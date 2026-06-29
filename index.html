@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html><head>
+<title>LotGuard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#34c759">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 25px;
+    margin: 0;
+}
+
+h1 {
+    font-size: 46px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+#timer {
+    font-size: 90px;
+    font-weight: bold;
+}
+
+#status {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#alertBox {
+    font-size: 42px;
+    font-weight: bold;
+}
+.app {
+    max-width: 700px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+button {
+    font-size: 24px;
+    padding: 18px 24px;
+    margin: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+border: none;
+background: #34c759;
+color: white;
+font-weight: bold;
+}
+.reset-btn {
+    background: #ff3b30;
+}
+.flash-red {
+    animation: flashRed 1s infinite;
+}
+
+@keyframes flashRed {
+    0% { background-color: red; }
+    50% { background-color: #8b0000; }
+    100% { background-color: red; }
+}
+@media (max-width: 600px) {
+    h1 {
+        font-size: 32px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    #timer {
+        font-size: 60px;
+    }
+
+    #status {
+        font-size: 24px;
+    }
+
+    #alertBox {
+        font-size: 28px;
+    }
+
+    button {
+        width: 90%;
+        font-size: 20px;
+    }
+}
+
+
+</style>
+
+</head>
+
+<body>
+    <div class="app">
+    <h1>LotGuard</h1>
+    <h3>TNC Waiting Lot 60-Minute Timer</h3>
+
+    <h2 id="timer">60:00</h2>
+    <p id="status">Ready to start</p>
+    <p id="currentTime">Current Time: --</p>
+    <p id="enteredAt">Entered Lot: --</p>
+    <p id="exitBy">Exit By: --</p>
+    <h1 id="alertBox"></h1>
+
+    <button onclick="startTimer()">Start 60-Min Countdown</button>
+    <button class="reset-btn" onclick="resetTimer()">Reset</button>
+    <script>
+let totalSeconds = 60 * 60;
+let remainingSeconds = totalSeconds;
+let timerInterval;
+let audioContext;
+let soundUnlocked = false;
+
+function unlockSound() {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    soundUnlocked = true;
+}
+
+function playBeep() {
+    if (!soundUnlocked || !audioContext) {
+        return;
+    }
+
+    let oscillator = audioContext.createOscillator();
+    let gain = audioContext.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.frequency.value = 800;
+    oscillator.start();
+
+    gain.gain.setValueAtTime(0.5, audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+}
+
+function calculateRemainingTime() {
+    let savedStartTime = localStorage.getItem("lotguardStartTime");
+
+    if (savedStartTime) {
+        let elapsedSeconds = Math.floor((Date.now() - Number(savedStartTime)) / 1000);
+        remainingSeconds = totalSeconds - elapsedSeconds;
+
+        if (remainingSeconds < 0) {
+            remainingSeconds = 0;
+        }
+    }
+}
+
+function updateDisplay() {
+    let mins = Math.floor(remainingSeconds / 60);
+    let secs = remainingSeconds % 60;
+
+    document.getElementById("timer").innerText =
+        String(mins).padStart(2, "0") + ":" +
+        String(secs).padStart(2, "0");
+
+    let status = document.getElementById("status");
+
+    if (remainingSeconds > 15 * 60) {
+        status.innerText = "SAFE ZONE";
+        document.body.style.backgroundColor = "#d4f8d4";
+        document.getElementById("alertBox").innerText = "";
+    } else if (remainingSeconds > 5 * 60) {
+        status.innerText = "PREPARE TO LEAVE";
+        document.body.classList.remove("flash-red");
+        document.body.style.backgroundColor = "#fff3b0";
+        document.getElementById("alertBox").innerText = "15 MINUTES REMAINING";
+    if (remainingSeconds === 59 * 60) {
+    playBeep();
+}
+
+
+    } else if (remainingSeconds > 0) {
+    status.innerText = "LEAVE THE LOT NOW";
+    document.body.classList.add("flash-red");
+    document.getElementById("alertBox").innerText = "⚠️ EXIT NOW ⚠️";
+    } else {
+        clearInterval(timerInterval);
+        status.innerText = "VIOLATION RISK";
+        document.getElementById("timer").innerText = "00:00";
+        document.body.style.backgroundColor = "#8b0000";
+        document.getElementById("alertBox").innerText = "YOU HAVE EXCEEDED THE LOT LIMIT";
+    }
+}
+
+function runCountdown() {
+    clearInterval(timerInterval);
+
+    timerInterval = setInterval(function () {
+        calculateRemainingTime();
+        updateDisplay();
+    }, 1000);
+}
+
+function startTimer() {
+    unlockSound();
+    let existingStartTime = localStorage.getItem("lotguardStartTime");
+
+    if (existingStartTime && remainingSeconds > 0) {
+        let confirmRestart = confirm(
+            "A timer is already running. Start a new 60-minute timer?"
+        );
+
+        if (!confirmRestart) {
+            return;
+        }
+    }
+
+    let now = new Date();
+
+    localStorage.setItem("lotguardStartTime", now.getTime());
+
+    document.getElementById("enteredAt").innerText =
+        "Entered Lot: " + now.toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+
+    let exitTime = new Date(now.getTime() + 60 * 60 * 1000);
+
+    document.getElementById("exitBy").innerText =
+        "Exit By: " + exitTime.toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+
+    calculateRemainingTime();
+    updateDisplay();
+    runCountdown();
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    remainingSeconds = totalSeconds;
+
+    document.getElementById("timer").innerText = "60:00";
+    document.getElementById("status").innerText = "Ready to start";
+    document.getElementById("enteredAt").innerText = "Entered Lot: --";
+    document.getElementById("exitBy").innerText = "Exit By: --";
+    document.getElementById("alertBox").innerText = "";
+    document.body.style.backgroundColor = "white";
+
+    localStorage.removeItem("lotguardStartTime");
+}
+
+setInterval(function () {
+    document.getElementById("currentTime").innerText =
+        "Current Time: " + new Date().toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+}, 1000);
+
+let savedStartTime = localStorage.getItem("lotguardStartTime");
+
+if (savedStartTime) {
+    let startTime = new Date(Number(savedStartTime));
+    let exitTime = new Date(Number(savedStartTime) + 60 * 60 * 1000);
+
+    document.getElementById("enteredAt").innerText =
+        "Entered Lot: " + startTime.toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+
+    document.getElementById("exitBy").innerText =
+        "Exit By: " + exitTime.toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+
+    calculateRemainingTime();
+    updateDisplay();
+    runCountdown();
+}
+
+document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) {
+        calculateRemainingTime();
+        updateDisplay();
+    }
+});
+
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html><head>
+<title>LotGuard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 25px;
+    margin: 0;
+}
+
+h1 {
+    font-size: 46px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+#timer {
+    font-size: 90px;
+    font-weight: bold;
+}
+
+#status {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#alertBox {
+    font-size: 42px;
+    font-weight: bold;
+}
+
+button {
+    font-size: 24px;
+    padding: 18px 24px;
+    margin: 12px;
+    border-radius: 12px;
+}
+</style>
+
+</head>
+<head>
+    <title>LotGuard</title>
+</head>
+<body>
+    <h1>LotGuard</h1>
+    <h3>TNC Waiting Lot 60-Minute Timer</h3>
+
+    <h2 id="timer">60:00</h2>
+    <p id="status">Ready to start</p>
+    <p id="currentTime">Current Time: --</p>
+    <p id="enteredAt">Entered Lot: --</p>
+    <p id="exitBy">Exit By: --</p>
+    <h1 id="alertBox"></h1>
+
+    <button onclick="startTimer()">Start 60-Min Countdown</button>
+    <button onclick="resetTimer()">Reset</button>
+
+    <script>
+        let totalSeconds = 60 * 60;
+let remainingSeconds = totalSeconds;
+let timerInterval;
+
+setInterval(function () {
+    document.getElementById("currentTime").innerText =
+        "Current Time: " + new Date().toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+}, 1000);
+
+function startTimer() {
+    clearInterval(timerInterval);
+    remainingSeconds = totalSeconds;
+
+    let now = new Date();
+
+    document.getElementById("enteredAt").innerText =
+        "Entered Lot: " + now.toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+
+    let exitTime = new Date(now.getTime() + 60 * 60 * 1000);
+
+    document.getElementById("exitBy").innerText =
+        "Exit By: " + exitTime.toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+
+    timerInterval = setInterval(function () {
+        remainingSeconds--;
+
+        let mins = Math.floor(remainingSeconds / 60);
+        let secs = remainingSeconds % 60;
+
+        document.getElementById("timer").innerText =
+            String(mins).padStart(2, "0") + ":" +
+            String(secs).padStart(2, "0");
+
+        let status = document.getElementById("status");
+
+        if (remainingSeconds > 15 * 60) {
+            status.innerText = "SAFE ZONE";
+            document.body.style.backgroundColor = "#d4f8d4";
+            document.getElementById("alertBox").innerText = "";
+        } else if (remainingSeconds > 5 * 60) {
+            status.innerText = "PREPARE TO LEAVE";
+            document.body.style.backgroundColor = "#fff3b0";
+            document.getElementById("alertBox").innerText = "15 MINUTES REMAINING";
+        } else if (remainingSeconds > 0) {
+            status.innerText = "LEAVE THE LOT NOW";
+            document.body.style.backgroundColor = "red";
+            document.getElementById("alertBox").innerText = "5 MINUTES REMAINING";
+        } else {
+            clearInterval(timerInterval);
+            status.innerText = "VIOLATION RISK";
+            document.getElementById("timer").innerText = "00:00";
+            document.body.style.backgroundColor = "#8b0000";
+            document.getElementById("alertBox").innerText = "YOU HAVE EXCEEDED THE LOT LIMIT";
+        }
+    }, 1000);
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    remainingSeconds = totalSeconds;
+    document.getElementById("timer").innerText = "60:00";
+    document.getElementById("status").innerText = "Ready to start";
+    document.getElementById("enteredAt").innerText = "Entered Lot: --";
+    document.getElementById("exitBy").innerText = "Exit By: --";
+    document.getElementById("alertBox").innerText = "";
+    document.body.style.backgroundColor = "white";
+}
+    </script>
+</body>
+</html>
