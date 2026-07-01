@@ -4,6 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#34c759">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -112,6 +113,26 @@ font-weight: bold;
     <button onclick="startTimer()">Start 60-Min Countdown</button>
     <button class="reset-btn" onclick="resetTimer()">Reset</button>
     <script>
+// ── Supabase Configuration ───────────────────────────────────────────────
+const SUPABASE_URL = 'https://oohrlwqtzpgiidayporl.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vaHJsd3F0enBnaWlkYXlwb3JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NTYzNTgsImV4cCI6MjA5ODMzMjM1OH0.XWEmygnLVuOG4_fkbqdGfIq5CrFGg8Xdq2i6z3Lmqqw';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── Anonymous Authentication ─────────────────────────────────────────────
+// Silently signs the driver in on every app load.
+// If a session already exists, Supabase restores it automatically.
+// Wrapped in try/catch so any failure is silent — timer is never affected.
+(async function initAuth() {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      await supabaseClient.auth.signInAnonymously();
+    }
+  } catch (err) {
+    // Supabase unavailable or key incorrect — timer continues normally
+    console.warn('LotGuard: Supabase auth unavailable.', err);
+  }
+})();
 let totalSeconds = 60 * 60;
 let remainingSeconds = totalSeconds;
 let timerInterval;
