@@ -6,6 +6,66 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#34c759">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+/* ── Airport Selection Modal ─────────────────────────────────────────── */
+#airportOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#airportOverlay.visible {
+    display: flex;
+}
+
+#airportModal {
+    background: white;
+    border-radius: 20px;
+    padding: 32px 24px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+#airportModal h2 {
+    font-size: 26px;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+}
+
+#airportModal p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 24px;
+}
+
+.airport-btn {
+    display: block;
+    width: 100%;
+    font-size: 18px;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border-radius: 12px;
+    border: none;
+    background: #34c759;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: left;
+}
+
+.airport-btn:active {
+    background: #28a745;
+}
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -101,6 +161,16 @@ font-weight: bold;
 
 <body>
     <div class="app">
+        <!-- Airport Selection Modal -->
+    <div id="airportOverlay">
+      <div id="airportModal">
+        <h2>Welcome to LotGuard</h2>
+        <p>Select your airport to get started.</p>
+        <button class="airport-btn" onclick="selectAirport('SFO', 'San Francisco International Airport')">
+          ✈️ SFO — San Francisco International
+        </button>
+      </div>
+    </div>
     <h1>LotGuard</h1>
     <h3>TNC Waiting Lot 60-Minute Timer</h3>
 
@@ -311,6 +381,82 @@ document.addEventListener("visibilitychange", function () {
     }
 });
 
+// ── Airport Selection Modal ──────────────────────────────────────────────
+// Checks if the driver already has an active airport set in Supabase.
+// If not, shows the airport selection modal.
+// If Supabase is unavailable, skips silently — timer is unaffected.
+
+async function checkAirportSelection() {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) return;
+
+    const { data: profile, error } = await supabaseClient
+      .from('driver_profiles')
+      .select('active_airport_id')
+      .eq('id', session.user.id)
+      .single();
+
+    if (error) return;
+
+    if (!profile.active_airport_id) {
+      showAirportModal();
+    }
+  } catch (err) {
+    // Supabase unavailable — skip modal silently, timer works normally
+    console.warn('LotGuard: Could not check airport selection.', err);
+  }
+}
+
+function showAirportModal() {
+  document.getElementById('airportOverlay').classList.add('visible');
+}
+
+function hideAirportModal() {
+  document.getElementById('airportOverlay').classList.remove('visible');
+}
+
+async function selectAirport(iataCode, airportName) {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      hideAirportModal();
+      return;
+    }
+
+    // Get the airport UUID from Supabase
+    const { data: airport, error: airportError } = await supabaseClient
+      .from('airports')
+      .select('id')
+      .eq('iata_code', iataCode)
+      .single();
+
+    if (airportError || !airport) {
+      console.warn('LotGuard: Airport not found.', airportError);
+      hideAirportModal();
+      return;
+    }
+
+    // Save the active airport to the driver's profile
+    const { error: updateError } = await supabaseClient
+      .from('driver_profiles')
+      .update({ active_airport_id: airport.id })
+      .eq('id', session.user.id);
+
+    if (updateError) {
+      console.warn('LotGuard: Could not save airport.', updateError);
+    }
+
+  } catch (err) {
+    console.warn('LotGuard: Airport selection error.', err);
+  } finally {
+    // Always hide the modal — even if Supabase failed
+    hideAirportModal();
+  }
+}
+
+// Run airport check after a short delay to let auth initialize first
+setTimeout(checkAirportSelection, 1500);
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js");
 }
