@@ -445,7 +445,7 @@ async function selectAirport(iataCode, airportName) {
   }
 }
 
-setTimeout(checkAirportSelection, 1500);
+setTimeout(checkAirportSelection, 3000);
 
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js");
