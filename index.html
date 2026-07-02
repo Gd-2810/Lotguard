@@ -198,10 +198,10 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
       await supabaseClient.auth.signInAnonymously();
     }
   } catch (err) {
-    // Supabase unavailable or key incorrect — timer continues normally
     console.warn('LotGuard: Supabase auth unavailable.', err);
   }
 })();
+
 let totalSeconds = 60 * 60;
 let remainingSeconds = totalSeconds;
 let timerInterval;
@@ -380,8 +380,22 @@ document.addEventListener("visibilitychange", function () {
 });
 
 // ── Airport Selection Modal ──────────────────────────────────────────────
+
+function showAirportModal() {
+  document.getElementById('airportOverlay').classList.add('visible');
+}
+
+function hideAirportModal() {
+  document.getElementById('airportOverlay').classList.remove('visible');
+}
+
 async function checkAirportSelection() {
   try {
+    // Check localStorage first — instant, no network needed
+    const localAirport = localStorage.getItem('lotguard_airport');
+    if (localAirport) return;
+
+    // Wait for session to be fully established
     let session = null;
     let attempts = 0;
 
@@ -394,7 +408,10 @@ async function checkAirportSelection() {
       }
     }
 
-    if (!session) return;
+    if (!session) {
+      showAirportModal();
+      return;
+    }
 
     const { data: profile, error } = await supabaseClient
       .from('driver_profiles')
@@ -402,57 +419,53 @@ async function checkAirportSelection() {
       .eq('id', session.user.id)
       .single();
 
-    // If we can't read the profile OR airport isn't set, show the modal
     if (error || !profile || !profile.active_airport_id) {
       showAirportModal();
     }
 
   } catch (err) {
     console.warn('LotGuard: Could not check airport selection.', err);
+    showAirportModal();
   }
 }
 
-function showAirportModal() {
-  document.getElementById('airportOverlay').classList.add('visible');
-}
-
-function hideAirportModal() {
-  document.getElementById('airportOverlay').classList.remove('visible');
-}
-
 async function selectAirport(iataCode, airportName) {
+  // Save to localStorage immediately — modal never shows again even if Supabase fails
+  localStorage.setItem('lotguard_airport', iataCode);
+  hideAirportModal();
+
   try {
     const { data: { session } } = await supabaseClient.auth.getSession();
-    if (!session) {
-      hideAirportModal();
-      return;
-    }
+    if (!session) return;
 
-    const { data: airport, error: airportError } = await supabaseClient
+    // Get all airports and find the matching one
+    const { data: airports, error: airportError } = await supabaseClient
       .from('airports')
-      .select('id')
-      .eq('iata_code', iataCode)
-      .single();
+      .select('id, iata_code');
 
-    if (airportError || !airport) {
-      console.warn('LotGuard: Airport not found.', airportError);
-      hideAirportModal();
+    if (airportError || !airports) {
+      console.warn('LotGuard: Could not load airports.', airportError);
       return;
     }
 
+    const airport = airports.find(a => a.iata_code === iataCode);
+    if (!airport) {
+      console.warn('LotGuard: Airport not found in results:', airports);
+      return;
+    }
+
+    // Save active airport to Supabase profile
     const { error: updateError } = await supabaseClient
       .from('driver_profiles')
       .update({ active_airport_id: airport.id })
       .eq('id', session.user.id);
 
     if (updateError) {
-      console.warn('LotGuard: Could not save airport.', updateError);
+      console.warn('LotGuard: Could not save airport to profile.', updateError);
     }
 
   } catch (err) {
     console.warn('LotGuard: Airport selection error.', err);
-  } finally {
-    hideAirportModal();
   }
 }
 
