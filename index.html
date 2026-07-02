@@ -36,6 +36,7 @@ h3 {
     font-size: 42px;
     font-weight: bold;
 }
+
 .app {
     max-width: 700px;
     margin: auto;
@@ -44,20 +45,23 @@ h3 {
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
+
 button {
     font-size: 24px;
     padding: 18px 24px;
     margin: 12px;
     border-radius: 12px;
     cursor: pointer;
-border: none;
-background: #34c759;
-color: white;
-font-weight: bold;
+    border: none;
+    background: #34c759;
+    color: white;
+    font-weight: bold;
 }
+
 .reset-btn {
     background: #ff3b30;
 }
+
 .flash-red {
     animation: flashRed 1s infinite;
 }
@@ -67,6 +71,7 @@ font-weight: bold;
     50% { background-color: #8b0000; }
     100% { background-color: red; }
 }
+
 @media (max-width: 600px) {
     h1 {
         font-size: 32px;
@@ -94,6 +99,43 @@ font-weight: bold;
     }
 }
 
+/* ── Tab Navigation ───────────────────────────────────────────────────── */
+.tab-bar {
+    display: flex;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 24px;
+}
+
+.tab-btn {
+    flex: 1;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: #999;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+}
+
+.tab-btn.active {
+    color: #34c759;
+    border-bottom: 3px solid #34c759;
+    background: transparent;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* ── Airport Selection Modal ──────────────────────────────────────────── */
 #airportOverlay {
     display: none;
     position: fixed;
@@ -159,6 +201,7 @@ font-weight: bold;
 
 <body>
     <div class="app">
+
         <!-- Airport Selection Modal -->
         <div id="airportOverlay">
           <div id="airportModal">
@@ -169,18 +212,38 @@ font-weight: bold;
             </button>
           </div>
         </div>
-    <h1>LotGuard</h1>
-    <h3>TNC Waiting Lot 60-Minute Timer</h3>
 
-    <h2 id="timer">60:00</h2>
-    <p id="status">Ready to start</p>
-    <p id="currentTime">Current Time: --</p>
-    <p id="enteredAt">Entered Lot: --</p>
-    <p id="exitBy">Exit By: --</p>
-    <h1 id="alertBox"></h1>
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="showTab('timer')">⏱ Timer</button>
+            <button class="tab-btn" onclick="showTab('feed')">📡 Driver Feed</button>
+        </div>
 
-    <button onclick="startTimer()">Start 60-Min Countdown</button>
-    <button class="reset-btn" onclick="resetTimer()">Reset</button>
+        <!-- Timer Tab -->
+        <div id="tab-timer" class="tab-panel active">
+            <h1>LotGuard</h1>
+            <h3>TNC Waiting Lot 60-Minute Timer</h3>
+
+            <h2 id="timer">60:00</h2>
+            <p id="status">Ready to start</p>
+            <p id="currentTime">Current Time: --</p>
+            <p id="enteredAt">Entered Lot: --</p>
+            <p id="exitBy">Exit By: --</p>
+            <h1 id="alertBox"></h1>
+
+            <button onclick="startTimer()">Start 60-Min Countdown</button>
+            <button class="reset-btn" onclick="resetTimer()">Reset</button>
+        </div>
+
+        <!-- Feed Tab -->
+        <div id="tab-feed" class="tab-panel">
+            <h2>Driver Feed</h2>
+            <p style="color: #555; font-size: 16px;">
+                Real-time updates from SFO drivers.<br>Coming soon.
+            </p>
+        </div>
+
+    </div>
     <script>
 // ── Supabase Configuration ───────────────────────────────────────────────
 const SUPABASE_URL = 'https://oohrlwqtzpgiidayporl.supabase.co';
@@ -188,9 +251,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ── Anonymous Authentication ─────────────────────────────────────────────
-// Silently signs the driver in on every app load.
-// If a session already exists, Supabase restores it automatically.
-// Wrapped in try/catch so any failure is silent — timer is never affected.
 (async function initAuth() {
   try {
     const { data: { session } } = await supabaseClient.auth.getSession();
@@ -202,6 +262,23 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
   }
 })();
 
+// ── Tab Navigation ───────────────────────────────────────────────────────
+function showTab(tabName) {
+    // Hide all panels
+    document.querySelectorAll('.tab-panel').forEach(function(panel) {
+        panel.classList.remove('active');
+    });
+    // Deactivate all tab buttons
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    // Show selected panel
+    document.getElementById('tab-' + tabName).classList.add('active');
+    // Activate selected tab button
+    event.target.classList.add('active');
+}
+
+// ── Timer ────────────────────────────────────────────────────────────────
 let totalSeconds = 60 * 60;
 let remainingSeconds = totalSeconds;
 let timerInterval;
@@ -263,15 +340,13 @@ function updateDisplay() {
         document.body.classList.remove("flash-red");
         document.body.style.backgroundColor = "#fff3b0";
         document.getElementById("alertBox").innerText = "15 MINUTES REMAINING";
-    if (remainingSeconds === 59 * 60) {
-    playBeep();
-}
-
-
+        if (remainingSeconds === 59 * 60) {
+            playBeep();
+        }
     } else if (remainingSeconds > 0) {
-    status.innerText = "LEAVE THE LOT NOW";
-    document.body.classList.add("flash-red");
-    document.getElementById("alertBox").innerText = "⚠️ EXIT NOW ⚠️";
+        status.innerText = "LEAVE THE LOT NOW";
+        document.body.classList.add("flash-red");
+        document.getElementById("alertBox").innerText = "⚠️ EXIT NOW ⚠️";
     } else {
         clearInterval(timerInterval);
         status.innerText = "VIOLATION RISK";
@@ -380,7 +455,6 @@ document.addEventListener("visibilitychange", function () {
 });
 
 // ── Airport Selection Modal ──────────────────────────────────────────────
-
 function showAirportModal() {
   document.getElementById('airportOverlay').classList.add('visible');
 }
@@ -391,11 +465,9 @@ function hideAirportModal() {
 
 async function checkAirportSelection() {
   try {
-    // Check localStorage first — instant, no network needed
     const localAirport = localStorage.getItem('lotguard_airport');
     if (localAirport) return;
 
-    // Wait for session to be fully established
     let session = null;
     let attempts = 0;
 
@@ -430,7 +502,6 @@ async function checkAirportSelection() {
 }
 
 async function selectAirport(iataCode, airportName) {
-  // Save to localStorage immediately — modal never shows again even if Supabase fails
   localStorage.setItem('lotguard_airport', iataCode);
   hideAirportModal();
 
@@ -438,7 +509,6 @@ async function selectAirport(iataCode, airportName) {
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) return;
 
-    // Get all airports and find the matching one
     const { data: airports, error: airportError } = await supabaseClient
       .from('airports')
       .select('id, iata_code');
@@ -454,7 +524,6 @@ async function selectAirport(iataCode, airportName) {
       return;
     }
 
-    // Save active airport to Supabase profile
     const { error: updateError } = await supabaseClient
       .from('driver_profiles')
       .update({ active_airport_id: airport.id })
@@ -475,6 +544,6 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js");
 }
 </script>
-    </div>
+</div>
 </body>
 </html>
