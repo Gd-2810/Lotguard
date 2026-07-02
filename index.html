@@ -382,7 +382,6 @@ document.addEventListener("visibilitychange", function () {
 // ── Airport Selection Modal ──────────────────────────────────────────────
 async function checkAirportSelection() {
   try {
-    // Wait for session to be fully established
     let session = null;
     let attempts = 0;
 
@@ -403,14 +402,11 @@ async function checkAirportSelection() {
       .eq('id', session.user.id)
       .single();
 
-    if (error) {
-      console.warn('LotGuard: Profile query error:', error);
-      return;
-    }
-
-    if (!profile.active_airport_id) {
+    // If we can't read the profile OR airport isn't set, show the modal
+    if (error || !profile || !profile.active_airport_id) {
       showAirportModal();
     }
+
   } catch (err) {
     console.warn('LotGuard: Could not check airport selection.', err);
   }
