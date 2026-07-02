@@ -382,7 +382,19 @@ document.addEventListener("visibilitychange", function () {
 // ── Airport Selection Modal ──────────────────────────────────────────────
 async function checkAirportSelection() {
   try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    // Wait for session to be fully established
+    let session = null;
+    let attempts = 0;
+
+    while (!session && attempts < 10) {
+      const { data } = await supabaseClient.auth.getSession();
+      session = data.session;
+      if (!session) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        attempts++;
+      }
+    }
+
     if (!session) return;
 
     const { data: profile, error } = await supabaseClient
@@ -391,7 +403,10 @@ async function checkAirportSelection() {
       .eq('id', session.user.id)
       .single();
 
-    if (error) return;
+    if (error) {
+      console.warn('LotGuard: Profile query error:', error);
+      return;
+    }
 
     if (!profile.active_airport_id) {
       showAirportModal();
