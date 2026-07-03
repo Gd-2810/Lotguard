@@ -120,6 +120,7 @@ button {
 /* ── Driver Feed ──────────────────────────────────────────────────────── */
 #feedList {
     text-align: left;
+    margin-bottom: 16px;
 }
 
 .feed-state {
@@ -199,6 +200,117 @@ button {
 
 .report-link:hover {
     color: #ff3b30;
+}
+
+/* ── Post Composer ────────────────────────────────────────────────────── */
+.composer {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 16px;
+    text-align: left;
+}
+
+.composer textarea {
+    width: 100%;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    resize: none;
+    height: 80px;
+    box-sizing: border-box;
+    color: #222;
+    outline: none;
+}
+
+.composer textarea:focus {
+    border-color: #34c759;
+}
+
+.char-counter {
+    font-size: 12px;
+    color: #aaa;
+    text-align: right;
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+.char-counter.over {
+    color: #ff3b30;
+}
+
+.type-selector {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.type-pill {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 2px solid #ddd;
+    background: white;
+    color: #888;
+    cursor: pointer;
+    margin: 0;
+    width: auto;
+}
+
+.type-pill.selected-wait_time {
+    background: #007aff;
+    border-color: #007aff;
+    color: white;
+}
+
+.type-pill.selected-alert {
+    background: #ff3b30;
+    border-color: #ff3b30;
+    color: white;
+}
+
+.type-pill.selected-tip {
+    background: #34c759;
+    border-color: #34c759;
+    color: white;
+}
+
+.type-pill.selected-general {
+    background: #8e8e93;
+    border-color: #8e8e93;
+    color: white;
+}
+
+.submit-btn {
+    width: 100%;
+    font-size: 16px;
+    padding: 14px;
+    margin: 0;
+    border-radius: 12px;
+    background: #34c759;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.composer-message {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 8px;
+    min-height: 20px;
+    color: #ff3b30;
+}
+
+.composer-message.success {
+    color: #34c759;
 }
 
 /* ── Airport Selection Modal ──────────────────────────────────────────── */
@@ -303,9 +415,33 @@ button {
 
         <!-- Feed Tab -->
         <div id="tab-feed" class="tab-panel">
+
+            <!-- Feed Posts -->
             <div id="feedList">
                 <div class="feed-state">Loading SFO feed...</div>
             </div>
+
+            <!-- Post Composer -->
+            <div class="composer">
+                <textarea
+                    id="postBody"
+                    placeholder="Share an update with SFO drivers..."
+                    maxlength="280"
+                    oninput="updateCharCounter()"
+                ></textarea>
+                <div class="char-counter" id="charCounter">280 remaining</div>
+
+                <div class="type-selector">
+                    <button class="type-pill selected-wait_time" id="pill-wait_time" onclick="selectType('wait_time')">⏱ WAIT TIME</button>
+                    <button class="type-pill" id="pill-alert"     onclick="selectType('alert')">🚨 ALERT</button>
+                    <button class="type-pill" id="pill-tip"       onclick="selectType('tip')">💡 TIP</button>
+                    <button class="type-pill" id="pill-general"   onclick="selectType('general')">💬 GENERAL</button>
+                </div>
+
+                <button class="submit-btn" id="submitBtn" onclick="submitPost()">Post Update</button>
+                <div class="composer-message" id="composerMessage"></div>
+            </div>
+
         </div>
 
     </div>
@@ -316,7 +452,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ── Auth State ───────────────────────────────────────────────────────────
-// Track whether auth is ready before allowing feed loads
 let authReady = false;
 
 (async function initAuth() {
@@ -328,7 +463,7 @@ let authReady = false;
     authReady = true;
   } catch (err) {
     console.warn('LotGuard: Supabase auth unavailable.', err);
-    authReady = true; // Allow feed attempt even if auth fails
+    authReady = true;
   }
 })();
 
@@ -391,7 +526,6 @@ async function waitForAuthThenLoadFeed() {
     const feedList = document.getElementById('feedList');
     feedList.innerHTML = '<div class="feed-state">Loading SFO feed...</div>';
 
-    // Wait up to 5 seconds for auth to be ready
     let waited = 0;
     while (!authReady && waited < 10) {
         await new Promise(resolve => setTimeout(resolve, 500));
@@ -435,6 +569,116 @@ async function loadFeed() {
 
 function reportPost(postId) {
     alert('Report submitted. Thank you for helping keep LotGuard accurate.');
+}
+
+// ── Post Composer ────────────────────────────────────────────────────────
+let selectedPostType = 'wait_time';
+let lastPostTime = 0;
+
+function selectType(type) {
+    selectedPostType = type;
+    document.querySelectorAll('.type-pill').forEach(function(pill) {
+        pill.className = 'type-pill';
+    });
+    document.getElementById('pill-' + type).className = 'type-pill selected-' + type;
+}
+
+function updateCharCounter() {
+    const body = document.getElementById('postBody').value;
+    const remaining = 280 - body.length;
+    const counter = document.getElementById('charCounter');
+    counter.innerText = remaining + ' remaining';
+    counter.className = remaining < 20 ? 'char-counter over' : 'char-counter';
+}
+
+function setComposerMessage(msg, isSuccess) {
+    const el = document.getElementById('composerMessage');
+    el.innerText = msg;
+    el.className = isSuccess ? 'composer-message success' : 'composer-message';
+    if (msg) {
+        setTimeout(function() {
+            el.innerText = '';
+        }, 3000);
+    }
+}
+
+async function submitPost() {
+    const body = document.getElementById('postBody').value.trim();
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Validation
+    if (body.length < 3) {
+        setComposerMessage('Please write a message before posting.', false);
+        return;
+    }
+
+    if (body.length > 280) {
+        setComposerMessage('Message is too long. Max 280 characters.', false);
+        return;
+    }
+
+    // Rate limit: 30 seconds between posts
+    const now = Date.now();
+    if (now - lastPostTime < 30000) {
+        const secondsLeft = Math.ceil((30000 - (now - lastPostTime)) / 1000);
+        setComposerMessage('Please wait ' + secondsLeft + ' seconds before posting again.', false);
+        return;
+    }
+
+    // Get session
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+        setComposerMessage('Not signed in. Please refresh and try again.', false);
+        return;
+    }
+
+    // Get airport ID
+    const { data: airports } = await supabaseClient
+        .from('airports')
+        .select('id, iata_code');
+
+    const airport = airports ? airports.find(a => a.iata_code === 'SFO') : null;
+    if (!airport) {
+        setComposerMessage('Could not find airport. Please try again.', false);
+        return;
+    }
+
+    // Disable submit button while posting
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Posting...';
+
+    try {
+        const { error } = await supabaseClient
+            .from('feed_posts')
+            .insert({
+                airport_id: airport.id,
+                author_id: session.user.id,
+                body: body,
+                post_type: selectedPostType
+            });
+
+        if (error) {
+            console.warn('LotGuard: Post error:', error);
+            setComposerMessage('Could not post. Please try again.', false);
+            return;
+        }
+
+        // Success
+        lastPostTime = Date.now();
+        document.getElementById('postBody').value = '';
+        updateCharCounter();
+        setComposerMessage('Posted successfully!', true);
+
+        // Reload feed to show new post
+        await loadFeed();
+
+    } catch (err) {
+        console.warn('LotGuard: Submit error:', err);
+        setComposerMessage('Could not post. Please try again.', false);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Post Update';
+    }
 }
 
 // ── Timer ────────────────────────────────────────────────────────────────
