@@ -191,6 +191,7 @@ button {
 
 .post-footer {
     text-align: right;
+    position: relative;
 }
 
 .report-link {
@@ -208,6 +209,61 @@ button {
 }
 
 .report-link:hover {
+    color: #ff3b30;
+}
+
+.report-link:disabled {
+    color: #ddd;
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+/* ── Report Dropdown ──────────────────────────────────────────────────── */
+.report-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 24px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    z-index: 100;
+    min-width: 180px;
+    overflow: hidden;
+}
+
+.report-dropdown.open {
+    display: block;
+}
+
+.report-dropdown-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #888;
+    padding: 10px 14px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.report-reason {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    padding: 10px 14px;
+    border: none;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    font-weight: normal;
+    margin: 0;
+    border-radius: 0;
+}
+
+.report-reason:hover {
+    background: #f5f5f5;
     color: #ff3b30;
 }
 
@@ -493,7 +549,6 @@ function showTab(tabName, btnEl) {
     if (tabName === 'feed') {
         waitForAuthThenLoadFeed();
     } else {
-        // Clean up realtime and polling when leaving feed tab
         if (realtimeChannel) {
             supabaseClient.removeChannel(realtimeChannel);
             realtimeChannel = null;
@@ -513,6 +568,9 @@ const BADGE_LABELS = {
     general:   '💬 GENERAL'
 };
 
+// Track reported posts in this session
+const reportedPosts = new Set();
+
 function timeAgo(dateString) {
     const now = new Date();
     const then = new Date(dateString);
@@ -529,6 +587,9 @@ function renderPost(post, isNew) {
     const badgeClass = 'badge-' + post.post_type;
     const time = timeAgo(post.created_at);
     const newClass = isNew ? ' new-post' : '';
+    const alreadyReported = reportedPosts.has(post.id);
+    const reportBtnAttr = alreadyReported ? 'disabled' : '';
+    const reportBtnText = alreadyReported ? 'Reported' : 'Report';
 
     return `
         <div class="post-card${newClass}" id="post-${post.id}">
@@ -539,10 +600,70 @@ function renderPost(post, isNew) {
             </div>
             <div class="post-body">${post.body}</div>
             <div class="post-footer">
-                <button class="report-link" onclick="reportPost('${post.id}')">Report</button>
+                <div style="position:relative; display:inline-block;">
+                    <button class="report-link" id="report-btn-${post.id}"
+                        onclick="toggleReportDropdown('${post.id}')"
+                        ${reportBtnAttr}>${reportBtnText}</button>
+                    <div class="report-dropdown" id="report-dropdown-${post.id}">
+                        <div class="report-dropdown-title">Report reason</div>
+                        <button class="report-reason" onclick="submitReport('${post.id}', 'spam')">Spam</button>
+                        <button class="report-reason" onclick="submitReport('${post.id}', 'harassment')">Harassment</button>
+                        <button class="report-reason" onclick="submitReport('${post.id}', 'misinformation')">Misinformation</button>
+                        <button class="report-reason" onclick="submitReport('${post.id}', 'inappropriate')">Inappropriate</button>
+                        <button class="report-reason" onclick="submitReport('${post.id}', 'other')">Other</button>
+                    </div>
+                </div>
             </div>
         </div>
     `;
+}
+
+function toggleReportDropdown(postId) {
+    // Close any other open dropdowns first
+    document.querySelectorAll('.report-dropdown.open').forEach(function(d) {
+        if (d.id !== 'report-dropdown-' + postId) {
+            d.classList.remove('open');
+        }
+    });
+    const dropdown = document.getElementById('report-dropdown-' + postId);
+    dropdown.classList.toggle('open');
+}
+
+async function submitReport(postId, reason) {
+    // Close dropdown immediately
+    const dropdown = document.getElementById('report-dropdown-' + postId);
+    if (dropdown) dropdown.classList.remove('open');
+
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return;
+
+        const { error } = await supabaseClient
+            .from('post_reports')
+            .insert({
+                post_id: postId,
+                reporter_id: session.user.id,
+                reason: reason
+            });
+
+        if (error) {
+            console.warn('LotGuard: Report error:', error);
+            return;
+        }
+
+        // Mark as reported in this session
+        reportedPosts.add(postId);
+
+        // Update button to show reported state
+        const btn = document.getElementById('report-btn-' + postId);
+        if (btn) {
+            btn.innerText = 'Reported';
+            btn.disabled = true;
+        }
+
+    } catch (err) {
+        console.warn('LotGuard: Report submit error:', err);
+    }
 }
 
 async function waitForAuthThenLoadFeed() {
@@ -594,7 +715,6 @@ async function loadFeed() {
 }
 
 function subscribeToFeed() {
-    // Remove any existing subscription and polling
     if (realtimeChannel) {
         supabaseClient.removeChannel(realtimeChannel);
         realtimeChannel = null;
@@ -604,7 +724,6 @@ function subscribeToFeed() {
         pollInterval = null;
     }
 
-    // Realtime subscription for instant updates
     realtimeChannel = supabaseClient
         .channel('airport:SFO')
         .on('broadcast', { event: 'new_post' }, function(payload) {
@@ -612,8 +731,6 @@ function subscribeToFeed() {
         })
         .subscribe();
 
-    // Polling fallback: quietly refresh feed every 30 seconds
-    // Ensures no post is missed if realtime delivery fails
     pollInterval = setInterval(function() {
         loadFeed();
     }, 30000);
@@ -622,25 +739,27 @@ function subscribeToFeed() {
 function handleNewRealtimePost(post) {
     const feedList = document.getElementById('feedList');
 
-    // Remove empty state if present
     const emptyState = feedList.querySelector('.feed-state');
     if (emptyState) {
         feedList.innerHTML = '';
     }
 
-    // Avoid duplicates
     if (document.getElementById('post-' + post.id)) {
         return;
     }
 
-    // Insert new post at top with slide-in animation
     const newPostHTML = renderPost(post, true);
     feedList.insertAdjacentHTML('afterbegin', newPostHTML);
 }
 
-function reportPost(postId) {
-    alert('Report submitted. Thank you for helping keep LotGuard accurate.');
-}
+// Close report dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.post-footer')) {
+        document.querySelectorAll('.report-dropdown.open').forEach(function(d) {
+            d.classList.remove('open');
+        });
+    }
+});
 
 // ── Post Composer ────────────────────────────────────────────────────────
 let selectedPostType = 'wait_time';
@@ -732,7 +851,6 @@ async function submitPost() {
         updateCharCounter();
         setComposerMessage('Posted successfully!', true);
 
-        // Reload feed to show own post immediately
         await loadFeed();
 
     } catch (err) {
