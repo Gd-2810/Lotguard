@@ -144,14 +144,8 @@ button {
 }
 
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .post-header {
@@ -484,6 +478,7 @@ let authReady = false;
 
 // ── Tab Navigation ───────────────────────────────────────────────────────
 let realtimeChannel = null;
+let pollInterval = null;
 
 function showTab(tabName, btnEl) {
     document.querySelectorAll('.tab-panel').forEach(function(panel) {
@@ -498,10 +493,14 @@ function showTab(tabName, btnEl) {
     if (tabName === 'feed') {
         waitForAuthThenLoadFeed();
     } else {
-        // Unsubscribe from realtime when leaving feed tab
+        // Clean up realtime and polling when leaving feed tab
         if (realtimeChannel) {
             supabaseClient.removeChannel(realtimeChannel);
             realtimeChannel = null;
+        }
+        if (pollInterval) {
+            clearInterval(pollInterval);
+            pollInterval = null;
         }
     }
 }
@@ -584,7 +583,9 @@ async function loadFeed() {
             return;
         }
 
-        feedList.innerHTML = posts.map(function(p) { return renderPost(p, false); }).join('');
+        feedList.innerHTML = posts.map(function(p) {
+            return renderPost(p, false);
+        }).join('');
 
     } catch (err) {
         console.warn('LotGuard: Feed error:', err);
@@ -593,18 +594,29 @@ async function loadFeed() {
 }
 
 function subscribeToFeed() {
-    // Remove any existing subscription first
+    // Remove any existing subscription and polling
     if (realtimeChannel) {
         supabaseClient.removeChannel(realtimeChannel);
         realtimeChannel = null;
     }
+    if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+    }
 
+    // Realtime subscription for instant updates
     realtimeChannel = supabaseClient
         .channel('airport:SFO')
         .on('broadcast', { event: 'new_post' }, function(payload) {
             handleNewRealtimePost(payload.payload);
         })
         .subscribe();
+
+    // Polling fallback: quietly refresh feed every 30 seconds
+    // Ensures no post is missed if realtime delivery fails
+    pollInterval = setInterval(function() {
+        loadFeed();
+    }, 30000);
 }
 
 function handleNewRealtimePost(post) {
@@ -616,12 +628,12 @@ function handleNewRealtimePost(post) {
         feedList.innerHTML = '';
     }
 
-    // Check if post already exists (avoid duplicates from own posts)
+    // Avoid duplicates
     if (document.getElementById('post-' + post.id)) {
         return;
     }
 
-    // Insert new post at the top with animation
+    // Insert new post at top with slide-in animation
     const newPostHTML = renderPost(post, true);
     feedList.insertAdjacentHTML('afterbegin', newPostHTML);
 }
@@ -720,8 +732,7 @@ async function submitPost() {
         updateCharCounter();
         setComposerMessage('Posted successfully!', true);
 
-        // Reload feed to show own post
-        // (realtime will handle other drivers' posts)
+        // Reload feed to show own post immediately
         await loadFeed();
 
     } catch (err) {
