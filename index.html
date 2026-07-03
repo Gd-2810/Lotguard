@@ -73,30 +73,12 @@ button {
 }
 
 @media (max-width: 600px) {
-    h1 {
-        font-size: 32px;
-    }
-
-    h3 {
-        font-size: 16px;
-    }
-
-    #timer {
-        font-size: 60px;
-    }
-
-    #status {
-        font-size: 24px;
-    }
-
-    #alertBox {
-        font-size: 28px;
-    }
-
-    button {
-        width: 90%;
-        font-size: 20px;
-    }
+    h1 { font-size: 32px; }
+    h3 { font-size: 16px; }
+    #timer { font-size: 60px; }
+    #status { font-size: 24px; }
+    #alertBox { font-size: 28px; }
+    button { width: 90%; font-size: 20px; }
 }
 
 /* ── Tab Navigation ───────────────────────────────────────────────────── */
@@ -133,6 +115,90 @@ button {
 
 .tab-panel.active {
     display: block;
+}
+
+/* ── Driver Feed ──────────────────────────────────────────────────────── */
+#feedList {
+    text-align: left;
+}
+
+.feed-state {
+    text-align: center;
+    color: #888;
+    font-size: 15px;
+    padding: 40px 0;
+}
+
+.post-card {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    text-align: left;
+    border: 1px solid #efefef;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.post-badge {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 20px;
+    color: white;
+    letter-spacing: 0.5px;
+}
+
+.badge-wait_time { background: #007aff; }
+.badge-alert     { background: #ff3b30; }
+.badge-tip       { background: #34c759; }
+.badge-general   { background: #8e8e93; }
+
+.post-author {
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+}
+
+.post-time {
+    font-size: 12px;
+    color: #aaa;
+    margin-left: auto;
+}
+
+.post-body {
+    font-size: 15px;
+    color: #222;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.post-footer {
+    text-align: right;
+}
+
+.report-link {
+    font-size: 12px;
+    color: #bbb;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+    text-decoration: underline;
+    width: auto;
+    font-family: Arial, sans-serif;
+}
+
+.report-link:hover {
+    color: #ff3b30;
 }
 
 /* ── Airport Selection Modal ──────────────────────────────────────────── */
@@ -215,8 +281,8 @@ button {
 
         <!-- Tab Bar -->
         <div class="tab-bar">
-            <button class="tab-btn active" onclick="showTab('timer')">⏱ Timer</button>
-            <button class="tab-btn" onclick="showTab('feed')">📡 Driver Feed</button>
+            <button class="tab-btn active" id="btn-timer" onclick="showTab('timer', this)">⏱ Timer</button>
+            <button class="tab-btn" id="btn-feed" onclick="showTab('feed', this)">📡 Driver Feed</button>
         </div>
 
         <!-- Timer Tab -->
@@ -237,10 +303,9 @@ button {
 
         <!-- Feed Tab -->
         <div id="tab-feed" class="tab-panel">
-            <h2>Driver Feed</h2>
-            <p style="color: #555; font-size: 16px;">
-                Real-time updates from SFO drivers.<br>Coming soon.
-            </p>
+            <div id="feedList">
+                <div class="feed-state">Loading SFO feed...</div>
+            </div>
         </div>
 
     </div>
@@ -263,19 +328,107 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 })();
 
 // ── Tab Navigation ───────────────────────────────────────────────────────
-function showTab(tabName) {
-    // Hide all panels
+function showTab(tabName, btnEl) {
     document.querySelectorAll('.tab-panel').forEach(function(panel) {
         panel.classList.remove('active');
     });
-    // Deactivate all tab buttons
     document.querySelectorAll('.tab-btn').forEach(function(btn) {
         btn.classList.remove('active');
     });
-    // Show selected panel
     document.getElementById('tab-' + tabName).classList.add('active');
-    // Activate selected tab button
-    event.target.classList.add('active');
+    btnEl.classList.add('active');
+
+    // Load feed when switching to Feed tab
+    if (tabName === 'feed') {
+        loadFeed();
+    }
+}
+
+// ── Driver Feed ──────────────────────────────────────────────────────────
+const BADGE_LABELS = {
+    wait_time: '⏱ WAIT TIME',
+    alert:     '🚨 ALERT',
+    tip:       '💡 TIP',
+    general:   '💬 GENERAL'
+};
+
+function timeAgo(dateString) {
+    const now = new Date();
+    const then = new Date(dateString);
+    const seconds = Math.floor((now - then) / 1000);
+
+    if (seconds < 60)  return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' min ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + ' hr ago';
+    return Math.floor(seconds / 86400) + ' day ago';
+}
+
+function renderPost(post) {
+    const badgeLabel = BADGE_LABELS[post.post_type] || '💬 GENERAL';
+    const badgeClass = 'badge-' + post.post_type;
+    const authorName = post.driver_profiles
+        ? post.driver_profiles.display_name
+        : 'Driver';
+    const time = timeAgo(post.created_at);
+
+    return `
+        <div class="post-card">
+            <div class="post-header">
+                <span class="post-badge ${badgeClass}">${badgeLabel}</span>
+                <span class="post-author">${authorName}</span>
+                <span class="post-time">${time}</span>
+            </div>
+            <div class="post-body">${post.body}</div>
+            <div class="post-footer">
+                <button class="report-link" onclick="reportPost('${post.id}')">Report</button>
+            </div>
+        </div>
+    `;
+}
+
+async function loadFeed() {
+    const feedList = document.getElementById('feedList');
+    feedList.innerHTML = '<div class="feed-state">Loading SFO feed...</div>';
+
+    try {
+        const { data: posts, error } = await supabaseClient
+            .from('feed_posts')
+            .select(`
+                id,
+                body,
+                post_type,
+                created_at,
+                airport_iata_code,
+                driver_profiles (display_name)
+            `)
+            .eq('airport_iata_code', 'SFO')
+            .eq('is_moderated', false)
+            .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+            .order('created_at', { ascending: false })
+            .limit(50);
+
+        if (error) {
+            console.warn('LotGuard: Feed load error:', error);
+            feedList.innerHTML = '<div class="feed-state">Unable to load feed. Please try again.</div>';
+            return;
+        }
+
+        if (!posts || posts.length === 0) {
+            feedList.innerHTML = '<div class="feed-state">No posts yet. Be the first to share an update.</div>';
+            return;
+        }
+
+        feedList.innerHTML = posts.map(renderPost).join('');
+
+    } catch (err) {
+        console.warn('LotGuard: Feed error:', err);
+        feedList.innerHTML = '<div class="feed-state">Unable to load feed. Please try again.</div>';
+    }
+}
+
+function reportPost(postId) {
+    // Reporting UI comes in Phase 3E
+    alert('Report submitted. Thank you for helping keep LotGuard accurate.');
 }
 
 // ── Timer ────────────────────────────────────────────────────────────────
@@ -291,9 +444,7 @@ function unlockSound() {
 }
 
 function playBeep() {
-    if (!soundUnlocked || !audioContext) {
-        return;
-    }
+    if (!soundUnlocked || !audioContext) return;
 
     let oscillator = audioContext.createOscillator();
     let gain = audioContext.createGain();
@@ -314,10 +465,7 @@ function calculateRemainingTime() {
     if (savedStartTime) {
         let elapsedSeconds = Math.floor((Date.now() - Number(savedStartTime)) / 1000);
         remainingSeconds = totalSeconds - elapsedSeconds;
-
-        if (remainingSeconds < 0) {
-            remainingSeconds = 0;
-        }
+        if (remainingSeconds < 0) remainingSeconds = 0;
     }
 }
 
@@ -373,10 +521,7 @@ function startTimer() {
         let confirmRestart = confirm(
             "A timer is already running. Start a new 60-minute timer?"
         );
-
-        if (!confirmRestart) {
-            return;
-        }
+        if (!confirmRestart) return;
     }
 
     let now = new Date();
@@ -456,86 +601,86 @@ document.addEventListener("visibilitychange", function () {
 
 // ── Airport Selection Modal ──────────────────────────────────────────────
 function showAirportModal() {
-  document.getElementById('airportOverlay').classList.add('visible');
+    document.getElementById('airportOverlay').classList.add('visible');
 }
 
 function hideAirportModal() {
-  document.getElementById('airportOverlay').classList.remove('visible');
+    document.getElementById('airportOverlay').classList.remove('visible');
 }
 
 async function checkAirportSelection() {
-  try {
-    const localAirport = localStorage.getItem('lotguard_airport');
-    if (localAirport) return;
+    try {
+        const localAirport = localStorage.getItem('lotguard_airport');
+        if (localAirport) return;
 
-    let session = null;
-    let attempts = 0;
+        let session = null;
+        let attempts = 0;
 
-    while (!session && attempts < 10) {
-      const { data } = await supabaseClient.auth.getSession();
-      session = data.session;
-      if (!session) {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        attempts++;
-      }
+        while (!session && attempts < 10) {
+            const { data } = await supabaseClient.auth.getSession();
+            session = data.session;
+            if (!session) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                attempts++;
+            }
+        }
+
+        if (!session) {
+            showAirportModal();
+            return;
+        }
+
+        const { data: profile, error } = await supabaseClient
+            .from('driver_profiles')
+            .select('active_airport_id')
+            .eq('id', session.user.id)
+            .single();
+
+        if (error || !profile || !profile.active_airport_id) {
+            showAirportModal();
+        }
+
+    } catch (err) {
+        console.warn('LotGuard: Could not check airport selection.', err);
+        showAirportModal();
     }
-
-    if (!session) {
-      showAirportModal();
-      return;
-    }
-
-    const { data: profile, error } = await supabaseClient
-      .from('driver_profiles')
-      .select('active_airport_id')
-      .eq('id', session.user.id)
-      .single();
-
-    if (error || !profile || !profile.active_airport_id) {
-      showAirportModal();
-    }
-
-  } catch (err) {
-    console.warn('LotGuard: Could not check airport selection.', err);
-    showAirportModal();
-  }
 }
 
 async function selectAirport(iataCode, airportName) {
-  localStorage.setItem('lotguard_airport', iataCode);
-  hideAirportModal();
+    localStorage.setItem('lotguard_airport', iataCode);
+    hideAirportModal();
 
-  try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (!session) return;
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return;
 
-    const { data: airports, error: airportError } = await supabaseClient
-      .from('airports')
-      .select('id, iata_code');
+        const { data: airports, error: airportError } = await supabaseClient
+            .from('airports')
+            .select('id, iata_code');
 
-    if (airportError || !airports) {
-      console.warn('LotGuard: Could not load airports.', airportError);
-      return;
+        if (airportError || !airports) {
+            console.warn('LotGuard: Could not load airports.', airportError);
+            return;
+        }
+
+        const airport = airports.find(a => a.iata_code === iataCode);
+        if (!airport) {
+            console.warn('LotGuard: Airport not found in results:', airports);
+            return;
+        }
+
+        const { error: updateError } = await supabaseClient
+            .from('driver_profiles')
+            .update({ active_airport_id: airport.id })
+            .eq('id', session.user.id);
+
+        if (updateError) {
+            console.warn('LotGuard: Could not save airport to profile.', updateError);
+        }
+
+    } catch (err) {
+        console.warn('LotGuard: Airport selection error.', err);
     }
-
-    const airport = airports.find(a => a.iata_code === iataCode);
-    if (!airport) {
-      console.warn('LotGuard: Airport not found in results:', airports);
-      return;
-    }
-
-    const { error: updateError } = await supabaseClient
-      .from('driver_profiles')
-      .update({ active_airport_id: airport.id })
-      .eq('id', session.user.id);
-
-    if (updateError) {
-      console.warn('LotGuard: Could not save airport to profile.', updateError);
-    }
-
-  } catch (err) {
-    console.warn('LotGuard: Airport selection error.', err);
-  }
 }
 
 setTimeout(checkAirportSelection, 3000);
