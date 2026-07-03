@@ -139,6 +139,21 @@ button {
     border: 1px solid #efefef;
 }
 
+.post-card.new-post {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .post-header {
     display: flex;
     align-items: center;
@@ -468,6 +483,8 @@ let authReady = false;
 })();
 
 // ── Tab Navigation ───────────────────────────────────────────────────────
+let realtimeChannel = null;
+
 function showTab(tabName, btnEl) {
     document.querySelectorAll('.tab-panel').forEach(function(panel) {
         panel.classList.remove('active');
@@ -480,6 +497,12 @@ function showTab(tabName, btnEl) {
 
     if (tabName === 'feed') {
         waitForAuthThenLoadFeed();
+    } else {
+        // Unsubscribe from realtime when leaving feed tab
+        if (realtimeChannel) {
+            supabaseClient.removeChannel(realtimeChannel);
+            realtimeChannel = null;
+        }
     }
 }
 
@@ -502,13 +525,14 @@ function timeAgo(dateString) {
     return Math.floor(seconds / 86400) + ' day ago';
 }
 
-function renderPost(post) {
+function renderPost(post, isNew) {
     const badgeLabel = BADGE_LABELS[post.post_type] || '💬 GENERAL';
     const badgeClass = 'badge-' + post.post_type;
     const time = timeAgo(post.created_at);
+    const newClass = isNew ? ' new-post' : '';
 
     return `
-        <div class="post-card">
+        <div class="post-card${newClass}" id="post-${post.id}">
             <div class="post-header">
                 <span class="post-badge ${badgeClass}">${badgeLabel}</span>
                 <span class="post-author">Driver</span>
@@ -533,6 +557,7 @@ async function waitForAuthThenLoadFeed() {
     }
 
     await loadFeed();
+    subscribeToFeed();
 }
 
 async function loadFeed() {
@@ -559,12 +584,46 @@ async function loadFeed() {
             return;
         }
 
-        feedList.innerHTML = posts.map(renderPost).join('');
+        feedList.innerHTML = posts.map(function(p) { return renderPost(p, false); }).join('');
 
     } catch (err) {
         console.warn('LotGuard: Feed error:', err);
         feedList.innerHTML = '<div class="feed-state">Unable to load feed. Please try again.</div>';
     }
+}
+
+function subscribeToFeed() {
+    // Remove any existing subscription first
+    if (realtimeChannel) {
+        supabaseClient.removeChannel(realtimeChannel);
+        realtimeChannel = null;
+    }
+
+    realtimeChannel = supabaseClient
+        .channel('airport:SFO')
+        .on('broadcast', { event: 'new_post' }, function(payload) {
+            handleNewRealtimePost(payload.payload);
+        })
+        .subscribe();
+}
+
+function handleNewRealtimePost(post) {
+    const feedList = document.getElementById('feedList');
+
+    // Remove empty state if present
+    const emptyState = feedList.querySelector('.feed-state');
+    if (emptyState) {
+        feedList.innerHTML = '';
+    }
+
+    // Check if post already exists (avoid duplicates from own posts)
+    if (document.getElementById('post-' + post.id)) {
+        return;
+    }
+
+    // Insert new post at the top with animation
+    const newPostHTML = renderPost(post, true);
+    feedList.insertAdjacentHTML('afterbegin', newPostHTML);
 }
 
 function reportPost(postId) {
@@ -596,9 +655,7 @@ function setComposerMessage(msg, isSuccess) {
     el.innerText = msg;
     el.className = isSuccess ? 'composer-message success' : 'composer-message';
     if (msg) {
-        setTimeout(function() {
-            el.innerText = '';
-        }, 3000);
+        setTimeout(function() { el.innerText = ''; }, 3000);
     }
 }
 
@@ -606,7 +663,6 @@ async function submitPost() {
     const body = document.getElementById('postBody').value.trim();
     const submitBtn = document.getElementById('submitBtn');
 
-    // Validation
     if (body.length < 3) {
         setComposerMessage('Please write a message before posting.', false);
         return;
@@ -617,7 +673,6 @@ async function submitPost() {
         return;
     }
 
-    // Rate limit: 30 seconds between posts
     const now = Date.now();
     if (now - lastPostTime < 30000) {
         const secondsLeft = Math.ceil((30000 - (now - lastPostTime)) / 1000);
@@ -625,14 +680,12 @@ async function submitPost() {
         return;
     }
 
-    // Get session
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) {
         setComposerMessage('Not signed in. Please refresh and try again.', false);
         return;
     }
 
-    // Get airport ID
     const { data: airports } = await supabaseClient
         .from('airports')
         .select('id, iata_code');
@@ -643,7 +696,6 @@ async function submitPost() {
         return;
     }
 
-    // Disable submit button while posting
     submitBtn.disabled = true;
     submitBtn.innerText = 'Posting...';
 
@@ -663,13 +715,13 @@ async function submitPost() {
             return;
         }
 
-        // Success
         lastPostTime = Date.now();
         document.getElementById('postBody').value = '';
         updateCharCounter();
         setComposerMessage('Posted successfully!', true);
 
-        // Reload feed to show new post
+        // Reload feed to show own post
+        // (realtime will handle other drivers' posts)
         await loadFeed();
 
     } catch (err) {
