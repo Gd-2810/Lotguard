@@ -191,7 +191,6 @@ button {
 
 .post-footer {
     text-align: right;
-    position: relative;
 }
 
 .report-link {
@@ -218,53 +217,84 @@ button {
     text-decoration: none;
 }
 
-/* ── Report Dropdown ──────────────────────────────────────────────────── */
-.report-dropdown {
+/* ── Report Modal ─────────────────────────────────────────────────────── */
+#reportModal {
     display: none;
-    position: absolute;
-    right: 0;
-    bottom: 24px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#reportModal.open {
+    display: flex;
+}
+
+#reportModalCard {
     background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    z-index: 100;
-    min-width: 180px;
-    overflow: hidden;
+    border-radius: 20px;
+    padding: 24px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    text-align: left;
 }
 
-.report-dropdown.open {
-    display: block;
+#reportModalCard h3 {
+    font-size: 17px;
+    color: #1a1a1a;
+    margin-bottom: 4px;
 }
 
-.report-dropdown-title {
-    font-size: 12px;
-    font-weight: bold;
+#reportModalCard p {
+    font-size: 13px;
     color: #888;
-    padding: 10px 14px 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    margin-bottom: 16px;
 }
 
-.report-reason {
+.report-option {
     display: block;
     width: 100%;
     text-align: left;
-    font-size: 14px;
+    font-size: 15px;
     font-family: Arial, sans-serif;
-    padding: 10px 14px;
-    border: none;
+    padding: 12px 16px;
+    margin: 0 0 8px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
     background: white;
     color: #333;
     cursor: pointer;
     font-weight: normal;
-    margin: 0;
-    border-radius: 0;
 }
 
-.report-reason:hover {
-    background: #f5f5f5;
+.report-option:hover {
+    background: #fff3f3;
+    border-color: #ff3b30;
     color: #ff3b30;
+}
+
+.report-cancel {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    padding: 12px;
+    margin: 8px 0 0 0;
+    border: none;
+    border-radius: 10px;
+    background: #f5f5f5;
+    color: #888;
+    cursor: pointer;
+    font-weight: normal;
 }
 
 /* ── Post Composer ────────────────────────────────────────────────────── */
@@ -443,6 +473,21 @@ button {
 </head>
 
 <body>
+
+    <!-- Report Modal -->
+    <div id="reportModal">
+        <div id="reportModalCard">
+            <h3>Report Post</h3>
+            <p>Why are you reporting this post?</p>
+            <button class="report-option" onclick="submitReport('spam')">Spam</button>
+            <button class="report-option" onclick="submitReport('harassment')">Harassment</button>
+            <button class="report-option" onclick="submitReport('misinformation')">Misinformation</button>
+            <button class="report-option" onclick="submitReport('inappropriate')">Inappropriate</button>
+            <button class="report-option" onclick="submitReport('other')">Other</button>
+            <button class="report-cancel" onclick="closeReportModal()">Cancel</button>
+        </div>
+    </div>
+
     <div class="app">
 
         <!-- Airport Selection Modal -->
@@ -568,8 +613,8 @@ const BADGE_LABELS = {
     general:   '💬 GENERAL'
 };
 
-// Track reported posts in this session
 const reportedPosts = new Set();
+let currentReportPostId = null;
 
 function timeAgo(dateString) {
     const now = new Date();
@@ -600,39 +645,29 @@ function renderPost(post, isNew) {
             </div>
             <div class="post-body">${post.body}</div>
             <div class="post-footer">
-                <div style="position:relative; display:inline-block;">
-                    <button class="report-link" id="report-btn-${post.id}"
-                        onclick="toggleReportDropdown('${post.id}')"
-                        ${reportBtnAttr}>${reportBtnText}</button>
-                    <div class="report-dropdown" id="report-dropdown-${post.id}">
-                        <div class="report-dropdown-title">Report reason</div>
-                        <button class="report-reason" onclick="submitReport('${post.id}', 'spam')">Spam</button>
-                        <button class="report-reason" onclick="submitReport('${post.id}', 'harassment')">Harassment</button>
-                        <button class="report-reason" onclick="submitReport('${post.id}', 'misinformation')">Misinformation</button>
-                        <button class="report-reason" onclick="submitReport('${post.id}', 'inappropriate')">Inappropriate</button>
-                        <button class="report-reason" onclick="submitReport('${post.id}', 'other')">Other</button>
-                    </div>
-                </div>
+                <button class="report-link" id="report-btn-${post.id}"
+                    onclick="openReportModal('${post.id}')"
+                    ${reportBtnAttr}>${reportBtnText}</button>
             </div>
         </div>
     `;
 }
 
-function toggleReportDropdown(postId) {
-    // Close any other open dropdowns first
-    document.querySelectorAll('.report-dropdown.open').forEach(function(d) {
-        if (d.id !== 'report-dropdown-' + postId) {
-            d.classList.remove('open');
-        }
-    });
-    const dropdown = document.getElementById('report-dropdown-' + postId);
-    dropdown.classList.toggle('open');
+function openReportModal(postId) {
+    currentReportPostId = postId;
+    document.getElementById('reportModal').classList.add('open');
 }
 
-async function submitReport(postId, reason) {
-    // Close dropdown immediately
-    const dropdown = document.getElementById('report-dropdown-' + postId);
-    if (dropdown) dropdown.classList.remove('open');
+function closeReportModal() {
+    currentReportPostId = null;
+    document.getElementById('reportModal').classList.remove('open');
+}
+
+async function submitReport(reason) {
+    const postId = currentReportPostId;
+    closeReportModal();
+
+    if (!postId) return;
 
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
@@ -751,15 +786,6 @@ function handleNewRealtimePost(post) {
     const newPostHTML = renderPost(post, true);
     feedList.insertAdjacentHTML('afterbegin', newPostHTML);
 }
-
-// Close report dropdowns when clicking outside
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('.post-footer')) {
-        document.querySelectorAll('.report-dropdown.open').forEach(function(d) {
-            d.classList.remove('open');
-        });
-    }
-});
 
 // ── Post Composer ────────────────────────────────────────────────────────
 let selectedPostType = 'wait_time';
