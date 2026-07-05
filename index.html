@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html><head>
+<html lang="en"><head>
 <title>LotGuard</title>
+<meta charset="utf-8">
 <!-- LotGuard PWA v2.0 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
@@ -686,10 +687,8 @@ async function submitReport(reason) {
             return;
         }
 
-        // Mark as reported in this session
         reportedPosts.add(postId);
 
-        // Update button to show reported state
         const btn = document.getElementById('report-btn-' + postId);
         if (btn) {
             btn.innerText = 'Reported';
@@ -945,7 +944,7 @@ function updateDisplay() {
         document.body.classList.remove("flash-red");
         document.body.style.backgroundColor = "#fff3b0";
         document.getElementById("alertBox").innerText = "15 MINUTES REMAINING";
-        if (remainingSeconds === 59 * 60) {
+        if (remainingSeconds === 15 * 60) {
             playBeep();
         }
     } else if (remainingSeconds > 0) {
