@@ -987,9 +987,7 @@ function updateDisplay() {
         status.innerText = "LEAVE THE LOT NOW";
         document.body.classList.add("flash-red");
         document.getElementById("alertBox").innerText = "⚠️ EXIT NOW ⚠️";
-        if (remainingSeconds === 5 * 60) {
-            playBeepPattern();
-        }
+        // V5: 5-minute haptic + beep pattern added in native iOS app
     } else {
         clearInterval(timerInterval);
         status.innerText = "VIOLATION RISK";
