@@ -908,11 +908,10 @@ function unlockSound() {
     soundUnlocked = true;
 }
 
-function playBeep() {
+async function playBeep() {
     if (!soundUnlocked || !audioContext) return;
-    // Resume context in case it was suspended
     if (audioContext.state === 'suspended') {
-        audioContext.resume();
+        await audioContext.resume();
     }
 
     var oscillator = audioContext.createOscillator();
@@ -927,12 +926,10 @@ function playBeep() {
     oscillator.stop(audioContext.currentTime + 0.3);
 }
 
-function playBeepPattern() {
-    // 4 urgent beeps at 5-minute warning
+async function playBeepPattern() {
     if (!soundUnlocked || !audioContext) return;
-    // Resume context in case it was suspended
     if (audioContext.state === 'suspended') {
-        audioContext.resume();
+        await audioContext.resume();
     }
 
     var beepCount = 4;
