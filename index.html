@@ -511,7 +511,7 @@ button {
         <!-- Timer Tab -->
         <div id="tab-timer" class="tab-panel active">
             <h1>LotGuard</h1>
-            <h3>TNC Waiting Lot 60-Minute Timer</h3>
+            <h3 id="timerSubtitle">TNC Waiting Lot 60-Minute Timer</h3>
 
             <h2 id="timer">60:00</h2>
             <p id="status">Ready to start</p>
@@ -576,6 +576,17 @@ let authReady = false;
     console.warn('LotGuard: Supabase auth unavailable.', err);
     authReady = true;
   }
+})();
+
+// ── Airport Subtitle ─────────────────────────────────────────────────────
+// Sets the timer subtitle to show the driver's active airport
+// Falls back to default text if no airport is set
+(function setTimerSubtitle() {
+    const airport = localStorage.getItem('lotguard_airport');
+    const subtitle = document.getElementById('timerSubtitle');
+    if (airport && subtitle) {
+        subtitle.innerText = '✈️ ' + airport + ' — TNC Waiting Lot';
+    }
 })();
 
 // ── Tab Navigation ───────────────────────────────────────────────────────
@@ -912,7 +923,31 @@ function playBeep() {
     oscillator.start();
 
     gain.gain.setValueAtTime(0.5, audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
+    oscillator.stop(audioContext.currentTime + 0.3);
+}
+
+function playBeepPattern() {
+    // 4 urgent beeps at 5-minute warning
+    // Each beep: 0.3s on, 0.4s gap = 0.7s per beep, total ~2.8s
+    if (!soundUnlocked || !audioContext) return;
+
+    var beepCount = 4;
+    var beepDuration = 0.3;
+    var beepGap = 0.4;
+
+    for (var i = 0; i < beepCount; i++) {
+        var oscillator = audioContext.createOscillator();
+        var gain = audioContext.createGain();
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.frequency.value = 900;
+        var startTime = audioContext.currentTime + (i * (beepDuration + beepGap));
+        gain.gain.setValueAtTime(0.6, startTime);
+        oscillator.start(startTime);
+        oscillator.stop(startTime + beepDuration);
+    }
 }
 
 function calculateRemainingTime() {
@@ -951,6 +986,9 @@ function updateDisplay() {
         status.innerText = "LEAVE THE LOT NOW";
         document.body.classList.add("flash-red");
         document.getElementById("alertBox").innerText = "⚠️ EXIT NOW ⚠️";
+        if (remainingSeconds === 5 * 60) {
+            playBeepPattern();
+        }
     } else {
         clearInterval(timerInterval);
         status.innerText = "VIOLATION RISK";
@@ -1104,6 +1142,12 @@ async function checkAirportSelection() {
 async function selectAirport(iataCode, airportName) {
     localStorage.setItem('lotguard_airport', iataCode);
     hideAirportModal();
+
+    // Update subtitle immediately after airport selection
+    const subtitle = document.getElementById('timerSubtitle');
+    if (subtitle) {
+        subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
+    }
 
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
