@@ -579,8 +579,6 @@ let authReady = false;
 })();
 
 // ── Airport Subtitle ─────────────────────────────────────────────────────
-// Sets the timer subtitle to show the driver's active airport
-// Falls back to default text if no airport is set
 (function setTimerSubtitle() {
     const airport = localStorage.getItem('lotguard_airport');
     const subtitle = document.getElementById('timerSubtitle');
@@ -912,24 +910,30 @@ function unlockSound() {
 
 function playBeep() {
     if (!soundUnlocked || !audioContext) return;
+    // Resume context in case it was suspended
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
 
-    let oscillator = audioContext.createOscillator();
-    let gain = audioContext.createGain();
+    var oscillator = audioContext.createOscillator();
+    var gain = audioContext.createGain();
 
     oscillator.connect(gain);
     gain.connect(audioContext.destination);
 
     oscillator.frequency.value = 800;
-    oscillator.start();
-
     gain.gain.setValueAtTime(0.5, audioContext.currentTime);
+    oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.3);
 }
 
 function playBeepPattern() {
     // 4 urgent beeps at 5-minute warning
-    // Each beep: 0.3s on, 0.4s gap = 0.7s per beep, total ~2.8s
     if (!soundUnlocked || !audioContext) return;
+    // Resume context in case it was suspended
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
 
     var beepCount = 4;
     var beepDuration = 0.3;
@@ -951,24 +955,24 @@ function playBeepPattern() {
 }
 
 function calculateRemainingTime() {
-    let savedStartTime = localStorage.getItem("lotguardStartTime");
+    var savedStartTime = localStorage.getItem("lotguardStartTime");
 
     if (savedStartTime) {
-        let elapsedSeconds = Math.floor((Date.now() - Number(savedStartTime)) / 1000);
+        var elapsedSeconds = Math.floor((Date.now() - Number(savedStartTime)) / 1000);
         remainingSeconds = totalSeconds - elapsedSeconds;
         if (remainingSeconds < 0) remainingSeconds = 0;
     }
 }
 
 function updateDisplay() {
-    let mins = Math.floor(remainingSeconds / 60);
-    let secs = remainingSeconds % 60;
+    var mins = Math.floor(remainingSeconds / 60);
+    var secs = remainingSeconds % 60;
 
     document.getElementById("timer").innerText =
         String(mins).padStart(2, "0") + ":" +
         String(secs).padStart(2, "0");
 
-    let status = document.getElementById("status");
+    var status = document.getElementById("status");
 
     if (remainingSeconds > 15 * 60) {
         status.innerText = "SAFE ZONE";
@@ -1009,16 +1013,16 @@ function runCountdown() {
 
 function startTimer() {
     unlockSound();
-    let existingStartTime = localStorage.getItem("lotguardStartTime");
+    var existingStartTime = localStorage.getItem("lotguardStartTime");
 
     if (existingStartTime && remainingSeconds > 0) {
-        let confirmRestart = confirm(
+        var confirmRestart = confirm(
             "A timer is already running. Start a new 60-minute timer?"
         );
         if (!confirmRestart) return;
     }
 
-    let now = new Date();
+    var now = new Date();
     localStorage.setItem("lotguardStartTime", now.getTime());
 
     document.getElementById("enteredAt").innerText =
@@ -1027,7 +1031,7 @@ function startTimer() {
             minute: '2-digit'
         });
 
-    let exitTime = new Date(now.getTime() + 60 * 60 * 1000);
+    var exitTime = new Date(now.getTime() + 60 * 60 * 1000);
 
     document.getElementById("exitBy").innerText =
         "Exit By: " + exitTime.toLocaleTimeString([], {
@@ -1043,6 +1047,9 @@ function startTimer() {
 function resetTimer() {
     clearInterval(timerInterval);
     remainingSeconds = totalSeconds;
+
+    // Fix: remove flash-red class so background stops flashing immediately
+    document.body.classList.remove("flash-red");
 
     document.getElementById("timer").innerText = "60:00";
     document.getElementById("status").innerText = "Ready to start";
@@ -1062,11 +1069,11 @@ setInterval(function () {
         });
 }, 1000);
 
-let savedStartTime = localStorage.getItem("lotguardStartTime");
+var savedStartTime = localStorage.getItem("lotguardStartTime");
 
 if (savedStartTime) {
-    let startTime = new Date(Number(savedStartTime));
-    let exitTime = new Date(Number(savedStartTime) + 60 * 60 * 1000);
+    var startTime = new Date(Number(savedStartTime));
+    var exitTime = new Date(Number(savedStartTime) + 60 * 60 * 1000);
 
     document.getElementById("enteredAt").innerText =
         "Entered Lot: " + startTime.toLocaleTimeString([], {
