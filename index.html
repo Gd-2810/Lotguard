@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <title>LotGuard</title>
 <meta charset="utf-8">
-<!-- LotGuard PWA v2.0 -->
+<!-- LotGuard PWA v3.0 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#34c759">
@@ -118,6 +118,69 @@ button {
     display: block;
 }
 
+/* ── Airport Header ───────────────────────────────────────────────────── */
+.airport-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 12px 0;
+    margin-bottom: 0;
+}
+
+.airport-header-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.airport-switch-link {
+    font-size: 13px;
+    color: #34c759;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    width: auto;
+    font-family: Arial, sans-serif;
+}
+
+.airport-switch-link:hover {
+    text-decoration: underline;
+}
+
+/* ── Airport Browse Tabs ──────────────────────────────────────────────── */
+.airport-tab-bar {
+    display: flex;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 16px;
+    gap: 0;
+}
+
+.airport-tab-btn {
+    flex: 1;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 4px;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: #999;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    width: auto;
+}
+
+.airport-tab-btn.active {
+    color: #34c759;
+    border-bottom: 3px solid #34c759;
+    background: transparent;
+}
+
 /* ── Driver Feed ──────────────────────────────────────────────────────── */
 #feedList {
     text-align: left;
@@ -177,6 +240,12 @@ button {
     color: #333;
 }
 
+.trust-dot {
+    color: #34c759;
+    font-size: 10px;
+    margin-left: 2px;
+}
+
 .post-time {
     font-size: 12px;
     color: #aaa;
@@ -218,91 +287,18 @@ button {
     text-decoration: none;
 }
 
-/* ── Report Modal ─────────────────────────────────────────────────────── */
-#reportModal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 2000;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-#reportModal.open {
-    display: flex;
-}
-
-#reportModalCard {
-    background: white;
-    border-radius: 20px;
-    padding: 24px;
-    max-width: 360px;
-    width: 100%;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    text-align: left;
-}
-
-#reportModalCard h3 {
-    font-size: 17px;
-    color: #1a1a1a;
-    margin-bottom: 4px;
-}
-
-#reportModalCard p {
-    font-size: 13px;
-    color: #888;
-    margin-bottom: 16px;
-}
-
-.report-option {
-    display: block;
-    width: 100%;
-    text-align: left;
-    font-size: 15px;
-    font-family: Arial, sans-serif;
-    padding: 12px 16px;
-    margin: 0 0 8px 0;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    background: white;
-    color: #333;
-    cursor: pointer;
-    font-weight: normal;
-}
-
-.report-option:hover {
-    background: #fff3f3;
-    border-color: #ff3b30;
-    color: #ff3b30;
-}
-
-.report-cancel {
-    display: block;
-    width: 100%;
-    text-align: center;
-    font-size: 15px;
-    font-family: Arial, sans-serif;
-    padding: 12px;
-    margin: 8px 0 0 0;
-    border: none;
-    border-radius: 10px;
-    background: #f5f5f5;
-    color: #888;
-    cursor: pointer;
-    font-weight: normal;
-}
-
-/* ── Post Composer ────────────────────────────────────────────────────── */
+/* ── Composer ─────────────────────────────────────────────────────────── */
 .composer {
     border-top: 1px solid #e0e0e0;
     padding-top: 16px;
     text-align: left;
+}
+
+.composer-disabled-msg {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    padding: 12px 0 8px 0;
 }
 
 .composer textarea {
@@ -355,29 +351,10 @@ button {
     width: auto;
 }
 
-.type-pill.selected-wait_time {
-    background: #007aff;
-    border-color: #007aff;
-    color: white;
-}
-
-.type-pill.selected-alert {
-    background: #ff3b30;
-    border-color: #ff3b30;
-    color: white;
-}
-
-.type-pill.selected-tip {
-    background: #34c759;
-    border-color: #34c759;
-    color: white;
-}
-
-.type-pill.selected-general {
-    background: #8e8e93;
-    border-color: #8e8e93;
-    color: white;
-}
+.type-pill.selected-wait_time { background: #007aff; border-color: #007aff; color: white; }
+.type-pill.selected-alert     { background: #ff3b30; border-color: #ff3b30; color: white; }
+.type-pill.selected-tip       { background: #34c759; border-color: #34c759; color: white; }
+.type-pill.selected-general   { background: #8e8e93; border-color: #8e8e93; color: white; }
 
 .submit-btn {
     width: 100%;
@@ -409,14 +386,174 @@ button {
     color: #34c759;
 }
 
-/* ── Airport Selection Modal ──────────────────────────────────────────── */
+/* ── Report Modal ─────────────────────────────────────────────────────── */
+#reportModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#reportModal.open { display: flex; }
+
+#reportModalCard {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    text-align: left;
+}
+
+#reportModalCard h3 { font-size: 17px; color: #1a1a1a; margin-bottom: 4px; }
+#reportModalCard p  { font-size: 13px; color: #888; margin-bottom: 16px; }
+
+.report-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    padding: 12px 16px;
+    margin: 0 0 8px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.report-option:hover { background: #fff3f3; border-color: #ff3b30; color: #ff3b30; }
+
+.report-cancel {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    padding: 12px;
+    margin: 8px 0 0 0;
+    border: none;
+    border-radius: 10px;
+    background: #f5f5f5;
+    color: #888;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+/* ── Airport Switch Modal ─────────────────────────────────────────────── */
+#switchModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#switchModal.open { display: flex; }
+
+#switchModalCard {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    text-align: left;
+}
+
+#switchModalCard h3 { font-size: 17px; color: #1a1a1a; margin-bottom: 4px; }
+#switchModalCard p  { font-size: 13px; color: #888; margin-bottom: 16px; }
+
+.switch-airport-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    padding: 12px 16px;
+    margin: 0 0 8px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.switch-airport-btn.is-active {
+    border-color: #34c759;
+    background: #f0fff4;
+    color: #1a1a1a;
+    font-weight: bold;
+    cursor: default;
+}
+
+.switch-airport-btn.is-locked {
+    color: #bbb;
+    cursor: not-allowed;
+    background: #fafafa;
+}
+
+.switch-airport-tag {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 20px;
+    color: white;
+    background: #34c759;
+}
+
+.switch-airport-tag.locked {
+    background: #ddd;
+    color: #999;
+}
+
+#switchCooldownMsg {
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+    margin-bottom: 12px;
+    min-height: 18px;
+}
+
+.switch-cancel {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    padding: 12px;
+    margin: 8px 0 0 0;
+    border: none;
+    border-radius: 10px;
+    background: #f5f5f5;
+    color: #888;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+/* ── Airport Selection Modal (first time) ─────────────────────────────── */
 #airportOverlay {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.6);
     z-index: 1000;
     justify-content: center;
@@ -425,9 +562,7 @@ button {
     box-sizing: border-box;
 }
 
-#airportOverlay.visible {
-    display: flex;
-}
+#airportOverlay.visible { display: flex; }
 
 #airportModal {
     background: white;
@@ -439,17 +574,8 @@ button {
     text-align: center;
 }
 
-#airportModal h2 {
-    font-size: 26px;
-    margin-bottom: 8px;
-    color: #1a1a1a;
-}
-
-#airportModal p {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 24px;
-}
+#airportModal h2 { font-size: 26px; margin-bottom: 8px; color: #1a1a1a; }
+#airportModal p  { font-size: 16px; color: #555; margin-bottom: 24px; }
 
 .airport-btn {
     display: block;
@@ -466,9 +592,7 @@ button {
     text-align: left;
 }
 
-.airport-btn:active {
-    background: #28a745;
-}
+.airport-btn:active { background: #28a745; }
 </style>
 
 </head>
@@ -489,20 +613,37 @@ button {
         </div>
     </div>
 
+    <!-- Airport Switch Modal -->
+    <div id="switchModal">
+        <div id="switchModalCard">
+            <h3>Change Active Airport</h3>
+            <p>You can post in your active airport. Switching is limited to once every 60 minutes.</p>
+            <div id="switchCooldownMsg"></div>
+            <div id="switchAirportList"></div>
+            <button class="switch-cancel" onclick="closeSwitchModal()">Cancel</button>
+        </div>
+    </div>
+
     <div class="app">
 
-        <!-- Airport Selection Modal -->
+        <!-- First-Time Airport Selection Modal -->
         <div id="airportOverlay">
           <div id="airportModal">
             <h2>Welcome to LotGuard</h2>
-            <p>Select your airport to get started.</p>
+            <p>Select your home airport to get started.</p>
             <button class="airport-btn" onclick="selectAirport('SFO', 'San Francisco International Airport')">
               ✈️ SFO — San Francisco International
+            </button>
+            <button class="airport-btn" onclick="selectAirport('SJC', 'San Jose International Airport')">
+              ✈️ SJC — San Jose International
+            </button>
+            <button class="airport-btn" onclick="selectAirport('OAK', 'Oakland International Airport')">
+              ✈️ OAK — Oakland International
             </button>
           </div>
         </div>
 
-        <!-- Tab Bar -->
+        <!-- Main Tab Bar -->
         <div class="tab-bar">
             <button class="tab-btn active" id="btn-timer" onclick="showTab('timer', this)">⏱ Timer</button>
             <button class="tab-btn" id="btn-feed" onclick="showTab('feed', this)">📡 Driver Feed</button>
@@ -527,13 +668,27 @@ button {
         <!-- Feed Tab -->
         <div id="tab-feed" class="tab-panel">
 
+            <!-- Active Airport Header -->
+            <div class="airport-header">
+                <span class="airport-header-label" id="activeAirportLabel">✈️ Active: --</span>
+                <button class="airport-switch-link" onclick="openSwitchModal()">Change airport ›</button>
+            </div>
+
+            <!-- Airport Browse Tabs -->
+            <div class="airport-tab-bar">
+                <button class="airport-tab-btn active" id="atab-SFO" onclick="switchBrowseTab('SFO', this)">SFO</button>
+                <button class="airport-tab-btn" id="atab-SJC" onclick="switchBrowseTab('SJC', this)">SJC</button>
+                <button class="airport-tab-btn" id="atab-OAK" onclick="switchBrowseTab('OAK', this)">OAK</button>
+            </div>
+
             <!-- Feed Posts -->
             <div id="feedList">
-                <div class="feed-state">Loading SFO feed...</div>
+                <div class="feed-state">Loading feed...</div>
             </div>
 
             <!-- Post Composer -->
             <div class="composer">
+                <div id="composerDisabledMsg" class="composer-disabled-msg" style="display:none;"></div>
                 <textarea
                     id="postBody"
                     placeholder="Share an update with SFO drivers..."
@@ -578,7 +733,7 @@ let authReady = false;
   }
 })();
 
-// ── Airport Subtitle ─────────────────────────────────────────────────────
+// ── Airport Subtitle (Timer Tab) ─────────────────────────────────────────
 (function setTimerSubtitle() {
     const airport = localStorage.getItem('lotguard_airport');
     const subtitle = document.getElementById('timerSubtitle');
@@ -586,6 +741,45 @@ let authReady = false;
         subtitle.innerText = '✈️ ' + airport + ' — TNC Waiting Lot';
     }
 })();
+
+// ── Airport State ────────────────────────────────────────────────────────
+// activeAirport: where the driver can POST
+// browsingAirport: which feed tab they are currently viewing
+let activeAirport = localStorage.getItem('lotguard_airport') || 'SFO';
+let browsingAirport = activeAirport;
+const AIRPORTS = ['SFO', 'SJC', 'OAK'];
+
+function updateAirportHeader() {
+    const label = document.getElementById('activeAirportLabel');
+    if (label) label.innerText = '✈️ Active: ' + activeAirport;
+}
+
+function updateComposerState() {
+    const textarea = document.getElementById('postBody');
+    const submitBtn = document.getElementById('submitBtn');
+    const disabledMsg = document.getElementById('composerDisabledMsg');
+    const charCounter = document.getElementById('charCounter');
+    const typeSelector = document.querySelector('.type-selector');
+    const placeholder = document.getElementById('postBody');
+
+    if (browsingAirport === activeAirport) {
+        // Composer active
+        disabledMsg.style.display = 'none';
+        textarea.style.display = 'block';
+        charCounter.style.display = 'block';
+        typeSelector.style.display = 'flex';
+        submitBtn.disabled = false;
+        placeholder.placeholder = 'Share an update with ' + activeAirport + ' drivers...';
+    } else {
+        // Composer disabled — viewing non-active airport
+        disabledMsg.style.display = 'block';
+        disabledMsg.innerText = 'You are viewing ' + browsingAirport + '. Switch your active airport to post here.';
+        textarea.style.display = 'none';
+        charCounter.style.display = 'none';
+        typeSelector.style.display = 'none';
+        submitBtn.disabled = true;
+    }
+}
 
 // ── Tab Navigation ───────────────────────────────────────────────────────
 let realtimeChannel = null;
@@ -602,6 +796,8 @@ function showTab(tabName, btnEl) {
     btnEl.classList.add('active');
 
     if (tabName === 'feed') {
+        updateAirportHeader();
+        updateComposerState();
         waitForAuthThenLoadFeed();
     } else {
         if (realtimeChannel) {
@@ -612,6 +808,146 @@ function showTab(tabName, btnEl) {
             clearInterval(pollInterval);
             pollInterval = null;
         }
+    }
+}
+
+// ── Airport Browse Tabs ──────────────────────────────────────────────────
+function switchBrowseTab(iataCode, btnEl) {
+    browsingAirport = iataCode;
+
+    // Update tab UI
+    document.querySelectorAll('.airport-tab-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    btnEl.classList.add('active');
+
+    // Update composer state
+    updateComposerState();
+
+    // Unsubscribe from old channel
+    if (realtimeChannel) {
+        supabaseClient.removeChannel(realtimeChannel);
+        realtimeChannel = null;
+    }
+
+    // Load feed for new airport
+    loadFeed(iataCode);
+    subscribeToFeed(iataCode);
+}
+
+// ── Airport Switch Modal ─────────────────────────────────────────────────
+async function openSwitchModal() {
+    const modal = document.getElementById('switchModal');
+    const list = document.getElementById('switchAirportList');
+    const cooldownMsg = document.getElementById('switchCooldownMsg');
+
+    // Check cooldown from Supabase
+    let canSwitch = true;
+    let switchAvailableAt = null;
+
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) {
+            const { data: profile } = await supabaseClient
+                .from('driver_profiles')
+                .select('airport_switched_at')
+                .eq('id', session.user.id)
+                .single();
+
+            if (profile && profile.airport_switched_at) {
+                const switchedAt = new Date(profile.airport_switched_at);
+                const cooldownEnd = new Date(switchedAt.getTime() + 60 * 60 * 1000);
+                if (new Date() < cooldownEnd) {
+                    canSwitch = false;
+                    switchAvailableAt = cooldownEnd;
+                }
+            }
+        }
+    } catch (err) {
+        console.warn('LotGuard: Could not check cooldown.', err);
+    }
+
+    // Build airport list
+    list.innerHTML = AIRPORTS.map(function(code) {
+        const isActive = code === activeAirport;
+        const isLocked = !canSwitch && !isActive;
+        const btnClass = isActive ? 'switch-airport-btn is-active' :
+                         isLocked ? 'switch-airport-btn is-locked' :
+                         'switch-airport-btn';
+        const tagText = isActive ? 'Active' : isLocked ? 'Locked' : 'Switch';
+        const tagClass = isActive ? 'switch-airport-tag' :
+                         isLocked ? 'switch-airport-tag locked' :
+                         'switch-airport-tag';
+        const onclick = isActive || isLocked ? '' :
+                        'onclick="switchActiveAirport(\'' + code + '\')"';
+
+        return '<button class="' + btnClass + '" ' + onclick + '>' +
+               '✈️ ' + code +
+               '<span class="' + tagClass + '">' + tagText + '</span>' +
+               '</button>';
+    }).join('');
+
+    // Show cooldown message
+    if (!canSwitch && switchAvailableAt) {
+        const timeStr = switchAvailableAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        cooldownMsg.innerText = 'You can switch again at ' + timeStr;
+    } else {
+        cooldownMsg.innerText = '';
+    }
+
+    modal.classList.add('open');
+}
+
+function closeSwitchModal() {
+    document.getElementById('switchModal').classList.remove('open');
+}
+
+async function switchActiveAirport(iataCode) {
+    closeSwitchModal();
+
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return;
+
+        // Get airport UUID
+        const { data: airports } = await supabaseClient
+            .from('airports')
+            .select('id, iata_code');
+
+        const airport = airports ? airports.find(function(a) { return a.iata_code === iataCode; }) : null;
+        if (!airport) return;
+
+        // Update active airport in Supabase (RLS enforces cooldown)
+        const { error } = await supabaseClient
+            .from('driver_profiles')
+            .update({
+                active_airport_id: airport.id,
+                airport_switched_at: new Date().toISOString()
+            })
+            .eq('id', session.user.id);
+
+        if (error) {
+            console.warn('LotGuard: Airport switch failed:', error);
+            return;
+        }
+
+        // Update local state
+        activeAirport = iataCode;
+        localStorage.setItem('lotguard_airport', iataCode);
+
+        // Update timer subtitle
+        const subtitle = document.getElementById('timerSubtitle');
+        if (subtitle) subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
+
+        // Update header and composer
+        updateAirportHeader();
+
+        // Switch browse tab to new active airport
+        const newTab = document.getElementById('atab-' + iataCode);
+        if (newTab) switchBrowseTab(iataCode, newTab);
+
+    } catch (err) {
+        console.warn('LotGuard: Airport switch error:', err);
     }
 }
 
@@ -630,7 +966,6 @@ function timeAgo(dateString) {
     const now = new Date();
     const then = new Date(dateString);
     const seconds = Math.floor((now - then) / 1000);
-
     if (seconds < 60)    return 'just now';
     if (seconds < 3600)  return Math.floor(seconds / 60) + ' min ago';
     if (seconds < 86400) return Math.floor(seconds / 3600) + ' hr ago';
@@ -645,12 +980,13 @@ function renderPost(post, isNew) {
     const alreadyReported = reportedPosts.has(post.id);
     const reportBtnAttr = alreadyReported ? 'disabled' : '';
     const reportBtnText = alreadyReported ? 'Reported' : 'Report';
+    const trustDot = post.trust_indicator ? '<span class="trust-dot">●</span>' : '';
 
     return `
         <div class="post-card${newClass}" id="post-${post.id}">
             <div class="post-header">
                 <span class="post-badge ${badgeClass}">${badgeLabel}</span>
-                <span class="post-author">Driver</span>
+                <span class="post-author">Driver${trustDot}</span>
                 <span class="post-time">${time}</span>
             </div>
             <div class="post-body">${post.body}</div>
@@ -676,7 +1012,6 @@ function closeReportModal() {
 async function submitReport(reason) {
     const postId = currentReportPostId;
     closeReportModal();
-
     if (!postId) return;
 
     try {
@@ -685,24 +1020,13 @@ async function submitReport(reason) {
 
         const { error } = await supabaseClient
             .from('post_reports')
-            .insert({
-                post_id: postId,
-                reporter_id: session.user.id,
-                reason: reason
-            });
+            .insert({ post_id: postId, reporter_id: session.user.id, reason: reason });
 
-        if (error) {
-            console.warn('LotGuard: Report error:', error);
-            return;
-        }
+        if (error) { console.warn('LotGuard: Report error:', error); return; }
 
         reportedPosts.add(postId);
-
         const btn = document.getElementById('report-btn-' + postId);
-        if (btn) {
-            btn.innerText = 'Reported';
-            btn.disabled = true;
-        }
+        if (btn) { btn.innerText = 'Reported'; btn.disabled = true; }
 
     } catch (err) {
         console.warn('LotGuard: Report submit error:', err);
@@ -711,26 +1035,26 @@ async function submitReport(reason) {
 
 async function waitForAuthThenLoadFeed() {
     const feedList = document.getElementById('feedList');
-    feedList.innerHTML = '<div class="feed-state">Loading SFO feed...</div>';
+    feedList.innerHTML = '<div class="feed-state">Loading ' + browsingAirport + ' feed...</div>';
 
     let waited = 0;
     while (!authReady && waited < 10) {
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(function(resolve) { setTimeout(resolve, 500); });
         waited++;
     }
 
-    await loadFeed();
-    subscribeToFeed();
+    await loadFeed(browsingAirport);
+    subscribeToFeed(browsingAirport);
 }
 
-async function loadFeed() {
+async function loadFeed(iataCode) {
     const feedList = document.getElementById('feedList');
 
     try {
         const { data: posts, error } = await supabaseClient
             .from('feed_posts')
             .select('id, body, post_type, created_at, airport_iata_code, author_id')
-            .eq('airport_iata_code', 'SFO')
+            .eq('airport_iata_code', iataCode)
             .eq('is_moderated', false)
             .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
             .order('created_at', { ascending: false })
@@ -757,7 +1081,7 @@ async function loadFeed() {
     }
 }
 
-function subscribeToFeed() {
+function subscribeToFeed(iataCode) {
     if (realtimeChannel) {
         supabaseClient.removeChannel(realtimeChannel);
         realtimeChannel = null;
@@ -768,31 +1092,23 @@ function subscribeToFeed() {
     }
 
     realtimeChannel = supabaseClient
-        .channel('airport:SFO')
+        .channel('airport:' + iataCode)
         .on('broadcast', { event: 'new_post' }, function(payload) {
             handleNewRealtimePost(payload.payload);
         })
         .subscribe();
 
     pollInterval = setInterval(function() {
-        loadFeed();
+        loadFeed(browsingAirport);
     }, 30000);
 }
 
 function handleNewRealtimePost(post) {
     const feedList = document.getElementById('feedList');
-
     const emptyState = feedList.querySelector('.feed-state');
-    if (emptyState) {
-        feedList.innerHTML = '';
-    }
-
-    if (document.getElementById('post-' + post.id)) {
-        return;
-    }
-
-    const newPostHTML = renderPost(post, true);
-    feedList.insertAdjacentHTML('afterbegin', newPostHTML);
+    if (emptyState) feedList.innerHTML = '';
+    if (document.getElementById('post-' + post.id)) return;
+    feedList.insertAdjacentHTML('afterbegin', renderPost(post, true));
 }
 
 // ── Post Composer ────────────────────────────────────────────────────────
@@ -819,24 +1135,15 @@ function setComposerMessage(msg, isSuccess) {
     const el = document.getElementById('composerMessage');
     el.innerText = msg;
     el.className = isSuccess ? 'composer-message success' : 'composer-message';
-    if (msg) {
-        setTimeout(function() { el.innerText = ''; }, 3000);
-    }
+    if (msg) setTimeout(function() { el.innerText = ''; }, 3000);
 }
 
 async function submitPost() {
     const body = document.getElementById('postBody').value.trim();
     const submitBtn = document.getElementById('submitBtn');
 
-    if (body.length < 3) {
-        setComposerMessage('Please write a message before posting.', false);
-        return;
-    }
-
-    if (body.length > 280) {
-        setComposerMessage('Message is too long. Max 280 characters.', false);
-        return;
-    }
+    if (body.length < 3) { setComposerMessage('Please write a message before posting.', false); return; }
+    if (body.length > 280) { setComposerMessage('Message is too long. Max 280 characters.', false); return; }
 
     const now = Date.now();
     if (now - lastPostTime < 30000) {
@@ -846,20 +1153,23 @@ async function submitPost() {
     }
 
     const { data: { session } } = await supabaseClient.auth.getSession();
-    if (!session) {
-        setComposerMessage('Not signed in. Please refresh and try again.', false);
+    if (!session) { setComposerMessage('Not signed in. Please refresh and try again.', false); return; }
+
+    // Check if banned
+    const { data: profile } = await supabaseClient
+        .from('driver_profiles')
+        .select('is_banned')
+        .eq('id', session.user.id)
+        .single();
+
+    if (profile && profile.is_banned) {
+        setComposerMessage('You can no longer post in LotGuard.', false);
         return;
     }
 
-    const { data: airports } = await supabaseClient
-        .from('airports')
-        .select('id, iata_code');
-
-    const airport = airports ? airports.find(a => a.iata_code === 'SFO') : null;
-    if (!airport) {
-        setComposerMessage('Could not find airport. Please try again.', false);
-        return;
-    }
+    const { data: airports } = await supabaseClient.from('airports').select('id, iata_code');
+    const airport = airports ? airports.find(function(a) { return a.iata_code === activeAirport; }) : null;
+    if (!airport) { setComposerMessage('Could not find airport. Please try again.', false); return; }
 
     submitBtn.disabled = true;
     submitBtn.innerText = 'Posting...';
@@ -884,8 +1194,7 @@ async function submitPost() {
         document.getElementById('postBody').value = '';
         updateCharCounter();
         setComposerMessage('Posted successfully!', true);
-
-        await loadFeed();
+        await loadFeed(activeAirport);
 
     } catch (err) {
         console.warn('LotGuard: Submit error:', err);
@@ -910,50 +1219,20 @@ function unlockSound() {
 
 async function playBeep() {
     if (!soundUnlocked || !audioContext) return;
-    if (audioContext.state === 'suspended') {
-        await audioContext.resume();
-    }
+    if (audioContext.state === 'suspended') await audioContext.resume();
 
     var oscillator = audioContext.createOscillator();
     var gain = audioContext.createGain();
-
     oscillator.connect(gain);
     gain.connect(audioContext.destination);
-
     oscillator.frequency.value = 800;
     gain.gain.setValueAtTime(0.5, audioContext.currentTime);
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.3);
 }
 
-async function playBeepPattern() {
-    if (!soundUnlocked || !audioContext) return;
-    if (audioContext.state === 'suspended') {
-        await audioContext.resume();
-    }
-
-    var beepCount = 4;
-    var beepDuration = 0.3;
-    var beepGap = 0.4;
-
-    for (var i = 0; i < beepCount; i++) {
-        var oscillator = audioContext.createOscillator();
-        var gain = audioContext.createGain();
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillator.frequency.value = 900;
-        var startTime = audioContext.currentTime + (i * (beepDuration + beepGap));
-        gain.gain.setValueAtTime(0.6, startTime);
-        oscillator.start(startTime);
-        oscillator.stop(startTime + beepDuration);
-    }
-}
-
 function calculateRemainingTime() {
     var savedStartTime = localStorage.getItem("lotguardStartTime");
-
     if (savedStartTime) {
         var elapsedSeconds = Math.floor((Date.now() - Number(savedStartTime)) / 1000);
         remainingSeconds = totalSeconds - elapsedSeconds;
@@ -966,8 +1245,7 @@ function updateDisplay() {
     var secs = remainingSeconds % 60;
 
     document.getElementById("timer").innerText =
-        String(mins).padStart(2, "0") + ":" +
-        String(secs).padStart(2, "0");
+        String(mins).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
 
     var status = document.getElementById("status");
 
@@ -980,9 +1258,7 @@ function updateDisplay() {
         document.body.classList.remove("flash-red");
         document.body.style.backgroundColor = "#fff3b0";
         document.getElementById("alertBox").innerText = "15 MINUTES REMAINING";
-        if (remainingSeconds === 15 * 60) {
-            playBeep();
-        }
+        if (remainingSeconds === 15 * 60) playBeep();
     } else if (remainingSeconds > 0) {
         status.innerText = "LEAVE THE LOT NOW";
         document.body.classList.add("flash-red");
@@ -999,7 +1275,6 @@ function updateDisplay() {
 
 function runCountdown() {
     clearInterval(timerInterval);
-
     timerInterval = setInterval(function () {
         calculateRemainingTime();
         updateDisplay();
@@ -1011,9 +1286,7 @@ function startTimer() {
     var existingStartTime = localStorage.getItem("lotguardStartTime");
 
     if (existingStartTime && remainingSeconds > 0) {
-        var confirmRestart = confirm(
-            "A timer is already running. Start a new 60-minute timer?"
-        );
+        var confirmRestart = confirm("A timer is already running. Start a new 60-minute timer?");
         if (!confirmRestart) return;
     }
 
@@ -1021,18 +1294,11 @@ function startTimer() {
     localStorage.setItem("lotguardStartTime", now.getTime());
 
     document.getElementById("enteredAt").innerText =
-        "Entered Lot: " + now.toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit'
-        });
+        "Entered Lot: " + now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
     var exitTime = new Date(now.getTime() + 60 * 60 * 1000);
-
     document.getElementById("exitBy").innerText =
-        "Exit By: " + exitTime.toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit'
-        });
+        "Exit By: " + exitTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
     calculateRemainingTime();
     updateDisplay();
@@ -1042,59 +1308,39 @@ function startTimer() {
 function resetTimer() {
     clearInterval(timerInterval);
     remainingSeconds = totalSeconds;
-
-    // Fix: remove flash-red class so background stops flashing immediately
     document.body.classList.remove("flash-red");
-
     document.getElementById("timer").innerText = "60:00";
     document.getElementById("status").innerText = "Ready to start";
     document.getElementById("enteredAt").innerText = "Entered Lot: --";
     document.getElementById("exitBy").innerText = "Exit By: --";
     document.getElementById("alertBox").innerText = "";
     document.body.style.backgroundColor = "white";
-
     localStorage.removeItem("lotguardStartTime");
 }
 
 setInterval(function () {
     document.getElementById("currentTime").innerText =
-        "Current Time: " + new Date().toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit'
-        });
+        "Current Time: " + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 }, 1000);
 
 var savedStartTime = localStorage.getItem("lotguardStartTime");
-
 if (savedStartTime) {
     var startTime = new Date(Number(savedStartTime));
     var exitTime = new Date(Number(savedStartTime) + 60 * 60 * 1000);
-
     document.getElementById("enteredAt").innerText =
-        "Entered Lot: " + startTime.toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit'
-        });
-
+        "Entered Lot: " + startTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     document.getElementById("exitBy").innerText =
-        "Exit By: " + exitTime.toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit'
-        });
-
+        "Exit By: " + exitTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     calculateRemainingTime();
     updateDisplay();
     runCountdown();
 }
 
 document.addEventListener("visibilitychange", function () {
-    if (!document.hidden) {
-        calculateRemainingTime();
-        updateDisplay();
-    }
+    if (!document.hidden) { calculateRemainingTime(); updateDisplay(); }
 });
 
-// ── Airport Selection Modal ──────────────────────────────────────────────
+// ── Airport Selection Modal (first time) ─────────────────────────────────
 function showAirportModal() {
     document.getElementById('airportOverlay').classList.add('visible');
 }
@@ -1106,24 +1352,24 @@ function hideAirportModal() {
 async function checkAirportSelection() {
     try {
         const localAirport = localStorage.getItem('lotguard_airport');
-        if (localAirport) return;
+        if (localAirport) {
+            activeAirport = localAirport;
+            browsingAirport = localAirport;
+            return;
+        }
 
         let session = null;
         let attempts = 0;
-
         while (!session && attempts < 10) {
             const { data } = await supabaseClient.auth.getSession();
             session = data.session;
             if (!session) {
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await new Promise(function(resolve) { setTimeout(resolve, 500); });
                 attempts++;
             }
         }
 
-        if (!session) {
-            showAirportModal();
-            return;
-        }
+        if (!session) { showAirportModal(); return; }
 
         const { data: profile, error } = await supabaseClient
             .from('driver_profiles')
@@ -1143,44 +1389,35 @@ async function checkAirportSelection() {
 
 async function selectAirport(iataCode, airportName) {
     localStorage.setItem('lotguard_airport', iataCode);
+    activeAirport = iataCode;
+    browsingAirport = iataCode;
     hideAirportModal();
 
-    // Update subtitle immediately after airport selection
     const subtitle = document.getElementById('timerSubtitle');
-    if (subtitle) {
-        subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
+    if (subtitle) subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
+
+    // Switch browse tab to selected airport
+    const tab = document.getElementById('atab-' + iataCode);
+    if (tab) {
+        document.querySelectorAll('.airport-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+        tab.classList.add('active');
     }
 
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) return;
 
-        const { data: airports, error: airportError } = await supabaseClient
-            .from('airports')
-            .select('id, iata_code');
+        const { data: airports } = await supabaseClient.from('airports').select('id, iata_code');
+        const airport = airports ? airports.find(function(a) { return a.iata_code === iataCode; }) : null;
+        if (!airport) return;
 
-        if (airportError || !airports) {
-            console.warn('LotGuard: Could not load airports.', airportError);
-            return;
-        }
-
-        const airport = airports.find(a => a.iata_code === iataCode);
-        if (!airport) {
-            console.warn('LotGuard: Airport not found in results:', airports);
-            return;
-        }
-
-        const { error: updateError } = await supabaseClient
+        await supabaseClient
             .from('driver_profiles')
             .update({ active_airport_id: airport.id })
             .eq('id', session.user.id);
 
-        if (updateError) {
-            console.warn('LotGuard: Could not save airport to profile.', updateError);
-        }
-
     } catch (err) {
-        console.warn('LotGuard: Airport selection error.', err);
+        console.warn('LotGuard: Airport selection error:', err);
     }
 }
 
