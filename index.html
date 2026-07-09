@@ -1053,7 +1053,17 @@ async function loadFeed(iataCode) {
     try {
         const { data: posts, error } = await supabaseClient
             .from('feed_posts')
-            .select('id, body, post_type, created_at, airport_iata_code, author_id')
+            .select(`
+                id,
+                body,
+                post_type,
+                created_at,
+                airport_iata_code,
+                author_id,
+                driver_profiles!author_id (
+                    trust_score
+                )
+            `)
             .eq('airport_iata_code', iataCode)
             .eq('is_moderated', false)
             .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
@@ -1071,7 +1081,14 @@ async function loadFeed(iataCode) {
             return;
         }
 
-        feedList.innerHTML = posts.map(function(p) {
+        // Map trust_score into trust_indicator boolean
+        const postsWithTrust = posts.map(function(p) {
+            return Object.assign({}, p, {
+                trust_indicator: p.driver_profiles && p.driver_profiles.trust_score >= 80
+            });
+        });
+
+        feedList.innerHTML = postsWithTrust.map(function(p) {
             return renderPost(p, false);
         }).join('');
 
