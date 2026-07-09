@@ -2,7 +2,7 @@
 // Cache-first strategy for all app assets
 // Ensures the app loads instantly and works offline
 
-const CACHE_NAME = 'lotguard-v7';
+const CACHE_NAME = 'lotguard-v8';
 const ASSETS = [
     '/',
     '/index.html',

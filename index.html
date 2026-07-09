@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <title>LotGuard</title>
 <meta charset="utf-8">
-<!-- LotGuard PWA v3.0 -->
+<!-- LotGuard PWA v3.1 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#34c759">
@@ -124,7 +124,6 @@ button {
     align-items: center;
     justify-content: space-between;
     padding: 0 0 12px 0;
-    margin-bottom: 0;
 }
 
 .airport-header-label {
@@ -142,13 +141,8 @@ button {
     margin: 0;
     cursor: pointer;
     font-weight: bold;
-    text-decoration: none;
     width: auto;
     font-family: Arial, sans-serif;
-}
-
-.airport-switch-link:hover {
-    text-decoration: underline;
 }
 
 /* ── Airport Browse Tabs ──────────────────────────────────────────────── */
@@ -156,7 +150,6 @@ button {
     display: flex;
     border-bottom: 2px solid #e0e0e0;
     margin-bottom: 16px;
-    gap: 0;
 }
 
 .airport-tab-btn {
@@ -260,7 +253,10 @@ button {
 }
 
 .post-footer {
-    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
 }
 
 .report-link {
@@ -277,14 +273,62 @@ button {
     font-family: Arial, sans-serif;
 }
 
-.report-link:hover {
-    color: #ff3b30;
+.report-link:hover { color: #ff3b30; }
+.report-link:disabled { color: #ddd; cursor: not-allowed; text-decoration: none; }
+
+.translate-link {
+    font-size: 12px;
+    color: #007aff;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+    text-decoration: underline;
+    width: auto;
+    font-family: Arial, sans-serif;
 }
 
-.report-link:disabled {
-    color: #ddd;
-    cursor: not-allowed;
-    text-decoration: none;
+.translate-link:hover { color: #0051a8; }
+
+/* ── Language Picker ──────────────────────────────────────────────────── */
+.lang-picker {
+    display: none;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.lang-picker.open {
+    display: flex;
+}
+
+.lang-btn {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #007aff;
+    background: white;
+    color: #007aff;
+    cursor: pointer;
+    margin: 0;
+    width: auto;
+    font-family: Arial, sans-serif;
+}
+
+.lang-btn:hover {
+    background: #007aff;
+    color: white;
+}
+
+.translate-status {
+    font-size: 12px;
+    color: #aaa;
+    font-style: italic;
+    margin-bottom: 4px;
+    display: none;
 }
 
 /* ── Composer ─────────────────────────────────────────────────────────── */
@@ -315,9 +359,7 @@ button {
     outline: none;
 }
 
-.composer textarea:focus {
-    border-color: #34c759;
-}
+.composer textarea:focus { border-color: #34c759; }
 
 .char-counter {
     font-size: 12px;
@@ -327,9 +369,7 @@ button {
     margin-bottom: 10px;
 }
 
-.char-counter.over {
-    color: #ff3b30;
-}
+.char-counter.over { color: #ff3b30; }
 
 .type-selector {
     display: flex;
@@ -369,10 +409,7 @@ button {
     cursor: pointer;
 }
 
-.submit-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
+.submit-btn:disabled { background: #ccc; cursor: not-allowed; }
 
 .composer-message {
     font-size: 13px;
@@ -382,9 +419,7 @@ button {
     color: #ff3b30;
 }
 
-.composer-message.success {
-    color: #34c759;
-}
+.composer-message.success { color: #34c759; }
 
 /* ── Report Modal ─────────────────────────────────────────────────────── */
 #reportModal {
@@ -548,7 +583,7 @@ button {
     font-weight: normal;
 }
 
-/* ── Airport Selection Modal (first time) ─────────────────────────────── */
+/* ── First-Time Airport Modal ─────────────────────────────────────────── */
 #airportOverlay {
     display: none;
     position: fixed;
@@ -626,7 +661,7 @@ button {
 
     <div class="app">
 
-        <!-- First-Time Airport Selection Modal -->
+        <!-- First-Time Airport Selection -->
         <div id="airportOverlay">
           <div id="airportModal">
             <h2>Welcome to LotGuard</h2>
@@ -668,25 +703,21 @@ button {
         <!-- Feed Tab -->
         <div id="tab-feed" class="tab-panel">
 
-            <!-- Active Airport Header -->
             <div class="airport-header">
                 <span class="airport-header-label" id="activeAirportLabel">✈️ Active: --</span>
                 <button class="airport-switch-link" onclick="openSwitchModal()">Change airport ›</button>
             </div>
 
-            <!-- Airport Browse Tabs -->
             <div class="airport-tab-bar">
                 <button class="airport-tab-btn active" id="atab-SFO" onclick="switchBrowseTab('SFO', this)">SFO</button>
                 <button class="airport-tab-btn" id="atab-SJC" onclick="switchBrowseTab('SJC', this)">SJC</button>
                 <button class="airport-tab-btn" id="atab-OAK" onclick="switchBrowseTab('OAK', this)">OAK</button>
             </div>
 
-            <!-- Feed Posts -->
             <div id="feedList">
                 <div class="feed-state">Loading feed...</div>
             </div>
 
-            <!-- Post Composer -->
             <div class="composer">
                 <div id="composerDisabledMsg" class="composer-disabled-msg" style="display:none;"></div>
                 <textarea
@@ -743,8 +774,6 @@ let authReady = false;
 })();
 
 // ── Airport State ────────────────────────────────────────────────────────
-// activeAirport: where the driver can POST
-// browsingAirport: which feed tab they are currently viewing
 let activeAirport = localStorage.getItem('lotguard_airport') || 'SFO';
 let browsingAirport = activeAirport;
 const AIRPORTS = ['SFO', 'SJC', 'OAK'];
@@ -760,18 +789,15 @@ function updateComposerState() {
     const disabledMsg = document.getElementById('composerDisabledMsg');
     const charCounter = document.getElementById('charCounter');
     const typeSelector = document.querySelector('.type-selector');
-    const placeholder = document.getElementById('postBody');
 
     if (browsingAirport === activeAirport) {
-        // Composer active
         disabledMsg.style.display = 'none';
         textarea.style.display = 'block';
         charCounter.style.display = 'block';
         typeSelector.style.display = 'flex';
         submitBtn.disabled = false;
-        placeholder.placeholder = 'Share an update with ' + activeAirport + ' drivers...';
+        textarea.placeholder = 'Share an update with ' + activeAirport + ' drivers...';
     } else {
-        // Composer disabled — viewing non-active airport
         disabledMsg.style.display = 'block';
         disabledMsg.innerText = 'You are viewing ' + browsingAirport + '. Switch your active airport to post here.';
         textarea.style.display = 'none';
@@ -815,22 +841,18 @@ function showTab(tabName, btnEl) {
 function switchBrowseTab(iataCode, btnEl) {
     browsingAirport = iataCode;
 
-    // Update tab UI
     document.querySelectorAll('.airport-tab-btn').forEach(function(btn) {
         btn.classList.remove('active');
     });
     btnEl.classList.add('active');
 
-    // Update composer state
     updateComposerState();
 
-    // Unsubscribe from old channel
     if (realtimeChannel) {
         supabaseClient.removeChannel(realtimeChannel);
         realtimeChannel = null;
     }
 
-    // Load feed for new airport
     loadFeed(iataCode);
     subscribeToFeed(iataCode);
 }
@@ -841,7 +863,6 @@ async function openSwitchModal() {
     const list = document.getElementById('switchAirportList');
     const cooldownMsg = document.getElementById('switchCooldownMsg');
 
-    // Check cooldown from Supabase
     let canSwitch = true;
     let switchAvailableAt = null;
 
@@ -867,7 +888,6 @@ async function openSwitchModal() {
         console.warn('LotGuard: Could not check cooldown.', err);
     }
 
-    // Build airport list
     list.innerHTML = AIRPORTS.map(function(code) {
         const isActive = code === activeAirport;
         const isLocked = !canSwitch && !isActive;
@@ -887,7 +907,6 @@ async function openSwitchModal() {
                '</button>';
     }).join('');
 
-    // Show cooldown message
     if (!canSwitch && switchAvailableAt) {
         const timeStr = switchAvailableAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
         cooldownMsg.innerText = 'You can switch again at ' + timeStr;
@@ -909,7 +928,6 @@ async function switchActiveAirport(iataCode) {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) return;
 
-        // Get airport UUID
         const { data: airports } = await supabaseClient
             .from('airports')
             .select('id, iata_code');
@@ -917,7 +935,6 @@ async function switchActiveAirport(iataCode) {
         const airport = airports ? airports.find(function(a) { return a.iata_code === iataCode; }) : null;
         if (!airport) return;
 
-        // Update active airport in Supabase (RLS enforces cooldown)
         const { error } = await supabaseClient
             .from('driver_profiles')
             .update({
@@ -926,28 +943,128 @@ async function switchActiveAirport(iataCode) {
             })
             .eq('id', session.user.id);
 
-        if (error) {
-            console.warn('LotGuard: Airport switch failed:', error);
-            return;
-        }
+        if (error) { console.warn('LotGuard: Airport switch failed:', error); return; }
 
-        // Update local state
         activeAirport = iataCode;
         localStorage.setItem('lotguard_airport', iataCode);
 
-        // Update timer subtitle
         const subtitle = document.getElementById('timerSubtitle');
         if (subtitle) subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
 
-        // Update header and composer
         updateAirportHeader();
 
-        // Switch browse tab to new active airport
         const newTab = document.getElementById('atab-' + iataCode);
         if (newTab) switchBrowseTab(iataCode, newTab);
 
     } catch (err) {
         console.warn('LotGuard: Airport switch error:', err);
+    }
+}
+
+// ── Translation ──────────────────────────────────────────────────────────
+// Cache: { postId: { en: '...', es: '...', pa: '...' } }
+var translationCache = {};
+
+// Original post bodies: { postId: originalText }
+var originalBodies = {};
+
+var LANG_NAMES = { en: 'English', es: 'Español', pa: 'ਪੰਜਾਬੀ' };
+
+function showTranslatePicker(postId) {
+    var picker = document.getElementById('lang-picker-' + postId);
+    var translateBtn = document.getElementById('translate-btn-' + postId);
+    if (!picker) return;
+
+    if (picker.classList.contains('open')) {
+        picker.classList.remove('open');
+    } else {
+        // Close all other open pickers
+        document.querySelectorAll('.lang-picker.open').forEach(function(p) {
+            p.classList.remove('open');
+        });
+        picker.classList.add('open');
+    }
+}
+
+async function translatePost(postId, targetLang) {
+    var picker = document.getElementById('lang-picker-' + postId);
+    var bodyEl = document.getElementById('body-' + postId);
+    var statusEl = document.getElementById('translate-status-' + postId);
+    var translateBtn = document.getElementById('translate-btn-' + postId);
+
+    if (!bodyEl) return;
+
+    // Close picker
+    if (picker) picker.classList.remove('open');
+
+    // Store original if not already stored
+    if (!originalBodies[postId]) {
+        originalBodies[postId] = bodyEl.innerText;
+    }
+
+    // Check cache
+    if (translationCache[postId] && translationCache[postId][targetLang]) {
+        bodyEl.innerText = translationCache[postId][targetLang];
+        if (translateBtn) translateBtn.innerText = 'Show original';
+        if (translateBtn) translateBtn.onclick = function() { showOriginal(postId); };
+        return;
+    }
+
+    // Show loading state
+    if (statusEl) { statusEl.style.display = 'block'; statusEl.innerText = 'Translating...'; }
+    if (translateBtn) { translateBtn.style.pointerEvents = 'none'; }
+
+    try {
+        const originalText = originalBodies[postId];
+        const url = 'https://api.mymemory.translated.net/get?q=' +
+                    encodeURIComponent(originalText) +
+                    '&langpair=autodetect|' + targetLang;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data && data.responseStatus === 200 && data.responseData) {
+            const translated = data.responseData.translatedText;
+
+            // Cache the result
+            if (!translationCache[postId]) translationCache[postId] = {};
+            translationCache[postId][targetLang] = translated;
+
+            bodyEl.innerText = translated;
+            if (translateBtn) {
+                translateBtn.innerText = 'Show original';
+                translateBtn.onclick = function() { showOriginal(postId); };
+            }
+        } else {
+            if (statusEl) statusEl.innerText = 'Translation unavailable.';
+            setTimeout(function() {
+                if (statusEl) statusEl.style.display = 'none';
+            }, 2000);
+        }
+
+    } catch (err) {
+        console.warn('LotGuard: Translation error:', err);
+        if (statusEl) statusEl.innerText = 'Translation failed. Check your connection.';
+        setTimeout(function() {
+            if (statusEl) statusEl.style.display = 'none';
+        }, 2000);
+    } finally {
+        if (statusEl) setTimeout(function() { statusEl.style.display = 'none'; }, 100);
+        if (translateBtn) translateBtn.style.pointerEvents = 'auto';
+    }
+}
+
+function showOriginal(postId) {
+    var bodyEl = document.getElementById('body-' + postId);
+    var translateBtn = document.getElementById('translate-btn-' + postId);
+
+    if (bodyEl && originalBodies[postId]) {
+        bodyEl.innerText = originalBodies[postId];
+    }
+
+    if (translateBtn) {
+        translateBtn.innerText = 'Translate';
+        translateBtn.onclick = function() { showTranslatePicker(postId); };
     }
 }
 
@@ -989,8 +1106,16 @@ function renderPost(post, isNew) {
                 <span class="post-author">Driver${trustDot}</span>
                 <span class="post-time">${time}</span>
             </div>
-            <div class="post-body">${post.body}</div>
+            <div class="translate-status" id="translate-status-${post.id}"></div>
+            <div class="lang-picker" id="lang-picker-${post.id}">
+                <button class="lang-btn" onclick="translatePost('${post.id}', 'en')">English</button>
+                <button class="lang-btn" onclick="translatePost('${post.id}', 'es')">Español</button>
+                <button class="lang-btn" onclick="translatePost('${post.id}', 'pa')">ਪੰਜਾਬੀ</button>
+            </div>
+            <div class="post-body" id="body-${post.id}">${post.body}</div>
             <div class="post-footer">
+                <button class="translate-link" id="translate-btn-${post.id}"
+                    onclick="showTranslatePicker('${post.id}')">Translate</button>
                 <button class="report-link" id="report-btn-${post.id}"
                     onclick="openReportModal('${post.id}')"
                     ${reportBtnAttr}>${reportBtnText}</button>
@@ -1081,7 +1206,6 @@ async function loadFeed(iataCode) {
             return;
         }
 
-        // Map trust_score into trust_indicator boolean
         const postsWithTrust = posts.map(function(p) {
             return Object.assign({}, p, {
                 trust_indicator: p.driver_profiles && p.driver_profiles.trust_score >= 80
@@ -1172,7 +1296,6 @@ async function submitPost() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) { setComposerMessage('Not signed in. Please refresh and try again.', false); return; }
 
-    // Check if banned
     const { data: profile } = await supabaseClient
         .from('driver_profiles')
         .select('is_banned')
@@ -1413,7 +1536,6 @@ async function selectAirport(iataCode, airportName) {
     const subtitle = document.getElementById('timerSubtitle');
     if (subtitle) subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
 
-    // Switch browse tab to selected airport
     const tab = document.getElementById('atab-' + iataCode);
     if (tab) {
         document.querySelectorAll('.airport-tab-btn').forEach(function(b) { b.classList.remove('active'); });
