@@ -1563,7 +1563,14 @@ async function selectAirport(iataCode, airportName) {
 setTimeout(checkAirportSelection, 3000);
 
 if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
+    navigator.serviceWorker.register("service-worker.js").then(function(reg) {
+        // Listen for the new service worker telling us to reload
+        navigator.serviceWorker.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'SW_ACTIVATED') {
+                window.location.reload();
+            }
+        });
+    });
 }
 </script>
 </div>

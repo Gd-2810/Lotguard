@@ -1,85 +1,81 @@
-// LotGuard Service Worker v2
-// Strategy:
-//   index.html      → network-first (always get latest app code)
-//   manifest.json   → cache-first (rarely changes)
-//   icon-512.png    → cache-first (never changes)
-// This ensures drivers always get the latest version of the app
-// while still supporting offline use for the timer.
+// LotGuard Service Worker v3
+// Self-clearing on activation to fix persistent Safari cache issues
+// index.html: network-first (always fresh)
+// Static assets: cache-first
 
 const CACHE_NAME = 'lotguard-v9';
-const CACHE_FIRST_ASSETS = [
+const STATIC_ASSETS = [
     '/manifest.json',
     '/icon-512.png'
 ];
 
-// Install: cache static assets only (not index.html)
 self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open(CACHE_NAME).then(function(cache) {
-            return cache.addAll(CACHE_FIRST_ASSETS);
+            return cache.addAll(STATIC_ASSETS);
         })
     );
-    // Activate immediately — don't wait for old service worker to finish
     self.skipWaiting();
 });
 
-// Activate: clean up old caches
 self.addEventListener('activate', function(event) {
     event.waitUntil(
         caches.keys().then(function(keys) {
             return Promise.all(
-                keys.filter(function(key) {
-                    return key !== CACHE_NAME;
-                }).map(function(key) {
-                    return caches.delete(key);
+                keys.map(function(key) {
+                    // Delete ALL old caches regardless of name
+                    if (key !== CACHE_NAME) {
+                        console.log('LotGuard SW: Deleting old cache:', key);
+                        return caches.delete(key);
+                    }
                 })
             );
+        }).then(function() {
+            // Take control of all tabs immediately
+            return self.clients.claim();
+        }).then(function() {
+            // Tell all open tabs to reload so they get the new version
+            return self.clients.matchAll({ type: 'window' }).then(function(clients) {
+                clients.forEach(function(client) {
+                    client.postMessage({ type: 'SW_ACTIVATED' });
+                });
+            });
         })
     );
-    // Take control of all open tabs immediately
-    self.clients.claim();
 });
 
-// Fetch: network-first for index.html, cache-first for assets
 self.addEventListener('fetch', function(event) {
     const url = new URL(event.request.url);
 
-    // Only handle same-origin requests
-    // Never intercept Supabase API calls or translation API calls
+    // Never intercept external requests (Supabase, MyMemory API, CDN)
     if (url.origin !== self.location.origin) {
         return;
     }
 
-    // Network-first for index.html
-    // Always try to get the latest version from the network
-    // Fall back to cache only if network is unavailable
+    // Network-first for HTML — always get latest app code
     if (url.pathname === '/' || url.pathname === '/index.html') {
         event.respondWith(
-            fetch(event.request)
-                .then(function(networkResponse) {
-                    // Got a fresh response — cache it and return it
-                    if (networkResponse && networkResponse.status === 200) {
-                        const clone = networkResponse.clone();
+            fetch(event.request, { cache: 'no-store' })
+                .then(function(response) {
+                    if (response && response.status === 200) {
+                        const clone = response.clone();
                         caches.open(CACHE_NAME).then(function(cache) {
                             cache.put(event.request, clone);
                         });
                     }
-                    return networkResponse;
+                    return response;
                 })
                 .catch(function() {
-                    // Network failed — serve from cache as fallback
                     return caches.match(event.request);
                 })
         );
         return;
     }
 
-    // Cache-first for static assets (manifest, icon)
+    // Cache-first for static assets
     event.respondWith(
         caches.match(event.request).then(function(cached) {
-            if (cached) {
-                return cached;
-            }
+            if (cached) return cached;
             return fetch(event.request).then(function(response) {
                 if (response && response.status === 200 && response.type === 'basic') {
                     const clone = response.clone();
