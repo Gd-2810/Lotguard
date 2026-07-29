@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <title>LotGuard</title>
 <meta charset="utf-8">
-<!-- LotGuard PWA v3.1 -->
+<!-- LotGuard PWA v3.2 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#34c759">
@@ -15,28 +15,11 @@ body {
     margin: 0;
 }
 
-h1 {
-    font-size: 46px;
-}
-
-h3 {
-    font-size: 20px;
-}
-
-#timer {
-    font-size: 90px;
-    font-weight: bold;
-}
-
-#status {
-    font-size: 32px;
-    font-weight: bold;
-}
-
-#alertBox {
-    font-size: 42px;
-    font-weight: bold;
-}
+h1 { font-size: 46px; }
+h3 { font-size: 20px; }
+#timer { font-size: 90px; font-weight: bold; }
+#status { font-size: 32px; font-weight: bold; }
+#alertBox { font-size: 42px; font-weight: bold; }
 
 .app {
     max-width: 700px;
@@ -59,17 +42,13 @@ button {
     font-weight: bold;
 }
 
-.reset-btn {
-    background: #ff3b30;
-}
+.reset-btn { background: #ff3b30; }
 
-.flash-red {
-    animation: flashRed 1s infinite;
-}
+.flash-red { animation: flashRed 1s infinite; }
 
 @keyframes flashRed {
-    0% { background-color: red; }
-    50% { background-color: #8b0000; }
+    0%   { background-color: red; }
+    50%  { background-color: #8b0000; }
     100% { background-color: red; }
 }
 
@@ -110,13 +89,8 @@ button {
     background: transparent;
 }
 
-.tab-panel {
-    display: none;
-}
-
-.tab-panel.active {
-    display: block;
-}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
 
 /* ── Airport Header ───────────────────────────────────────────────────── */
 .airport-header {
@@ -126,11 +100,7 @@ button {
     padding: 0 0 12px 0;
 }
 
-.airport-header-label {
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-}
+.airport-header-label { font-size: 14px; font-weight: bold; color: #333; }
 
 .airport-switch-link {
     font-size: 13px;
@@ -196,9 +166,7 @@ button {
     border: 1px solid #efefef;
 }
 
-.post-card.new-post {
-    animation: slideIn 0.3s ease-out;
-}
+.post-card.new-post { animation: slideIn 0.3s ease-out; }
 
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(-8px); }
@@ -227,29 +195,28 @@ button {
 .badge-tip       { background: #34c759; }
 .badge-general   { background: #8e8e93; }
 
-.post-author {
-    font-size: 13px;
-    font-weight: bold;
-    color: #333;
-}
-
-.trust-dot {
-    color: #34c759;
-    font-size: 10px;
-    margin-left: 2px;
-}
-
-.post-time {
-    font-size: 12px;
-    color: #aaa;
-    margin-left: auto;
-}
+.post-author { font-size: 13px; font-weight: bold; color: #333; }
+.trust-dot { color: #34c759; font-size: 10px; margin-left: 2px; }
+.post-time { font-size: 12px; color: #aaa; margin-left: auto; }
 
 .post-body {
     font-size: 15px;
     color: #222;
     line-height: 1.5;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+}
+
+.post-confirmation-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.confirmation-count {
+    font-size: 12px;
+    color: #34c759;
+    font-weight: bold;
 }
 
 .post-footer {
@@ -300,9 +267,7 @@ button {
     flex-wrap: wrap;
 }
 
-.lang-picker.open {
-    display: flex;
-}
+.lang-picker.open { display: flex; }
 
 .lang-btn {
     font-size: 12px;
@@ -318,10 +283,7 @@ button {
     font-family: Arial, sans-serif;
 }
 
-.lang-btn:hover {
-    background: #007aff;
-    color: white;
-}
+.lang-btn:hover { background: #007aff; color: white; }
 
 .translate-status {
     font-size: 12px;
@@ -331,7 +293,7 @@ button {
     display: none;
 }
 
-/* ── Composer ─────────────────────────────────────────────────────────── */
+/* ── Post Composer ────────────────────────────────────────────────────── */
 .composer {
     border-top: 1px solid #e0e0e0;
     padding-top: 16px;
@@ -396,6 +358,78 @@ button {
 .type-pill.selected-tip       { background: #34c759; border-color: #34c759; color: white; }
 .type-pill.selected-general   { background: #8e8e93; border-color: #8e8e93; color: white; }
 
+/* ── Confirmation Prompt Card ─────────────────────────────────────────── */
+#confirmationPrompt {
+    display: none;
+    background: #f0f7ff;
+    border: 1px solid #b3d4ff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+#confirmationPrompt.visible { display: block; }
+
+.confirm-prompt-header {
+    font-size: 13px;
+    font-weight: bold;
+    color: #007aff;
+    margin-bottom: 8px;
+}
+
+.confirm-prompt-body {
+    font-size: 14px;
+    color: #222;
+    font-style: italic;
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.confirm-prompt-meta {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 12px;
+}
+
+.confirm-prompt-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.confirm-btn {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    width: auto;
+}
+
+.confirm-btn-yes {
+    background: #34c759;
+    color: white;
+}
+
+.confirm-btn-post {
+    background: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.confirm-btn-cancel {
+    background: transparent;
+    color: #aaa;
+    border: none;
+    text-decoration: underline;
+    font-size: 12px;
+    padding: 8px 6px;
+}
+
+/* ── Submit Button + Messages ─────────────────────────────────────────── */
 .submit-btn {
     width: 100%;
     font-size: 16px;
@@ -539,11 +573,7 @@ button {
     cursor: default;
 }
 
-.switch-airport-btn.is-locked {
-    color: #bbb;
-    cursor: not-allowed;
-    background: #fafafa;
-}
+.switch-airport-btn.is-locked { color: #bbb; cursor: not-allowed; background: #fafafa; }
 
 .switch-airport-tag {
     font-size: 11px;
@@ -554,10 +584,7 @@ button {
     background: #34c759;
 }
 
-.switch-airport-tag.locked {
-    background: #ddd;
-    color: #999;
-}
+.switch-airport-tag.locked { background: #ddd; color: #999; }
 
 #switchCooldownMsg {
     font-size: 13px;
@@ -589,7 +616,7 @@ button {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0,0,0,0.6);
     z-index: 1000;
     justify-content: center;
     align-items: center;
@@ -605,7 +632,7 @@ button {
     padding: 32px 24px;
     max-width: 420px;
     width: 100%;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     text-align: center;
 }
 
@@ -631,7 +658,6 @@ button {
 </style>
 
 </head>
-
 <body>
 
     <!-- Report Modal -->
@@ -663,19 +689,13 @@ button {
 
         <!-- First-Time Airport Selection -->
         <div id="airportOverlay">
-          <div id="airportModal">
-            <h2>Welcome to LotGuard</h2>
-            <p>Select your home airport to get started.</p>
-            <button class="airport-btn" onclick="selectAirport('SFO', 'San Francisco International Airport')">
-              ✈️ SFO — San Francisco International
-            </button>
-            <button class="airport-btn" onclick="selectAirport('SJC', 'San Jose International Airport')">
-              ✈️ SJC — San Jose International
-            </button>
-            <button class="airport-btn" onclick="selectAirport('OAK', 'Oakland International Airport')">
-              ✈️ OAK — Oakland International
-            </button>
-          </div>
+            <div id="airportModal">
+                <h2>Welcome to LotGuard</h2>
+                <p>Select your home airport to get started.</p>
+                <button class="airport-btn" onclick="selectAirport('SFO')">✈️ SFO — San Francisco International</button>
+                <button class="airport-btn" onclick="selectAirport('SJC')">✈️ SJC — San Jose International</button>
+                <button class="airport-btn" onclick="selectAirport('OAK')">✈️ OAK — Oakland International</button>
+            </div>
         </div>
 
         <!-- Main Tab Bar -->
@@ -688,14 +708,12 @@ button {
         <div id="tab-timer" class="tab-panel active">
             <h1>LotGuard</h1>
             <h3 id="timerSubtitle">TNC Waiting Lot 60-Minute Timer</h3>
-
             <h2 id="timer">60:00</h2>
             <p id="status">Ready to start</p>
             <p id="currentTime">Current Time: --</p>
             <p id="enteredAt">Entered Lot: --</p>
             <p id="exitBy">Exit By: --</p>
             <h1 id="alertBox"></h1>
-
             <button onclick="startTimer()">Start 60-Min Countdown</button>
             <button class="reset-btn" onclick="resetTimer()">Reset</button>
         </div>
@@ -720,6 +738,7 @@ button {
 
             <div class="composer">
                 <div id="composerDisabledMsg" class="composer-disabled-msg" style="display:none;"></div>
+
                 <textarea
                     id="postBody"
                     placeholder="Share an update with SFO drivers..."
@@ -735,14 +754,26 @@ button {
                     <button class="type-pill" id="pill-general"   onclick="selectType('general')">💬 GENERAL</button>
                 </div>
 
+                <!-- Inline Confirmation Prompt -->
+                <div id="confirmationPrompt">
+                    <div class="confirm-prompt-header">📋 Similar alert already posted</div>
+                    <div class="confirm-prompt-body" id="confirmPromptBody"></div>
+                    <div class="confirm-prompt-meta" id="confirmPromptMeta"></div>
+                    <div class="confirm-prompt-actions">
+                        <button class="confirm-btn confirm-btn-yes" onclick="confirmExistingPost()">✅ Confirm this alert</button>
+                        <button class="confirm-btn confirm-btn-post" onclick="postAnyway()">✏️ Post anyway</button>
+                        <button class="confirm-btn confirm-btn-cancel" onclick="cancelConfirmation()">✕ Cancel</button>
+                    </div>
+                </div>
+
                 <button class="submit-btn" id="submitBtn" onclick="submitPost()">Post Update</button>
                 <div class="composer-message" id="composerMessage"></div>
             </div>
 
         </div>
-
     </div>
-    <script>
+
+<script>
 // ── Supabase Configuration ───────────────────────────────────────────────
 const SUPABASE_URL = 'https://oohrlwqtzpgiidayporl.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vaHJsd3F0enBnaWlkYXlwb3JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NTYzNTgsImV4cCI6MjA5ODMzMjM1OH0.XWEmygnLVuOG4_fkbqdGfIq5CrFGg8Xdq2i6z3Lmqqw';
@@ -752,25 +783,21 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 let authReady = false;
 
 (async function initAuth() {
-  try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (!session) {
-      await supabaseClient.auth.signInAnonymously();
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) await supabaseClient.auth.signInAnonymously();
+        authReady = true;
+    } catch (err) {
+        console.warn('LotGuard: Supabase auth unavailable.', err);
+        authReady = true;
     }
-    authReady = true;
-  } catch (err) {
-    console.warn('LotGuard: Supabase auth unavailable.', err);
-    authReady = true;
-  }
 })();
 
-// ── Airport Subtitle (Timer Tab) ─────────────────────────────────────────
+// ── Airport Subtitle ─────────────────────────────────────────────────────
 (function setTimerSubtitle() {
     const airport = localStorage.getItem('lotguard_airport');
     const subtitle = document.getElementById('timerSubtitle');
-    if (airport && subtitle) {
-        subtitle.innerText = '✈️ ' + airport + ' — TNC Waiting Lot';
-    }
+    if (airport && subtitle) subtitle.innerText = '✈️ ' + airport + ' — TNC Waiting Lot';
 })();
 
 // ── Airport State ────────────────────────────────────────────────────────
@@ -804,6 +831,7 @@ function updateComposerState() {
         charCounter.style.display = 'none';
         typeSelector.style.display = 'none';
         submitBtn.disabled = true;
+        hideConfirmationPrompt();
     }
 }
 
@@ -812,12 +840,8 @@ let realtimeChannel = null;
 let pollInterval = null;
 
 function showTab(tabName, btnEl) {
-    document.querySelectorAll('.tab-panel').forEach(function(panel) {
-        panel.classList.remove('active');
-    });
-    document.querySelectorAll('.tab-btn').forEach(function(btn) {
-        btn.classList.remove('active');
-    });
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
     document.getElementById('tab-' + tabName).classList.add('active');
     btnEl.classList.add('active');
 
@@ -826,33 +850,18 @@ function showTab(tabName, btnEl) {
         updateComposerState();
         waitForAuthThenLoadFeed();
     } else {
-        if (realtimeChannel) {
-            supabaseClient.removeChannel(realtimeChannel);
-            realtimeChannel = null;
-        }
-        if (pollInterval) {
-            clearInterval(pollInterval);
-            pollInterval = null;
-        }
+        if (realtimeChannel) { supabaseClient.removeChannel(realtimeChannel); realtimeChannel = null; }
+        if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
     }
 }
 
 // ── Airport Browse Tabs ──────────────────────────────────────────────────
 function switchBrowseTab(iataCode, btnEl) {
     browsingAirport = iataCode;
-
-    document.querySelectorAll('.airport-tab-btn').forEach(function(btn) {
-        btn.classList.remove('active');
-    });
+    document.querySelectorAll('.airport-tab-btn').forEach(function(b) { b.classList.remove('active'); });
     btnEl.classList.add('active');
-
     updateComposerState();
-
-    if (realtimeChannel) {
-        supabaseClient.removeChannel(realtimeChannel);
-        realtimeChannel = null;
-    }
-
+    if (realtimeChannel) { supabaseClient.removeChannel(realtimeChannel); realtimeChannel = null; }
     loadFeed(iataCode);
     subscribeToFeed(iataCode);
 }
@@ -892,27 +901,18 @@ async function openSwitchModal() {
         const isActive = code === activeAirport;
         const isLocked = !canSwitch && !isActive;
         const btnClass = isActive ? 'switch-airport-btn is-active' :
-                         isLocked ? 'switch-airport-btn is-locked' :
-                         'switch-airport-btn';
+                         isLocked ? 'switch-airport-btn is-locked' : 'switch-airport-btn';
         const tagText = isActive ? 'Active' : isLocked ? 'Locked' : 'Switch';
         const tagClass = isActive ? 'switch-airport-tag' :
-                         isLocked ? 'switch-airport-tag locked' :
-                         'switch-airport-tag';
-        const onclick = isActive || isLocked ? '' :
-                        'onclick="switchActiveAirport(\'' + code + '\')"';
-
-        return '<button class="' + btnClass + '" ' + onclick + '>' +
-               '✈️ ' + code +
-               '<span class="' + tagClass + '">' + tagText + '</span>' +
-               '</button>';
+                         isLocked ? 'switch-airport-tag locked' : 'switch-airport-tag';
+        const onclick = isActive || isLocked ? '' : 'onclick="switchActiveAirport(\'' + code + '\')"';
+        return '<button class="' + btnClass + '" ' + onclick + '>✈️ ' + code +
+               '<span class="' + tagClass + '">' + tagText + '</span></button>';
     }).join('');
 
-    if (!canSwitch && switchAvailableAt) {
-        const timeStr = switchAvailableAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-        cooldownMsg.innerText = 'You can switch again at ' + timeStr;
-    } else {
-        cooldownMsg.innerText = '';
-    }
+    cooldownMsg.innerText = (!canSwitch && switchAvailableAt)
+        ? 'You can switch again at ' + switchAvailableAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+        : '';
 
     modal.classList.add('open');
 }
@@ -923,24 +923,17 @@ function closeSwitchModal() {
 
 async function switchActiveAirport(iataCode) {
     closeSwitchModal();
-
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) return;
 
-        const { data: airports } = await supabaseClient
-            .from('airports')
-            .select('id, iata_code');
-
+        const { data: airports } = await supabaseClient.from('airports').select('id, iata_code');
         const airport = airports ? airports.find(function(a) { return a.iata_code === iataCode; }) : null;
         if (!airport) return;
 
         const { error } = await supabaseClient
             .from('driver_profiles')
-            .update({
-                active_airport_id: airport.id,
-                airport_switched_at: new Date().toISOString()
-            })
+            .update({ active_airport_id: airport.id, airport_switched_at: new Date().toISOString() })
             .eq('id', session.user.id);
 
         if (error) { console.warn('LotGuard: Airport switch failed:', error); return; }
@@ -952,7 +945,6 @@ async function switchActiveAirport(iataCode) {
         if (subtitle) subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
 
         updateAirportHeader();
-
         const newTab = document.getElementById('atab-' + iataCode);
         if (newTab) switchBrowseTab(iataCode, newTab);
 
@@ -961,27 +953,214 @@ async function switchActiveAirport(iataCode) {
     }
 }
 
+// ── Event Taxonomy (client-side similarity classification) ───────────────
+const EVENT_TAXONOMY = {
+    compliance: {
+        keywords: ['compliance', 'tsa', 'enforcement', 'officer', 'inspector', 'placard', 'check'],
+        states: {
+            active:   ['checking', 'here', 'arrived', 'back', 'returned', 'coming', 'active', 'at entrance', 'at exit', 'moving through'],
+            inactive: ['left', 'gone', 'cleared', 'done', 'finished', 'departed', 'away']
+        }
+    },
+    overflow: {
+        keywords: ['overflow', 'lot b', 'lot 2', 'secondary lot'],
+        states: {
+            closed: ['closed', 'full', 'blocked', 'unavailable'],
+            open:   ['open', 'reopened', 'available', 'cleared', 'empty']
+        }
+    },
+    lot_capacity: {
+        keywords: ['lot', 'staging', 'spaces', 'spots', 'cars', 'vehicles', 'capacity'],
+        states: {
+            filling:  ['full', 'filling', 'packed', 'busy', 'crowded', 'getting full'],
+            clearing: ['clearing', 'emptying', 'moving', 'opening up', 'empty', 'quiet', 'slow', 'cleared']
+        }
+    },
+    queue: {
+        keywords: ['wait', 'waiting', 'queue', 'line', 'minutes', 'min'],
+        states: {
+            growing: ['growing', 'longer', 'backed up', 'slow', 'long wait', 'busy', 'long'],
+            moving:  ['moving', 'fast', 'quick', 'short wait', 'clearing', 'picked up', 'short']
+        }
+    }
+};
+
+const STOP_WORDS = new Set([
+    'the','a','an','is','are','was','were','at','in','on','to','and','or',
+    'i','we','they','it','this','that','be','been','has','have','had',
+    'for','of','with','by','from','as','its','but','not','so','if'
+]);
+
+function classifyPost(body) {
+    const normalized = body.toLowerCase().trim();
+    for (const [category, data] of Object.entries(EVENT_TAXONOMY)) {
+        const mentionsCategory = data.keywords.some(function(kw) { return normalized.includes(kw); });
+        if (!mentionsCategory) continue;
+        for (const [stateName, stateWords] of Object.entries(data.states)) {
+            const matchesState = stateWords.some(function(sw) { return normalized.includes(sw); });
+            if (matchesState) return { category, state: stateName };
+        }
+        return { category, state: null };
+    }
+    return { category: null, state: null };
+}
+
+function areOppositeEvents(bodyA, bodyB) {
+    const classA = classifyPost(bodyA);
+    const classB = classifyPost(bodyB);
+    if (!classA.category || !classB.category) return false;
+    if (classA.category !== classB.category) return false;
+    if (classA.state && classB.state && classA.state !== classB.state) return true;
+    return false;
+}
+
+function extractKeywords(body) {
+    return body.toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '')
+        .split(/\s+/)
+        .filter(function(w) { return w.length > 1 && !STOP_WORDS.has(w); });
+}
+
+function similarityScore(bodyA, bodyB) {
+    const kwA = new Set(extractKeywords(bodyA));
+    const kwB = new Set(extractKeywords(bodyB));
+    if (kwA.size === 0 || kwB.size === 0) return 0;
+    let overlap = 0;
+    kwA.forEach(function(w) { if (kwB.has(w)) overlap++; });
+    return overlap / Math.max(kwA.size, kwB.size);
+}
+
+// ── Duplicate & Similarity Detection ────────────────────────────────────
+var pendingConfirmPostId = null;
+
+async function checkForDuplicates(body, session) {
+    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+
+    // Rule 1: same-driver exact duplicate within 15 minutes — block
+    const { data: ownRecent } = await supabaseClient
+        .from('feed_posts')
+        .select('id, body, created_at')
+        .eq('author_id', session.user.id)
+        .eq('airport_iata_code', activeAirport)
+        .eq('is_moderated', false)
+        .gte('created_at', fifteenMinutesAgo)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+    if (ownRecent) {
+        for (const post of ownRecent) {
+            if (post.body.trim().toLowerCase() === body.trim().toLowerCase()) {
+                return { result: 'block', reason: 'You already posted this.' };
+            }
+        }
+    }
+
+    // Rule 2: community similar post within 10 minutes — confirmation prompt
+    const { data: communityRecent } = await supabaseClient
+        .from('feed_posts')
+        .select('id, body, created_at, author_id')
+        .eq('airport_iata_code', activeAirport)
+        .eq('is_moderated', false)
+        .neq('author_id', session.user.id)
+        .gte('created_at', tenMinutesAgo)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+    if (communityRecent) {
+        for (const post of communityRecent) {
+            // Skip if opposite events
+            if (areOppositeEvents(body, post.body)) continue;
+            // Check similarity
+            const score = similarityScore(body, post.body);
+            if (score >= 0.70) {
+                return { result: 'confirm', post: post };
+            }
+        }
+    }
+
+    return { result: 'allow' };
+}
+
+function showConfirmationPrompt(post) {
+    pendingConfirmPostId = post.id;
+    const prompt = document.getElementById('confirmationPrompt');
+    const bodyEl = document.getElementById('confirmPromptBody');
+    const metaEl = document.getElementById('confirmPromptMeta');
+
+    bodyEl.innerText = '"' + post.body + '"';
+    metaEl.innerText = 'Posted ' + timeAgo(post.created_at) + ' at ' + activeAirport;
+
+    prompt.classList.add('visible');
+    document.getElementById('submitBtn').style.display = 'none';
+}
+
+function hideConfirmationPrompt() {
+    document.getElementById('confirmationPrompt').classList.remove('visible');
+    document.getElementById('submitBtn').style.display = 'block';
+    pendingConfirmPostId = null;
+}
+
+async function confirmExistingPost() {
+    if (!pendingConfirmPostId) return;
+
+    const postId = pendingConfirmPostId;
+    hideConfirmationPrompt();
+
+    try {
+        const { data, error } = await supabaseClient.rpc('confirm_post', { p_post_id: postId });
+
+        if (error) {
+            console.warn('LotGuard: Confirm RPC error:', error);
+            setComposerMessage('Could not confirm. Please try again.', false);
+            return;
+        }
+
+        if (data.error) {
+            const msgs = {
+                'already_confirmed': 'You already confirmed this alert.',
+                'own_post':          'You cannot confirm your own post.',
+                'window_expired':    'This alert is too old to confirm.',
+                'post_moderated':    'This post is no longer available.',
+                'not_authenticated': 'Please refresh and try again.'
+            };
+            setComposerMessage(msgs[data.error] || 'Could not confirm.', false);
+            return;
+        }
+
+        // Success
+        document.getElementById('postBody').value = '';
+        updateCharCounter();
+        setComposerMessage('Thanks for confirming. Other drivers have been notified.', true);
+        await loadFeed(activeAirport);
+
+    } catch (err) {
+        console.warn('LotGuard: Confirm error:', err);
+        setComposerMessage('Could not confirm. Please try again.', false);
+    }
+}
+
+async function postAnyway() {
+    hideConfirmationPrompt();
+    await submitPost(true); // bypass = true — skip duplicate check for this submission
+}
+
+function cancelConfirmation() {
+    hideConfirmationPrompt();
+    // Typed text is preserved in the textarea
+}
+
 // ── Translation ──────────────────────────────────────────────────────────
-// Cache: { postId: { en: '...', es: '...', pa: '...' } }
 var translationCache = {};
-
-// Original post bodies: { postId: originalText }
 var originalBodies = {};
-
-var LANG_NAMES = { en: 'English', es: 'Español', pa: 'ਪੰਜਾਬੀ' };
 
 function showTranslatePicker(postId) {
     var picker = document.getElementById('lang-picker-' + postId);
-    var translateBtn = document.getElementById('translate-btn-' + postId);
     if (!picker) return;
-
     if (picker.classList.contains('open')) {
         picker.classList.remove('open');
     } else {
-        // Close all other open pickers
-        document.querySelectorAll('.lang-picker.open').forEach(function(p) {
-            p.classList.remove('open');
-        });
+        document.querySelectorAll('.lang-picker.open').forEach(function(p) { p.classList.remove('open'); });
         picker.classList.add('open');
     }
 }
@@ -993,43 +1172,28 @@ async function translatePost(postId, targetLang) {
     var translateBtn = document.getElementById('translate-btn-' + postId);
 
     if (!bodyEl) return;
-
-    // Close picker
     if (picker) picker.classList.remove('open');
+    if (!originalBodies[postId]) originalBodies[postId] = bodyEl.innerText;
 
-    // Store original if not already stored
-    if (!originalBodies[postId]) {
-        originalBodies[postId] = bodyEl.innerText;
-    }
-
-    // Check cache
     if (translationCache[postId] && translationCache[postId][targetLang]) {
         bodyEl.innerText = translationCache[postId][targetLang];
-        if (translateBtn) translateBtn.innerText = 'Show original';
-        if (translateBtn) translateBtn.onclick = function() { showOriginal(postId); };
+        if (translateBtn) { translateBtn.innerText = 'Show original'; translateBtn.onclick = function() { showOriginal(postId); }; }
         return;
     }
 
-    // Show loading state
     if (statusEl) { statusEl.style.display = 'block'; statusEl.innerText = 'Translating...'; }
-    if (translateBtn) { translateBtn.style.pointerEvents = 'none'; }
+    if (translateBtn) translateBtn.style.pointerEvents = 'none';
 
     try {
-        const originalText = originalBodies[postId];
         const url = 'https://api.mymemory.translated.net/get?q=' +
-                    encodeURIComponent(originalText) +
-                    '&langpair=autodetect|' + targetLang;
-
+                    encodeURIComponent(originalBodies[postId]) + '&langpair=autodetect|' + targetLang;
         const response = await fetch(url);
         const data = await response.json();
 
         if (data && data.responseStatus === 200 && data.responseData) {
             const translated = data.responseData.translatedText;
-
-            // Cache the result
             if (!translationCache[postId]) translationCache[postId] = {};
             translationCache[postId][targetLang] = translated;
-
             bodyEl.innerText = translated;
             if (translateBtn) {
                 translateBtn.innerText = 'Show original';
@@ -1037,17 +1201,12 @@ async function translatePost(postId, targetLang) {
             }
         } else {
             if (statusEl) statusEl.innerText = 'Translation unavailable.';
-            setTimeout(function() {
-                if (statusEl) statusEl.style.display = 'none';
-            }, 2000);
+            setTimeout(function() { if (statusEl) statusEl.style.display = 'none'; }, 2000);
         }
-
     } catch (err) {
         console.warn('LotGuard: Translation error:', err);
         if (statusEl) statusEl.innerText = 'Translation failed. Check your connection.';
-        setTimeout(function() {
-            if (statusEl) statusEl.style.display = 'none';
-        }, 2000);
+        setTimeout(function() { if (statusEl) statusEl.style.display = 'none'; }, 2000);
     } finally {
         if (statusEl) setTimeout(function() { statusEl.style.display = 'none'; }, 100);
         if (translateBtn) translateBtn.style.pointerEvents = 'auto';
@@ -1057,11 +1216,7 @@ async function translatePost(postId, targetLang) {
 function showOriginal(postId) {
     var bodyEl = document.getElementById('body-' + postId);
     var translateBtn = document.getElementById('translate-btn-' + postId);
-
-    if (bodyEl && originalBodies[postId]) {
-        bodyEl.innerText = originalBodies[postId];
-    }
-
+    if (bodyEl && originalBodies[postId]) bodyEl.innerText = originalBodies[postId];
     if (translateBtn) {
         translateBtn.innerText = 'Translate';
         translateBtn.onclick = function() { showTranslatePicker(postId); };
@@ -1077,6 +1232,7 @@ const BADGE_LABELS = {
 };
 
 const reportedPosts = new Set();
+const confirmedByMe = new Set();
 let currentReportPostId = null;
 
 function timeAgo(dateString) {
@@ -1095,9 +1251,19 @@ function renderPost(post, isNew) {
     const time = timeAgo(post.created_at);
     const newClass = isNew ? ' new-post' : '';
     const alreadyReported = reportedPosts.has(post.id);
-    const reportBtnAttr = alreadyReported ? 'disabled' : '';
-    const reportBtnText = alreadyReported ? 'Reported' : 'Report';
+    const alreadyConfirmed = confirmedByMe.has(post.id);
     const trustDot = post.trust_indicator ? '<span class="trust-dot">●</span>' : '';
+
+    const confirmCount = post.confirmation_count > 0
+        ? '<span class="confirmation-count">✅ ' + post.confirmation_count + ' confirmed</span>'
+        : '';
+
+    const reportBtnText = alreadyReported ? 'Reported' : 'Report';
+    const reportBtnAttr = alreadyReported ? 'disabled' : '';
+
+    // Check if within 10-minute confirmation window and not own post
+    const postAge = (new Date() - new Date(post.created_at)) / 1000 / 60;
+    const canConfirm = postAge <= 10 && !alreadyConfirmed;
 
     return `
         <div class="post-card${newClass}" id="post-${post.id}">
@@ -1113,6 +1279,9 @@ function renderPost(post, isNew) {
                 <button class="lang-btn" onclick="translatePost('${post.id}', 'pa')">ਪੰਜਾਬੀ</button>
             </div>
             <div class="post-body" id="body-${post.id}">${post.body}</div>
+            <div class="post-confirmation-row">
+                ${confirmCount}
+            </div>
             <div class="post-footer">
                 <button class="translate-link" id="translate-btn-${post.id}"
                     onclick="showTranslatePicker('${post.id}')">Translate</button>
@@ -1179,15 +1348,9 @@ async function loadFeed(iataCode) {
         const { data: posts, error } = await supabaseClient
             .from('feed_posts')
             .select(`
-                id,
-                body,
-                post_type,
-                created_at,
-                airport_iata_code,
-                author_id,
-                driver_profiles!author_id (
-                    trust_score
-                )
+                id, body, post_type, created_at, airport_iata_code,
+                author_id, confirmation_count,
+                driver_profiles!author_id ( trust_score )
             `)
             .eq('airport_iata_code', iataCode)
             .eq('is_moderated', false)
@@ -1206,6 +1369,20 @@ async function loadFeed(iataCode) {
             return;
         }
 
+        // Load own confirmations for visible posts
+        try {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                const postIds = posts.map(function(p) { return p.id; });
+                const { data: myConfs } = await supabaseClient
+                    .from('post_confirmations')
+                    .select('post_id')
+                    .eq('user_id', session.user.id)
+                    .in('post_id', postIds);
+                if (myConfs) myConfs.forEach(function(c) { confirmedByMe.add(c.post_id); });
+            }
+        } catch (e) { /* non-critical */ }
+
         const postsWithTrust = posts.map(function(p) {
             return Object.assign({}, p, {
                 trust_indicator: p.driver_profiles && p.driver_profiles.trust_score >= 80
@@ -1223,14 +1400,8 @@ async function loadFeed(iataCode) {
 }
 
 function subscribeToFeed(iataCode) {
-    if (realtimeChannel) {
-        supabaseClient.removeChannel(realtimeChannel);
-        realtimeChannel = null;
-    }
-    if (pollInterval) {
-        clearInterval(pollInterval);
-        pollInterval = null;
-    }
+    if (realtimeChannel) { supabaseClient.removeChannel(realtimeChannel); realtimeChannel = null; }
+    if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
 
     realtimeChannel = supabaseClient
         .channel('airport:' + iataCode)
@@ -1239,9 +1410,7 @@ function subscribeToFeed(iataCode) {
         })
         .subscribe();
 
-    pollInterval = setInterval(function() {
-        loadFeed(browsingAirport);
-    }, 30000);
+    pollInterval = setInterval(function() { loadFeed(browsingAirport); }, 30000);
 }
 
 function handleNewRealtimePost(post) {
@@ -1258,9 +1427,7 @@ let lastPostTime = 0;
 
 function selectType(type) {
     selectedPostType = type;
-    document.querySelectorAll('.type-pill').forEach(function(pill) {
-        pill.className = 'type-pill';
-    });
+    document.querySelectorAll('.type-pill').forEach(function(pill) { pill.className = 'type-pill'; });
     document.getElementById('pill-' + type).className = 'type-pill selected-' + type;
 }
 
@@ -1279,7 +1446,7 @@ function setComposerMessage(msg, isSuccess) {
     if (msg) setTimeout(function() { el.innerText = ''; }, 3000);
 }
 
-async function submitPost() {
+async function submitPost(bypass) {
     const body = document.getElementById('postBody').value.trim();
     const submitBtn = document.getElementById('submitBtn');
 
@@ -1296,17 +1463,30 @@ async function submitPost() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) { setComposerMessage('Not signed in. Please refresh and try again.', false); return; }
 
+    // Banned check
     const { data: profile } = await supabaseClient
-        .from('driver_profiles')
-        .select('is_banned')
-        .eq('id', session.user.id)
-        .single();
-
+        .from('driver_profiles').select('is_banned').eq('id', session.user.id).single();
     if (profile && profile.is_banned) {
         setComposerMessage('You can no longer post in LotGuard.', false);
         return;
     }
 
+    // Duplicate / similarity check (skip if bypass = true from postAnyway)
+    if (!bypass) {
+        const check = await checkForDuplicates(body, session);
+
+        if (check.result === 'block') {
+            setComposerMessage(check.reason, false);
+            return;
+        }
+
+        if (check.result === 'confirm') {
+            showConfirmationPrompt(check.post);
+            return;
+        }
+    }
+
+    // Get airport
     const { data: airports } = await supabaseClient.from('airports').select('id, iata_code');
     const airport = airports ? airports.find(function(a) { return a.iata_code === activeAirport; }) : null;
     if (!airport) { setComposerMessage('Could not find airport. Please try again.', false); return; }
@@ -1317,12 +1497,7 @@ async function submitPost() {
     try {
         const { error } = await supabaseClient
             .from('feed_posts')
-            .insert({
-                airport_id: airport.id,
-                author_id: session.user.id,
-                body: body,
-                post_type: selectedPostType
-            });
+            .insert({ airport_id: airport.id, author_id: session.user.id, body: body, post_type: selectedPostType });
 
         if (error) {
             console.warn('LotGuard: Post error:', error);
@@ -1360,22 +1535,20 @@ function unlockSound() {
 async function playBeep() {
     if (!soundUnlocked || !audioContext) return;
     if (audioContext.state === 'suspended') await audioContext.resume();
-
-    var oscillator = audioContext.createOscillator();
+    var osc = audioContext.createOscillator();
     var gain = audioContext.createGain();
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
-    oscillator.frequency.value = 800;
+    osc.connect(gain); gain.connect(audioContext.destination);
+    osc.frequency.value = 800;
     gain.gain.setValueAtTime(0.5, audioContext.currentTime);
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.3);
+    osc.start(audioContext.currentTime);
+    osc.stop(audioContext.currentTime + 0.3);
 }
 
 function calculateRemainingTime() {
-    var savedStartTime = localStorage.getItem("lotguardStartTime");
-    if (savedStartTime) {
-        var elapsedSeconds = Math.floor((Date.now() - Number(savedStartTime)) / 1000);
-        remainingSeconds = totalSeconds - elapsedSeconds;
+    var saved = localStorage.getItem('lotguardStartTime');
+    if (saved) {
+        var elapsed = Math.floor((Date.now() - Number(saved)) / 1000);
+        remainingSeconds = totalSeconds - elapsed;
         if (remainingSeconds < 0) remainingSeconds = 0;
     }
 }
@@ -1383,143 +1556,111 @@ function calculateRemainingTime() {
 function updateDisplay() {
     var mins = Math.floor(remainingSeconds / 60);
     var secs = remainingSeconds % 60;
+    document.getElementById('timer').innerText =
+        String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
 
-    document.getElementById("timer").innerText =
-        String(mins).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
-
-    var status = document.getElementById("status");
+    var status = document.getElementById('status');
 
     if (remainingSeconds > 15 * 60) {
-        status.innerText = "SAFE ZONE";
-        document.body.style.backgroundColor = "#d4f8d4";
-        document.getElementById("alertBox").innerText = "";
+        status.innerText = 'SAFE ZONE';
+        document.body.style.backgroundColor = '#d4f8d4';
+        document.getElementById('alertBox').innerText = '';
     } else if (remainingSeconds > 5 * 60) {
-        status.innerText = "PREPARE TO LEAVE";
-        document.body.classList.remove("flash-red");
-        document.body.style.backgroundColor = "#fff3b0";
-        document.getElementById("alertBox").innerText = "15 MINUTES REMAINING";
+        status.innerText = 'PREPARE TO LEAVE';
+        document.body.classList.remove('flash-red');
+        document.body.style.backgroundColor = '#fff3b0';
+        document.getElementById('alertBox').innerText = '15 MINUTES REMAINING';
         if (remainingSeconds === 15 * 60) playBeep();
     } else if (remainingSeconds > 0) {
-        status.innerText = "LEAVE THE LOT NOW";
-        document.body.classList.add("flash-red");
-        document.getElementById("alertBox").innerText = "⚠️ EXIT NOW ⚠️";
+        status.innerText = 'LEAVE THE LOT NOW';
+        document.body.classList.add('flash-red');
+        document.getElementById('alertBox').innerText = '⚠️ EXIT NOW ⚠️';
         // V5: 5-minute haptic + beep pattern added in native iOS app
     } else {
         clearInterval(timerInterval);
-        status.innerText = "VIOLATION RISK";
-        document.getElementById("timer").innerText = "00:00";
-        document.body.style.backgroundColor = "#8b0000";
-        document.getElementById("alertBox").innerText = "YOU HAVE EXCEEDED THE LOT LIMIT";
+        status.innerText = 'VIOLATION RISK';
+        document.getElementById('timer').innerText = '00:00';
+        document.body.style.backgroundColor = '#8b0000';
+        document.getElementById('alertBox').innerText = 'YOU HAVE EXCEEDED THE LOT LIMIT';
     }
 }
 
 function runCountdown() {
     clearInterval(timerInterval);
-    timerInterval = setInterval(function () {
-        calculateRemainingTime();
-        updateDisplay();
-    }, 1000);
+    timerInterval = setInterval(function() { calculateRemainingTime(); updateDisplay(); }, 1000);
 }
 
 function startTimer() {
     unlockSound();
-    var existingStartTime = localStorage.getItem("lotguardStartTime");
-
-    if (existingStartTime && remainingSeconds > 0) {
-        var confirmRestart = confirm("A timer is already running. Start a new 60-minute timer?");
-        if (!confirmRestart) return;
+    var existing = localStorage.getItem('lotguardStartTime');
+    if (existing && remainingSeconds > 0) {
+        if (!confirm('A timer is already running. Start a new 60-minute timer?')) return;
     }
-
     var now = new Date();
-    localStorage.setItem("lotguardStartTime", now.getTime());
-
-    document.getElementById("enteredAt").innerText =
-        "Entered Lot: " + now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-
+    localStorage.setItem('lotguardStartTime', now.getTime());
+    document.getElementById('enteredAt').innerText =
+        'Entered Lot: ' + now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     var exitTime = new Date(now.getTime() + 60 * 60 * 1000);
-    document.getElementById("exitBy").innerText =
-        "Exit By: " + exitTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-
-    calculateRemainingTime();
-    updateDisplay();
-    runCountdown();
+    document.getElementById('exitBy').innerText =
+        'Exit By: ' + exitTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    calculateRemainingTime(); updateDisplay(); runCountdown();
 }
 
 function resetTimer() {
     clearInterval(timerInterval);
     remainingSeconds = totalSeconds;
-    document.body.classList.remove("flash-red");
-    document.getElementById("timer").innerText = "60:00";
-    document.getElementById("status").innerText = "Ready to start";
-    document.getElementById("enteredAt").innerText = "Entered Lot: --";
-    document.getElementById("exitBy").innerText = "Exit By: --";
-    document.getElementById("alertBox").innerText = "";
-    document.body.style.backgroundColor = "white";
-    localStorage.removeItem("lotguardStartTime");
+    document.body.classList.remove('flash-red');
+    document.getElementById('timer').innerText = '60:00';
+    document.getElementById('status').innerText = 'Ready to start';
+    document.getElementById('enteredAt').innerText = 'Entered Lot: --';
+    document.getElementById('exitBy').innerText = 'Exit By: --';
+    document.getElementById('alertBox').innerText = '';
+    document.body.style.backgroundColor = 'white';
+    localStorage.removeItem('lotguardStartTime');
 }
 
-setInterval(function () {
-    document.getElementById("currentTime").innerText =
-        "Current Time: " + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+setInterval(function() {
+    document.getElementById('currentTime').innerText =
+        'Current Time: ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 }, 1000);
 
-var savedStartTime = localStorage.getItem("lotguardStartTime");
+var savedStartTime = localStorage.getItem('lotguardStartTime');
 if (savedStartTime) {
     var startTime = new Date(Number(savedStartTime));
-    var exitTime = new Date(Number(savedStartTime) + 60 * 60 * 1000);
-    document.getElementById("enteredAt").innerText =
-        "Entered Lot: " + startTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-    document.getElementById("exitBy").innerText =
-        "Exit By: " + exitTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-    calculateRemainingTime();
-    updateDisplay();
-    runCountdown();
+    var exitTime  = new Date(Number(savedStartTime) + 60 * 60 * 1000);
+    document.getElementById('enteredAt').innerText =
+        'Entered Lot: ' + startTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    document.getElementById('exitBy').innerText =
+        'Exit By: ' + exitTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    calculateRemainingTime(); updateDisplay(); runCountdown();
 }
 
-document.addEventListener("visibilitychange", function () {
+document.addEventListener('visibilitychange', function() {
     if (!document.hidden) { calculateRemainingTime(); updateDisplay(); }
 });
 
-// ── Airport Selection Modal (first time) ─────────────────────────────────
-function showAirportModal() {
-    document.getElementById('airportOverlay').classList.add('visible');
-}
-
-function hideAirportModal() {
-    document.getElementById('airportOverlay').classList.remove('visible');
-}
+// ── Airport Selection (first time) ───────────────────────────────────────
+function showAirportModal()  { document.getElementById('airportOverlay').classList.add('visible'); }
+function hideAirportModal()  { document.getElementById('airportOverlay').classList.remove('visible'); }
 
 async function checkAirportSelection() {
     try {
-        const localAirport = localStorage.getItem('lotguard_airport');
-        if (localAirport) {
-            activeAirport = localAirport;
-            browsingAirport = localAirport;
-            return;
-        }
+        const local = localStorage.getItem('lotguard_airport');
+        if (local) { activeAirport = local; browsingAirport = local; return; }
 
-        let session = null;
-        let attempts = 0;
+        let session = null, attempts = 0;
         while (!session && attempts < 10) {
             const { data } = await supabaseClient.auth.getSession();
             session = data.session;
-            if (!session) {
-                await new Promise(function(resolve) { setTimeout(resolve, 500); });
-                attempts++;
-            }
+            if (!session) { await new Promise(function(r) { setTimeout(r, 500); }); attempts++; }
         }
 
         if (!session) { showAirportModal(); return; }
 
         const { data: profile, error } = await supabaseClient
-            .from('driver_profiles')
-            .select('active_airport_id')
-            .eq('id', session.user.id)
-            .single();
+            .from('driver_profiles').select('active_airport_id').eq('id', session.user.id).single();
 
-        if (error || !profile || !profile.active_airport_id) {
-            showAirportModal();
-        }
+        if (error || !profile || !profile.active_airport_id) showAirportModal();
 
     } catch (err) {
         console.warn('LotGuard: Could not check airport selection.', err);
@@ -1527,7 +1668,7 @@ async function checkAirportSelection() {
     }
 }
 
-async function selectAirport(iataCode, airportName) {
+async function selectAirport(iataCode) {
     localStorage.setItem('lotguard_airport', iataCode);
     activeAirport = iataCode;
     browsingAirport = iataCode;
@@ -1545,16 +1686,11 @@ async function selectAirport(iataCode, airportName) {
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) return;
-
         const { data: airports } = await supabaseClient.from('airports').select('id, iata_code');
         const airport = airports ? airports.find(function(a) { return a.iata_code === iataCode; }) : null;
         if (!airport) return;
-
-        await supabaseClient
-            .from('driver_profiles')
-            .update({ active_airport_id: airport.id })
-            .eq('id', session.user.id);
-
+        await supabaseClient.from('driver_profiles')
+            .update({ active_airport_id: airport.id }).eq('id', session.user.id);
     } catch (err) {
         console.warn('LotGuard: Airport selection error:', err);
     }
@@ -1562,13 +1698,10 @@ async function selectAirport(iataCode, airportName) {
 
 setTimeout(checkAirportSelection, 3000);
 
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js").then(function(reg) {
-        // Listen for the new service worker telling us to reload
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js').then(function(reg) {
         navigator.serviceWorker.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'SW_ACTIVATED') {
-                window.location.reload();
-            }
+            if (event.data && event.data.type === 'SW_ACTIVATED') window.location.reload();
         });
     });
 }
