@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <title>LotGuard</title>
 <meta charset="utf-8">
-<!-- LotGuard PWA v3.3 -->
+<!-- LotGuard PWA v4.0 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#34c759">
@@ -69,9 +69,9 @@ button {
 
 .tab-btn {
     flex: 1;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    padding: 12px;
+    padding: 12px 4px;
     margin: 0;
     border: none;
     border-radius: 0;
@@ -419,7 +419,7 @@ button {
     padding: 8px 6px;
 }
 
-/* ── Submit Button + Messages ─────────────────────────────────────────── */
+/* ── Submit Button ────────────────────────────────────────────────────── */
 .submit-btn {
     width: 100%;
     font-size: 16px;
@@ -444,6 +444,152 @@ button {
 }
 
 .composer-message.success { color: #34c759; }
+
+/* ── Settings Tab ─────────────────────────────────────────────────────── */
+.settings-panel {
+    text-align: left;
+}
+
+.settings-section {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 16px 0;
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+}
+
+.settings-section-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+}
+
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.settings-row:active { opacity: 0.7; }
+
+.settings-row-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.settings-row-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+.settings-row-subtitle {
+    font-size: 13px;
+    color: #888;
+}
+
+.settings-row-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #ccc;
+    font-size: 18px;
+}
+
+.settings-badge {
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+}
+
+.settings-badge-free {
+    background: #f0f0f0;
+    color: #888;
+}
+
+.settings-badge-pro {
+    background: #34c759;
+    color: white;
+}
+
+/* ── Pro Upgrade Card ─────────────────────────────────────────────────── */
+.pro-upgrade-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 4px 0 12px 0;
+    text-align: left;
+    color: white;
+}
+
+.pro-upgrade-card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 6px;
+}
+
+.pro-upgrade-card-tagline {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 16px;
+    line-height: 1.4;
+}
+
+.pro-upgrade-features {
+    margin-bottom: 16px;
+}
+
+.pro-upgrade-feature {
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    padding: 3px 0;
+}
+
+.pro-upgrade-btn {
+    width: 100%;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 12px;
+    margin: 0;
+    border-radius: 10px;
+    background: #34c759;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.pro-upgrade-btn:hover { background: #28a745; }
+
+.pro-active-card {
+    background: #f0fff4;
+    border: 1px solid #34c759;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 4px 0 12px 0;
+    text-align: left;
+}
+
+.pro-active-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+}
+
+.pro-active-subtitle {
+    font-size: 13px;
+    color: #34c759;
+}
 
 /* ── Report Modal ─────────────────────────────────────────────────────── */
 #reportModal {
@@ -691,7 +837,8 @@ button {
         <!-- Main Tab Bar -->
         <div class="tab-bar">
             <button class="tab-btn active" id="btn-timer" onclick="showTab('timer', this)">⏱ Timer</button>
-            <button class="tab-btn" id="btn-feed" onclick="showTab('feed', this)">📡 Driver Feed</button>
+            <button class="tab-btn" id="btn-feed" onclick="showTab('feed', this)">📡 Feed</button>
+            <button class="tab-btn" id="btn-settings" onclick="showTab('settings', this)">⚙️ Settings</button>
         </div>
 
         <!-- Timer Tab -->
@@ -744,7 +891,6 @@ button {
                     <button class="type-pill" id="pill-general"   onclick="selectType('general')">💬 GENERAL</button>
                 </div>
 
-                <!-- Inline Confirmation Prompt -->
                 <div id="confirmationPrompt">
                     <div class="confirm-prompt-header">📋 Similar alert already posted</div>
                     <div class="confirm-prompt-body" id="confirmPromptBody"></div>
@@ -761,6 +907,57 @@ button {
             </div>
 
         </div>
+
+        <!-- Settings Tab -->
+        <div id="tab-settings" class="tab-panel">
+            <div class="settings-panel">
+
+                <!-- Active Airport -->
+                <div class="settings-section">
+                    <div class="settings-section-label">Active Airport</div>
+                    <div class="settings-row" onclick="openSwitchModal()">
+                        <div class="settings-row-left">
+                            <div class="settings-row-title" id="settingsAirportTitle">✈️ SFO — San Francisco International</div>
+                            <div class="settings-row-subtitle">Tap to change airport</div>
+                        </div>
+                        <div class="settings-row-right">›</div>
+                    </div>
+                </div>
+
+                <!-- Account -->
+                <div class="settings-section">
+                    <div class="settings-section-label">Account</div>
+                    <div class="settings-row" id="accountRow">
+                        <div class="settings-row-left">
+                            <div class="settings-row-title">Anonymous Driver</div>
+                            <div class="settings-row-subtitle" id="accountSubtitle">Link email to save your account</div>
+                        </div>
+                        <div class="settings-row-right">›</div>
+                    </div>
+                </div>
+
+                <!-- LotGuard Pro -->
+                <div class="settings-section">
+                    <div class="settings-section-label">LotGuard Pro</div>
+                    <div id="proSection">
+                        <!-- Populated by renderProSection() -->
+                    </div>
+                </div>
+
+                <!-- About -->
+                <div class="settings-section">
+                    <div class="settings-section-label">About</div>
+                    <div class="settings-row">
+                        <div class="settings-row-left">
+                            <div class="settings-row-title">LotGuard</div>
+                            <div class="settings-row-subtitle">Version 4.0 · For airport rideshare drivers</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
 <script>
@@ -771,17 +968,40 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 
 // ── Auth State ───────────────────────────────────────────────────────────
 let authReady = false;
+let currentSession = null;
+let currentProfile = null;
 
 (async function initAuth() {
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
-        if (!session) await supabaseClient.auth.signInAnonymously();
+        if (!session) {
+            await supabaseClient.auth.signInAnonymously();
+            const { data: { session: newSession } } = await supabaseClient.auth.getSession();
+            currentSession = newSession;
+        } else {
+            currentSession = session;
+        }
+        await loadProfile();
         authReady = true;
     } catch (err) {
         console.warn('LotGuard: Supabase auth unavailable.', err);
         authReady = true;
     }
 })();
+
+async function loadProfile() {
+    if (!currentSession) return;
+    try {
+        const { data } = await supabaseClient
+            .from('driver_profiles')
+            .select('display_name, is_pro, pro_expires_at, trust_score')
+            .eq('id', currentSession.user.id)
+            .single();
+        currentProfile = data;
+    } catch (err) {
+        console.warn('LotGuard: Could not load profile.', err);
+    }
+}
 
 // ── Airport Subtitle ─────────────────────────────────────────────────────
 (function setTimerSubtitle() {
@@ -795,9 +1015,20 @@ let activeAirport = localStorage.getItem('lotguard_airport') || 'SFO';
 let browsingAirport = activeAirport;
 const AIRPORTS = ['SFO', 'SJC', 'OAK'];
 
+const AIRPORT_NAMES = {
+    'SFO': 'San Francisco International',
+    'SJC': 'San Jose International',
+    'OAK': 'Oakland International'
+};
+
 function updateAirportHeader() {
     const label = document.getElementById('activeAirportLabel');
     if (label) label.innerText = '✈️ Active: ' + activeAirport;
+}
+
+function updateSettingsAirport() {
+    const el = document.getElementById('settingsAirportTitle');
+    if (el) el.innerText = '✈️ ' + activeAirport + ' — ' + (AIRPORT_NAMES[activeAirport] || activeAirport);
 }
 
 function updateComposerState() {
@@ -825,6 +1056,52 @@ function updateComposerState() {
     }
 }
 
+// ── Settings — Pro Section ───────────────────────────────────────────────
+function renderProSection() {
+    const el = document.getElementById('proSection');
+    if (!el) return;
+
+    const isPro = currentProfile && currentProfile.is_pro &&
+                  (!currentProfile.pro_expires_at || new Date(currentProfile.pro_expires_at) > new Date());
+
+    if (isPro) {
+        const expiryText = currentProfile.pro_expires_at
+            ? 'Renews ' + new Date(currentProfile.pro_expires_at).toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' })
+            : 'Lifetime access';
+
+        el.innerHTML = `
+            <div class="pro-active-card">
+                <div class="pro-active-title">⭐ LotGuard Pro — Active</div>
+                <div class="pro-active-subtitle">${expiryText}</div>
+            </div>
+        `;
+    } else {
+        el.innerHTML = `
+            <div class="pro-upgrade-card">
+                <div class="pro-upgrade-card-title">⭐ LotGuard Pro</div>
+                <div class="pro-upgrade-card-tagline">Skip reading dozens of posts.<br>Get the airport situation in seconds.</div>
+                <div class="pro-upgrade-features">
+                    <div class="pro-upgrade-feature">✦ AI Operations Brief for your airport</div>
+                    <div class="pro-upgrade-feature">✦ Automatic GPS timer (iOS app)</div>
+                    <div class="pro-upgrade-feature">✦ Predictive queue forecast</div>
+                    <div class="pro-upgrade-feature">✦ Personal smart alerts</div>
+                    <div class="pro-upgrade-feature">✦ Driver analytics dashboard</div>
+                </div>
+                <button class="pro-upgrade-btn" onclick="handleUpgradeClick()">
+                    Upgrade for $4.99/month
+                </button>
+            </div>
+        `;
+    }
+}
+
+function handleUpgradeClick() {
+    // V4-B: will trigger email linking flow first
+    // V4-D: will connect to Stripe checkout
+    // For now: show coming soon message
+    alert('Pro subscriptions are coming soon. You\'ll be among the first to know.');
+}
+
 // ── Tab Navigation ───────────────────────────────────────────────────────
 let realtimeChannel = null;
 let pollInterval = null;
@@ -839,6 +1116,9 @@ function showTab(tabName, btnEl) {
         updateAirportHeader();
         updateComposerState();
         waitForAuthThenLoadFeed();
+    } else if (tabName === 'settings') {
+        updateSettingsAirport();
+        renderProSection();
     } else {
         if (realtimeChannel) { supabaseClient.removeChannel(realtimeChannel); realtimeChannel = null; }
         if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
@@ -935,6 +1215,7 @@ async function switchActiveAirport(iataCode) {
         if (subtitle) subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
 
         updateAirportHeader();
+        updateSettingsAirport();
         const newTab = document.getElementById('atab-' + iataCode);
         if (newTab) switchBrowseTab(iataCode, newTab);
 
@@ -1027,7 +1308,6 @@ async function checkForDuplicates(body, session) {
     const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
-    // Rule 1: same-driver exact duplicate within 15 minutes
     const { data: ownRecent } = await supabaseClient
         .from('feed_posts')
         .select('id, body, created_at')
@@ -1046,7 +1326,6 @@ async function checkForDuplicates(body, session) {
         }
     }
 
-    // Rule 2: community similar post within 10 minutes
     const { data: communityRecent } = await supabaseClient
         .from('feed_posts')
         .select('id, body, created_at, author_id')
@@ -1061,9 +1340,7 @@ async function checkForDuplicates(body, session) {
         for (const post of communityRecent) {
             if (areOppositeEvents(body, post.body)) continue;
             const score = similarityScore(body, post.body);
-            if (score >= 0.70) {
-                return { result: 'confirm', post: post };
-            }
+            if (score >= 0.70) return { result: 'confirm', post: post };
         }
     }
 
@@ -1091,13 +1368,7 @@ async function confirmExistingPost() {
 
     try {
         const { data, error } = await supabaseClient.rpc('confirm_post', { p_post_id: postId });
-
-        if (error) {
-            console.warn('LotGuard: Confirm RPC error:', error);
-            setComposerMessage('Could not confirm. Please try again.', false);
-            return;
-        }
-
+        if (error) { console.warn('LotGuard: Confirm RPC error:', error); setComposerMessage('Could not confirm. Please try again.', false); return; }
         if (data && data.error) {
             const msgs = {
                 'already_confirmed': 'You already confirmed this alert.',
@@ -1109,12 +1380,10 @@ async function confirmExistingPost() {
             setComposerMessage(msgs[data.error] || 'Could not confirm.', false);
             return;
         }
-
         document.getElementById('postBody').value = '';
         updateCharCounter();
         setComposerMessage('Thanks for confirming. Other drivers have been notified.', true);
         await loadFeed(activeAirport);
-
     } catch (err) {
         console.warn('LotGuard: Confirm error:', err);
         setComposerMessage('Could not confirm. Please try again.', false);
@@ -1126,9 +1395,7 @@ async function postAnyway() {
     await submitPost(true);
 }
 
-function cancelConfirmation() {
-    hideConfirmationPrompt();
-}
+function cancelConfirmation() { hideConfirmationPrompt(); }
 
 // ── Translation ──────────────────────────────────────────────────────────
 var translationCache = {};
@@ -1169,16 +1436,12 @@ async function translatePost(postId, targetLang) {
                     encodeURIComponent(originalBodies[postId]) + '&langpair=autodetect|' + targetLang;
         const response = await fetch(url);
         const data = await response.json();
-
         if (data && data.responseStatus === 200 && data.responseData) {
             const translated = data.responseData.translatedText;
             if (!translationCache[postId]) translationCache[postId] = {};
             translationCache[postId][targetLang] = translated;
             bodyEl.innerText = translated;
-            if (translateBtn) {
-                translateBtn.innerText = 'Show original';
-                translateBtn.onclick = function() { showOriginal(postId); };
-            }
+            if (translateBtn) { translateBtn.innerText = 'Show original'; translateBtn.onclick = function() { showOriginal(postId); }; }
         } else {
             if (statusEl) statusEl.innerText = 'Translation unavailable.';
             setTimeout(function() { if (statusEl) statusEl.style.display = 'none'; }, 2000);
@@ -1197,10 +1460,7 @@ function showOriginal(postId) {
     var bodyEl = document.getElementById('body-' + postId);
     var translateBtn = document.getElementById('translate-btn-' + postId);
     if (bodyEl && originalBodies[postId]) bodyEl.innerText = originalBodies[postId];
-    if (translateBtn) {
-        translateBtn.innerText = 'Translate';
-        translateBtn.onclick = function() { showTranslatePicker(postId); };
-    }
+    if (translateBtn) { translateBtn.innerText = 'Translate'; translateBtn.onclick = function() { showTranslatePicker(postId); }; }
 }
 
 // ── Driver Feed ──────────────────────────────────────────────────────────
@@ -1278,21 +1538,16 @@ async function submitReport(reason) {
     const postId = currentReportPostId;
     closeReportModal();
     if (!postId) return;
-
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) return;
-
         const { error } = await supabaseClient
             .from('post_reports')
             .insert({ post_id: postId, reporter_id: session.user.id, reason: reason });
-
         if (error) { console.warn('LotGuard: Report error:', error); return; }
-
         reportedPosts.add(postId);
         const btn = document.getElementById('report-btn-' + postId);
         if (btn) { btn.innerText = 'Reported'; btn.disabled = true; }
-
     } catch (err) {
         console.warn('LotGuard: Report submit error:', err);
     }
@@ -1301,20 +1556,17 @@ async function submitReport(reason) {
 async function waitForAuthThenLoadFeed() {
     const feedList = document.getElementById('feedList');
     feedList.innerHTML = '<div class="feed-state">Loading ' + browsingAirport + ' feed...</div>';
-
     let waited = 0;
     while (!authReady && waited < 10) {
         await new Promise(function(resolve) { setTimeout(resolve, 500); });
         waited++;
     }
-
     await loadFeed(browsingAirport);
     subscribeToFeed(browsingAirport);
 }
 
 async function loadFeed(iataCode) {
     const feedList = document.getElementById('feedList');
-
     try {
         const { data: posts, error } = await supabaseClient
             .from('feed_posts')
@@ -1340,7 +1592,6 @@ async function loadFeed(iataCode) {
             return;
         }
 
-        // Load own confirmations
         try {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
@@ -1360,9 +1611,7 @@ async function loadFeed(iataCode) {
             });
         });
 
-        feedList.innerHTML = postsWithTrust.map(function(p) {
-            return renderPost(p, false);
-        }).join('');
+        feedList.innerHTML = postsWithTrust.map(function(p) { return renderPost(p, false); }).join('');
 
     } catch (err) {
         console.warn('LotGuard: Feed error:', err);
@@ -1373,14 +1622,10 @@ async function loadFeed(iataCode) {
 function subscribeToFeed(iataCode) {
     if (realtimeChannel) { supabaseClient.removeChannel(realtimeChannel); realtimeChannel = null; }
     if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
-
     realtimeChannel = supabaseClient
         .channel('airport:' + iataCode)
-        .on('broadcast', { event: 'new_post' }, function(payload) {
-            handleNewRealtimePost(payload.payload);
-        })
+        .on('broadcast', { event: 'new_post' }, function(payload) { handleNewRealtimePost(payload.payload); })
         .subscribe();
-
     pollInterval = setInterval(function() { loadFeed(browsingAirport); }, 30000);
 }
 
@@ -1436,10 +1681,7 @@ async function submitPost(bypass) {
 
     const { data: profile } = await supabaseClient
         .from('driver_profiles').select('is_banned').eq('id', session.user.id).single();
-    if (profile && profile.is_banned) {
-        setComposerMessage('You can no longer post in LotGuard.', false);
-        return;
-    }
+    if (profile && profile.is_banned) { setComposerMessage('You can no longer post in LotGuard.', false); return; }
 
     if (!bypass) {
         const check = await checkForDuplicates(body, session);
@@ -1459,11 +1701,7 @@ async function submitPost(bypass) {
             .from('feed_posts')
             .insert({ airport_id: airport.id, author_id: session.user.id, body: body, post_type: selectedPostType });
 
-        if (error) {
-            console.warn('LotGuard: Post error:', error);
-            setComposerMessage('Could not post. Please try again.', false);
-            return;
-        }
+        if (error) { console.warn('LotGuard: Post error:', error); setComposerMessage('Could not post. Please try again.', false); return; }
 
         lastPostTime = Date.now();
         document.getElementById('postBody').value = '';
@@ -1518,9 +1756,7 @@ function updateDisplay() {
     var secs = remainingSeconds % 60;
     document.getElementById('timer').innerText =
         String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
-
     var status = document.getElementById('status');
-
     if (remainingSeconds > 15 * 60) {
         status.innerText = 'SAFE ZONE';
         document.body.style.backgroundColor = '#d4f8d4';
@@ -1535,7 +1771,6 @@ function updateDisplay() {
         status.innerText = 'LEAVE THE LOT NOW';
         document.body.classList.add('flash-red');
         document.getElementById('alertBox').innerText = '⚠️ EXIT NOW ⚠️';
-        // V5: 5-minute haptic + beep pattern added in native iOS app
     } else {
         clearInterval(timerInterval);
         status.innerText = 'VIOLATION RISK';
@@ -1607,21 +1842,16 @@ async function checkAirportSelection() {
     try {
         const local = localStorage.getItem('lotguard_airport');
         if (local) { activeAirport = local; browsingAirport = local; return; }
-
         let session = null, attempts = 0;
         while (!session && attempts < 10) {
             const { data } = await supabaseClient.auth.getSession();
             session = data.session;
             if (!session) { await new Promise(function(r) { setTimeout(r, 500); }); attempts++; }
         }
-
         if (!session) { showAirportModal(); return; }
-
         const { data: profile, error } = await supabaseClient
             .from('driver_profiles').select('active_airport_id').eq('id', session.user.id).single();
-
         if (error || !profile || !profile.active_airport_id) showAirportModal();
-
     } catch (err) {
         console.warn('LotGuard: Could not check airport selection.', err);
         showAirportModal();
@@ -1633,16 +1863,13 @@ async function selectAirport(iataCode) {
     activeAirport = iataCode;
     browsingAirport = iataCode;
     hideAirportModal();
-
     const subtitle = document.getElementById('timerSubtitle');
     if (subtitle) subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
-
     const tab = document.getElementById('atab-' + iataCode);
     if (tab) {
         document.querySelectorAll('.airport-tab-btn').forEach(function(b) { b.classList.remove('active'); });
         tab.classList.add('active');
     }
-
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) return;
