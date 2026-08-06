@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <title>LotGuard</title>
 <meta charset="utf-8">
-<!-- LotGuard PWA v4.0 -->
+<!-- LotGuard PWA v4.1 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#34c759">
@@ -144,10 +144,7 @@ button {
 }
 
 /* ── Driver Feed ──────────────────────────────────────────────────────── */
-#feedList {
-    text-align: left;
-    margin-bottom: 16px;
-}
+#feedList { text-align: left; margin-bottom: 16px; }
 
 .feed-state {
     text-align: center;
@@ -212,11 +209,7 @@ button {
     margin-top: 4px;
 }
 
-.confirmation-count {
-    font-size: 12px;
-    color: #34c759;
-    font-weight: bold;
-}
+.confirmation-count { font-size: 12px; color: #34c759; font-weight: bold; }
 
 .post-footer {
     display: flex;
@@ -259,13 +252,7 @@ button {
 .translate-link:hover { color: #0051a8; }
 
 /* ── Language Picker ──────────────────────────────────────────────────── */
-.lang-picker {
-    display: none;
-    gap: 6px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-}
-
+.lang-picker { display: none; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
 .lang-picker.open { display: flex; }
 
 .lang-btn {
@@ -293,11 +280,7 @@ button {
 }
 
 /* ── Post Composer ────────────────────────────────────────────────────── */
-.composer {
-    border-top: 1px solid #e0e0e0;
-    padding-top: 16px;
-    text-align: left;
-}
+.composer { border-top: 1px solid #e0e0e0; padding-top: 16px; text-align: left; }
 
 .composer-disabled-msg {
     text-align: center;
@@ -322,22 +305,10 @@ button {
 
 .composer textarea:focus { border-color: #34c759; }
 
-.char-counter {
-    font-size: 12px;
-    color: #aaa;
-    text-align: right;
-    margin-top: 4px;
-    margin-bottom: 10px;
-}
-
+.char-counter { font-size: 12px; color: #aaa; text-align: right; margin-top: 4px; margin-bottom: 10px; }
 .char-counter.over { color: #ff3b30; }
 
-.type-selector {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-}
+.type-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
 
 .type-pill {
     font-size: 12px;
@@ -357,7 +328,7 @@ button {
 .type-pill.selected-tip       { background: #34c759; border-color: #34c759; color: white; }
 .type-pill.selected-general   { background: #8e8e93; border-color: #8e8e93; color: white; }
 
-/* ── Confirmation Prompt Card ─────────────────────────────────────────── */
+/* ── Confirmation Prompt ──────────────────────────────────────────────── */
 #confirmationPrompt {
     display: none;
     background: #f0f7ff;
@@ -370,32 +341,10 @@ button {
 
 #confirmationPrompt.visible { display: block; }
 
-.confirm-prompt-header {
-    font-size: 13px;
-    font-weight: bold;
-    color: #007aff;
-    margin-bottom: 8px;
-}
-
-.confirm-prompt-body {
-    font-size: 14px;
-    color: #222;
-    font-style: italic;
-    margin-bottom: 4px;
-    line-height: 1.4;
-}
-
-.confirm-prompt-meta {
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 12px;
-}
-
-.confirm-prompt-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
+.confirm-prompt-header { font-size: 13px; font-weight: bold; color: #007aff; margin-bottom: 8px; }
+.confirm-prompt-body { font-size: 14px; color: #222; font-style: italic; margin-bottom: 4px; line-height: 1.4; }
+.confirm-prompt-meta { font-size: 12px; color: #888; margin-bottom: 12px; }
+.confirm-prompt-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .confirm-btn {
     font-size: 13px;
@@ -435,29 +384,14 @@ button {
 
 .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-.composer-message {
-    font-size: 13px;
-    text-align: center;
-    margin-top: 8px;
-    min-height: 20px;
-    color: #ff3b30;
-}
-
+.composer-message { font-size: 13px; text-align: center; margin-top: 8px; min-height: 20px; color: #ff3b30; }
 .composer-message.success { color: #34c759; }
 
 /* ── Settings Tab ─────────────────────────────────────────────────────── */
-.settings-panel {
-    text-align: left;
-}
+.settings-panel { text-align: left; }
 
-.settings-section {
-    border-bottom: 1px solid #f0f0f0;
-    padding: 16px 0;
-}
-
-.settings-section:last-child {
-    border-bottom: none;
-}
+.settings-section { border-bottom: 1px solid #f0f0f0; padding: 16px 0; }
+.settings-section:last-child { border-bottom: none; }
 
 .settings-section-label {
     font-size: 11px;
@@ -478,48 +412,124 @@ button {
 
 .settings-row:active { opacity: 0.7; }
 
-.settings-row-left {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+.settings-row-left { display: flex; flex-direction: column; gap: 2px; }
+.settings-row-title { font-size: 15px; font-weight: bold; color: #1a1a1a; }
+.settings-row-subtitle { font-size: 13px; color: #888; }
+.settings-row-right { display: flex; align-items: center; gap: 6px; color: #ccc; font-size: 18px; }
+
+/* ── Email Linking UI ─────────────────────────────────────────────────── */
+.email-link-card {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 8px;
+    text-align: left;
 }
 
-.settings-row-title {
+.email-link-card-title {
     font-size: 15px;
     font-weight: bold;
     color: #1a1a1a;
+    margin-bottom: 6px;
 }
 
-.settings-row-subtitle {
+.email-link-card-desc {
     font-size: 13px;
-    color: #888;
+    color: #666;
+    margin-bottom: 14px;
+    line-height: 1.5;
 }
 
-.settings-row-right {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #ccc;
-    font-size: 18px;
+.email-input {
+    width: 100%;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: #222;
+    outline: none;
+    margin-bottom: 10px;
 }
 
-.settings-badge {
-    font-size: 10px;
+.email-input:focus { border-color: #34c759; }
+
+.email-submit-btn {
+    width: 100%;
+    font-size: 15px;
     font-weight: bold;
-    padding: 2px 8px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-}
-
-.settings-badge-free {
-    background: #f0f0f0;
-    color: #888;
-}
-
-.settings-badge-pro {
+    padding: 12px;
+    margin: 0;
+    border-radius: 10px;
     background: #34c759;
     color: white;
+    border: none;
+    cursor: pointer;
 }
+
+.email-submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+.email-cancel-btn {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+    margin: 8px 0 0 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #888;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.email-status {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 8px;
+    color: #ff3b30;
+    min-height: 18px;
+}
+
+.email-status.success { color: #34c759; }
+
+.email-sent-card {
+    background: #f0fff4;
+    border: 1px solid #34c759;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 8px;
+    text-align: left;
+}
+
+.email-sent-title { font-size: 15px; font-weight: bold; color: #1a1a1a; margin-bottom: 6px; }
+.email-sent-desc { font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 12px; }
+
+.email-resend-btn {
+    font-size: 13px;
+    color: #34c759;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+    width: auto;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.account-verified-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+}
+
+.account-verified-icon { font-size: 20px; }
+.account-verified-text { font-size: 14px; font-weight: bold; color: #1a1a1a; }
+.account-verified-email { font-size: 13px; color: #888; }
 
 /* ── Pro Upgrade Card ─────────────────────────────────────────────────── */
 .pro-upgrade-card {
@@ -531,12 +541,7 @@ button {
     color: white;
 }
 
-.pro-upgrade-card-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-    margin-bottom: 6px;
-}
+.pro-upgrade-card-title { font-size: 18px; font-weight: bold; color: white; margin-bottom: 6px; }
 
 .pro-upgrade-card-tagline {
     font-size: 13px;
@@ -545,15 +550,8 @@ button {
     line-height: 1.4;
 }
 
-.pro-upgrade-features {
-    margin-bottom: 16px;
-}
-
-.pro-upgrade-feature {
-    font-size: 13px;
-    color: rgba(255,255,255,0.9);
-    padding: 3px 0;
-}
+.pro-upgrade-features { margin-bottom: 16px; }
+.pro-upgrade-feature { font-size: 13px; color: rgba(255,255,255,0.9); padding: 3px 0; }
 
 .pro-upgrade-btn {
     width: 100%;
@@ -568,8 +566,6 @@ button {
     cursor: pointer;
 }
 
-.pro-upgrade-btn:hover { background: #28a745; }
-
 .pro-active-card {
     background: #f0fff4;
     border: 1px solid #34c759;
@@ -579,17 +575,8 @@ button {
     text-align: left;
 }
 
-.pro-active-title {
-    font-size: 15px;
-    font-weight: bold;
-    color: #1a1a1a;
-    margin-bottom: 4px;
-}
-
-.pro-active-subtitle {
-    font-size: 13px;
-    color: #34c759;
-}
+.pro-active-title { font-size: 15px; font-weight: bold; color: #1a1a1a; margin-bottom: 4px; }
+.pro-active-subtitle { font-size: 13px; color: #34c759; }
 
 /* ── Report Modal ─────────────────────────────────────────────────────── */
 #reportModal {
@@ -701,14 +688,7 @@ button {
     font-weight: normal;
 }
 
-.switch-airport-btn.is-active {
-    border-color: #34c759;
-    background: #f0fff4;
-    color: #1a1a1a;
-    font-weight: bold;
-    cursor: default;
-}
-
+.switch-airport-btn.is-active { border-color: #34c759; background: #f0fff4; color: #1a1a1a; font-weight: bold; cursor: default; }
 .switch-airport-btn.is-locked { color: #bbb; cursor: not-allowed; background: #fafafa; }
 
 .switch-airport-tag {
@@ -722,13 +702,7 @@ button {
 
 .switch-airport-tag.locked { background: #ddd; color: #999; }
 
-#switchCooldownMsg {
-    font-size: 13px;
-    color: #888;
-    text-align: center;
-    margin-bottom: 12px;
-    min-height: 18px;
-}
+#switchCooldownMsg { font-size: 13px; color: #888; text-align: center; margin-bottom: 12px; min-height: 18px; }
 
 .switch-cancel {
     display: block;
@@ -857,40 +831,26 @@ button {
 
         <!-- Feed Tab -->
         <div id="tab-feed" class="tab-panel">
-
             <div class="airport-header">
                 <span class="airport-header-label" id="activeAirportLabel">✈️ Active: --</span>
                 <button class="airport-switch-link" onclick="openSwitchModal()">Change airport ›</button>
             </div>
-
             <div class="airport-tab-bar">
                 <button class="airport-tab-btn active" id="atab-SFO" onclick="switchBrowseTab('SFO', this)">SFO</button>
                 <button class="airport-tab-btn" id="atab-SJC" onclick="switchBrowseTab('SJC', this)">SJC</button>
                 <button class="airport-tab-btn" id="atab-OAK" onclick="switchBrowseTab('OAK', this)">OAK</button>
             </div>
-
-            <div id="feedList">
-                <div class="feed-state">Loading feed...</div>
-            </div>
-
+            <div id="feedList"><div class="feed-state">Loading feed...</div></div>
             <div class="composer">
                 <div id="composerDisabledMsg" class="composer-disabled-msg" style="display:none;"></div>
-
-                <textarea
-                    id="postBody"
-                    placeholder="Share an update with SFO drivers..."
-                    maxlength="280"
-                    oninput="updateCharCounter()"
-                ></textarea>
+                <textarea id="postBody" placeholder="Share an update with SFO drivers..." maxlength="280" oninput="updateCharCounter()"></textarea>
                 <div class="char-counter" id="charCounter">280 remaining</div>
-
                 <div class="type-selector">
                     <button class="type-pill selected-wait_time" id="pill-wait_time" onclick="selectType('wait_time')">⏱ WAIT TIME</button>
                     <button class="type-pill" id="pill-alert"     onclick="selectType('alert')">🚨 ALERT</button>
                     <button class="type-pill" id="pill-tip"       onclick="selectType('tip')">💡 TIP</button>
                     <button class="type-pill" id="pill-general"   onclick="selectType('general')">💬 GENERAL</button>
                 </div>
-
                 <div id="confirmationPrompt">
                     <div class="confirm-prompt-header">📋 Similar alert already posted</div>
                     <div class="confirm-prompt-body" id="confirmPromptBody"></div>
@@ -901,11 +861,9 @@ button {
                         <button class="confirm-btn confirm-btn-cancel" onclick="cancelConfirmation()">✕ Cancel</button>
                     </div>
                 </div>
-
                 <button class="submit-btn" id="submitBtn" onclick="submitPost()">Post Update</button>
                 <div class="composer-message" id="composerMessage"></div>
             </div>
-
         </div>
 
         <!-- Settings Tab -->
@@ -927,12 +885,8 @@ button {
                 <!-- Account -->
                 <div class="settings-section">
                     <div class="settings-section-label">Account</div>
-                    <div class="settings-row" id="accountRow">
-                        <div class="settings-row-left">
-                            <div class="settings-row-title">Anonymous Driver</div>
-                            <div class="settings-row-subtitle" id="accountSubtitle">Link email to save your account</div>
-                        </div>
-                        <div class="settings-row-right">›</div>
+                    <div id="accountSection">
+                        <!-- Populated by renderAccountSection() -->
                     </div>
                 </div>
 
@@ -950,7 +904,7 @@ button {
                     <div class="settings-row">
                         <div class="settings-row-left">
                             <div class="settings-row-title">LotGuard</div>
-                            <div class="settings-row-subtitle">Version 4.0 · For airport rideshare drivers</div>
+                            <div class="settings-row-subtitle">Version 4.1 · For airport rideshare drivers</div>
                         </div>
                     </div>
                 </div>
@@ -983,6 +937,17 @@ let currentProfile = null;
         }
         await loadProfile();
         authReady = true;
+
+        // Listen for auth state changes (magic link verification)
+        supabaseClient.auth.onAuthStateChange(async function(event, session) {
+            if (event === 'USER_UPDATED' || event === 'SIGNED_IN') {
+                currentSession = session;
+                await loadProfile();
+                renderAccountSection();
+                renderProSection();
+            }
+        });
+
     } catch (err) {
         console.warn('LotGuard: Supabase auth unavailable.', err);
         authReady = true;
@@ -1001,6 +966,15 @@ async function loadProfile() {
     } catch (err) {
         console.warn('LotGuard: Could not load profile.', err);
     }
+}
+
+function getUserEmail() {
+    if (!currentSession) return null;
+    return currentSession.user.email || null;
+}
+
+function isEmailLinked() {
+    return !!getUserEmail();
 }
 
 // ── Airport Subtitle ─────────────────────────────────────────────────────
@@ -1056,6 +1030,143 @@ function updateComposerState() {
     }
 }
 
+// ── Settings — Account Section ───────────────────────────────────────────
+var emailLinkState = 'idle'; // idle | entering | sent
+
+function renderAccountSection() {
+    const el = document.getElementById('accountSection');
+    if (!el) return;
+
+    if (isEmailLinked()) {
+        // Email is linked — show verified state
+        el.innerHTML = `
+            <div class="account-verified-row">
+                <div class="account-verified-icon">✅</div>
+                <div>
+                    <div class="account-verified-text">Account linked</div>
+                    <div class="account-verified-email">${getUserEmail()}</div>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    if (emailLinkState === 'sent') {
+        el.innerHTML = `
+            <div class="email-sent-card">
+                <div class="email-sent-title">✉️ Check your email</div>
+                <div class="email-sent-desc">
+                    We sent a sign-in link to <strong id="sentEmailDisplay"></strong>.<br><br>
+                    Open the link on this device to verify your account.
+                </div>
+                <button class="email-resend-btn" onclick="resetEmailLinkState()">Use a different email</button>
+            </div>
+        `;
+        return;
+    }
+
+    if (emailLinkState === 'entering') {
+        el.innerHTML = `
+            <div class="email-link-card">
+                <div class="email-link-card-title">Save your account</div>
+                <div class="email-link-card-desc">
+                    Link an email to keep your posts, trust score, and future Pro access if you get a new phone.
+                </div>
+                <input type="email" class="email-input" id="emailInput"
+                    placeholder="your@email.com"
+                    onkeydown="if(event.key==='Enter') sendMagicLink()">
+                <button class="email-submit-btn" id="emailSubmitBtn" onclick="sendMagicLink()">
+                    Send Magic Link
+                </button>
+                <button class="email-cancel-btn" onclick="resetEmailLinkState()">Cancel</button>
+                <div class="email-status" id="emailStatus"></div>
+            </div>
+        `;
+        setTimeout(function() {
+            const input = document.getElementById('emailInput');
+            if (input) input.focus();
+        }, 100);
+        return;
+    }
+
+    // Default idle state
+    el.innerHTML = `
+        <div class="settings-row" onclick="startEmailLink()">
+            <div class="settings-row-left">
+                <div class="settings-row-title">Anonymous Driver</div>
+                <div class="settings-row-subtitle">Link email to save your account</div>
+            </div>
+            <div class="settings-row-right">›</div>
+        </div>
+    `;
+}
+
+function startEmailLink() {
+    emailLinkState = 'entering';
+    renderAccountSection();
+}
+
+function resetEmailLinkState() {
+    emailLinkState = 'idle';
+    renderAccountSection();
+}
+
+async function sendMagicLink() {
+    const input = document.getElementById('emailInput');
+    const statusEl = document.getElementById('emailStatus');
+    const submitBtn = document.getElementById('emailSubmitBtn');
+
+    if (!input) return;
+
+    const email = input.value.trim().toLowerCase();
+
+    if (!email || !email.includes('@') || !email.includes('.')) {
+        if (statusEl) { statusEl.innerText = 'Please enter a valid email address.'; statusEl.className = 'email-status'; }
+        return;
+    }
+
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = 'Sending...'; }
+    if (statusEl) statusEl.innerText = '';
+
+    try {
+        const { error } = await supabaseClient.auth.updateUser({ email: email });
+
+        if (error) {
+            console.warn('LotGuard: Magic link error:', error);
+
+            // Handle duplicate email conflict
+            if (error.message && error.message.toLowerCase().includes('already')) {
+                if (statusEl) {
+                    statusEl.innerText = 'This email is already linked to another account. Try a different email.';
+                    statusEl.className = 'email-status';
+                }
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = 'Send Magic Link'; }
+                return;
+            }
+
+            if (statusEl) {
+                statusEl.innerText = 'Could not send link. Please try again.';
+                statusEl.className = 'email-status';
+            }
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = 'Send Magic Link'; }
+            return;
+        }
+
+        // Success — show sent state
+        emailLinkState = 'sent';
+        renderAccountSection();
+
+        // Show the email address in the sent card
+        const sentDisplay = document.getElementById('sentEmailDisplay');
+        if (sentDisplay) sentDisplay.innerText = email;
+
+    } catch (err) {
+        console.warn('LotGuard: Send magic link error:', err);
+        if (statusEl) { statusEl.innerText = 'Could not send link. Check your connection.'; statusEl.className = 'email-status'; }
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = 'Send Magic Link'; }
+    }
+}
+
 // ── Settings — Pro Section ───────────────────────────────────────────────
 function renderProSection() {
     const el = document.getElementById('proSection');
@@ -1068,7 +1179,6 @@ function renderProSection() {
         const expiryText = currentProfile.pro_expires_at
             ? 'Renews ' + new Date(currentProfile.pro_expires_at).toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' })
             : 'Lifetime access';
-
         el.innerHTML = `
             <div class="pro-active-card">
                 <div class="pro-active-title">⭐ LotGuard Pro — Active</div>
@@ -1096,10 +1206,17 @@ function renderProSection() {
 }
 
 function handleUpgradeClick() {
-    // V4-B: will trigger email linking flow first
-    // V4-D: will connect to Stripe checkout
-    // For now: show coming soon message
-    alert('Pro subscriptions are coming soon. You\'ll be among the first to know.');
+    // V4-D: connects to Stripe checkout
+    // Requires email to be linked first
+    if (!isEmailLinked()) {
+        emailLinkState = 'entering';
+        renderAccountSection();
+        // Scroll to account section
+        document.getElementById('accountSection').scrollIntoView({ behavior: 'smooth' });
+        return;
+    }
+    // Stripe checkout — coming in V4-D
+    alert('Pro subscriptions are coming very soon. You\'ll be among the first to know.');
 }
 
 // ── Tab Navigation ───────────────────────────────────────────────────────
@@ -1118,6 +1235,7 @@ function showTab(tabName, btnEl) {
         waitForAuthThenLoadFeed();
     } else if (tabName === 'settings') {
         updateSettingsAirport();
+        renderAccountSection();
         renderProSection();
     } else {
         if (realtimeChannel) { supabaseClient.removeChannel(realtimeChannel); realtimeChannel = null; }
@@ -1153,75 +1271,54 @@ async function openSwitchModal() {
                 .select('airport_switched_at')
                 .eq('id', session.user.id)
                 .single();
-
             if (profile && profile.airport_switched_at) {
                 const switchedAt = new Date(profile.airport_switched_at);
                 const cooldownEnd = new Date(switchedAt.getTime() + 60 * 60 * 1000);
-                if (new Date() < cooldownEnd) {
-                    canSwitch = false;
-                    switchAvailableAt = cooldownEnd;
-                }
+                if (new Date() < cooldownEnd) { canSwitch = false; switchAvailableAt = cooldownEnd; }
             }
         }
-    } catch (err) {
-        console.warn('LotGuard: Could not check cooldown.', err);
-    }
+    } catch (err) { console.warn('LotGuard: Could not check cooldown.', err); }
 
     list.innerHTML = AIRPORTS.map(function(code) {
         const isActive = code === activeAirport;
         const isLocked = !canSwitch && !isActive;
-        const btnClass = isActive ? 'switch-airport-btn is-active' :
-                         isLocked ? 'switch-airport-btn is-locked' : 'switch-airport-btn';
+        const btnClass = isActive ? 'switch-airport-btn is-active' : isLocked ? 'switch-airport-btn is-locked' : 'switch-airport-btn';
         const tagText = isActive ? 'Active' : isLocked ? 'Locked' : 'Switch';
-        const tagClass = isActive ? 'switch-airport-tag' :
-                         isLocked ? 'switch-airport-tag locked' : 'switch-airport-tag';
+        const tagClass = isActive ? 'switch-airport-tag' : isLocked ? 'switch-airport-tag locked' : 'switch-airport-tag';
         const onclick = isActive || isLocked ? '' : 'onclick="switchActiveAirport(\'' + code + '\')"';
-        return '<button class="' + btnClass + '" ' + onclick + '>✈️ ' + code +
-               '<span class="' + tagClass + '">' + tagText + '</span></button>';
+        return '<button class="' + btnClass + '" ' + onclick + '>✈️ ' + code + '<span class="' + tagClass + '">' + tagText + '</span></button>';
     }).join('');
 
     cooldownMsg.innerText = (!canSwitch && switchAvailableAt)
-        ? 'You can switch again at ' + switchAvailableAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
-        : '';
+        ? 'You can switch again at ' + switchAvailableAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '';
 
     modal.classList.add('open');
 }
 
-function closeSwitchModal() {
-    document.getElementById('switchModal').classList.remove('open');
-}
+function closeSwitchModal() { document.getElementById('switchModal').classList.remove('open'); }
 
 async function switchActiveAirport(iataCode) {
     closeSwitchModal();
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) return;
-
         const { data: airports } = await supabaseClient.from('airports').select('id, iata_code');
         const airport = airports ? airports.find(function(a) { return a.iata_code === iataCode; }) : null;
         if (!airport) return;
-
         const { error } = await supabaseClient
             .from('driver_profiles')
             .update({ active_airport_id: airport.id, airport_switched_at: new Date().toISOString() })
             .eq('id', session.user.id);
-
         if (error) { console.warn('LotGuard: Airport switch failed:', error); return; }
-
         activeAirport = iataCode;
         localStorage.setItem('lotguard_airport', iataCode);
-
         const subtitle = document.getElementById('timerSubtitle');
         if (subtitle) subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
-
         updateAirportHeader();
         updateSettingsAirport();
         const newTab = document.getElementById('atab-' + iataCode);
         if (newTab) switchBrowseTab(iataCode, newTab);
-
-    } catch (err) {
-        console.warn('LotGuard: Airport switch error:', err);
-    }
+    } catch (err) { console.warn('LotGuard: Airport switch error:', err); }
 }
 
 // ── Event Taxonomy ───────────────────────────────────────────────────────
@@ -1286,9 +1383,7 @@ function areOppositeEvents(bodyA, bodyB) {
 }
 
 function extractKeywords(body) {
-    return body.toLowerCase()
-        .replace(/[^a-z0-9\s]/g, '')
-        .split(/\s+/)
+    return body.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/)
         .filter(function(w) { return w.length > 1 && !STOP_WORDS.has(w); });
 }
 
@@ -1309,38 +1404,28 @@ async function checkForDuplicates(body, session) {
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
     const { data: ownRecent } = await supabaseClient
-        .from('feed_posts')
-        .select('id, body, created_at')
-        .eq('author_id', session.user.id)
-        .eq('airport_iata_code', activeAirport)
-        .eq('is_moderated', false)
-        .gte('created_at', fifteenMinutesAgo)
-        .order('created_at', { ascending: false })
-        .limit(5);
+        .from('feed_posts').select('id, body, created_at')
+        .eq('author_id', session.user.id).eq('airport_iata_code', activeAirport)
+        .eq('is_moderated', false).gte('created_at', fifteenMinutesAgo)
+        .order('created_at', { ascending: false }).limit(5);
 
     if (ownRecent) {
         for (const post of ownRecent) {
-            if (post.body.trim().toLowerCase() === body.trim().toLowerCase()) {
+            if (post.body.trim().toLowerCase() === body.trim().toLowerCase())
                 return { result: 'block', reason: 'You already posted this.' };
-            }
         }
     }
 
     const { data: communityRecent } = await supabaseClient
-        .from('feed_posts')
-        .select('id, body, created_at, author_id')
-        .eq('airport_iata_code', activeAirport)
-        .eq('is_moderated', false)
-        .neq('author_id', session.user.id)
-        .gte('created_at', tenMinutesAgo)
-        .order('created_at', { ascending: false })
-        .limit(20);
+        .from('feed_posts').select('id, body, created_at, author_id')
+        .eq('airport_iata_code', activeAirport).eq('is_moderated', false)
+        .neq('author_id', session.user.id).gte('created_at', tenMinutesAgo)
+        .order('created_at', { ascending: false }).limit(20);
 
     if (communityRecent) {
         for (const post of communityRecent) {
             if (areOppositeEvents(body, post.body)) continue;
-            const score = similarityScore(body, post.body);
-            if (score >= 0.70) return { result: 'confirm', post: post };
+            if (similarityScore(body, post.body) >= 0.70) return { result: 'confirm', post: post };
         }
     }
 
@@ -1365,18 +1450,11 @@ async function confirmExistingPost() {
     if (!pendingConfirmPostId) return;
     const postId = pendingConfirmPostId;
     hideConfirmationPrompt();
-
     try {
         const { data, error } = await supabaseClient.rpc('confirm_post', { p_post_id: postId });
         if (error) { console.warn('LotGuard: Confirm RPC error:', error); setComposerMessage('Could not confirm. Please try again.', false); return; }
         if (data && data.error) {
-            const msgs = {
-                'already_confirmed': 'You already confirmed this alert.',
-                'own_post':          'You cannot confirm your own post.',
-                'window_expired':    'This alert is too old to confirm.',
-                'post_moderated':    'This post is no longer available.',
-                'not_authenticated': 'Please refresh and try again.'
-            };
+            const msgs = { 'already_confirmed': 'You already confirmed this alert.', 'own_post': 'You cannot confirm your own post.', 'window_expired': 'This alert is too old to confirm.', 'post_moderated': 'This post is no longer available.', 'not_authenticated': 'Please refresh and try again.' };
             setComposerMessage(msgs[data.error] || 'Could not confirm.', false);
             return;
         }
@@ -1384,17 +1462,10 @@ async function confirmExistingPost() {
         updateCharCounter();
         setComposerMessage('Thanks for confirming. Other drivers have been notified.', true);
         await loadFeed(activeAirport);
-    } catch (err) {
-        console.warn('LotGuard: Confirm error:', err);
-        setComposerMessage('Could not confirm. Please try again.', false);
-    }
+    } catch (err) { console.warn('LotGuard: Confirm error:', err); setComposerMessage('Could not confirm. Please try again.', false); }
 }
 
-async function postAnyway() {
-    hideConfirmationPrompt();
-    await submitPost(true);
-}
-
+async function postAnyway() { hideConfirmationPrompt(); await submitPost(true); }
 function cancelConfirmation() { hideConfirmationPrompt(); }
 
 // ── Translation ──────────────────────────────────────────────────────────
@@ -1404,12 +1475,8 @@ var originalBodies = {};
 function showTranslatePicker(postId) {
     var picker = document.getElementById('lang-picker-' + postId);
     if (!picker) return;
-    if (picker.classList.contains('open')) {
-        picker.classList.remove('open');
-    } else {
-        document.querySelectorAll('.lang-picker.open').forEach(function(p) { p.classList.remove('open'); });
-        picker.classList.add('open');
-    }
+    if (picker.classList.contains('open')) { picker.classList.remove('open'); }
+    else { document.querySelectorAll('.lang-picker.open').forEach(function(p) { p.classList.remove('open'); }); picker.classList.add('open'); }
 }
 
 async function translatePost(postId, targetLang) {
@@ -1417,23 +1484,18 @@ async function translatePost(postId, targetLang) {
     var bodyEl = document.getElementById('body-' + postId);
     var statusEl = document.getElementById('translate-status-' + postId);
     var translateBtn = document.getElementById('translate-btn-' + postId);
-
     if (!bodyEl) return;
     if (picker) picker.classList.remove('open');
     if (!originalBodies[postId]) originalBodies[postId] = bodyEl.innerText;
-
     if (translationCache[postId] && translationCache[postId][targetLang]) {
         bodyEl.innerText = translationCache[postId][targetLang];
         if (translateBtn) { translateBtn.innerText = 'Show original'; translateBtn.onclick = function() { showOriginal(postId); }; }
         return;
     }
-
     if (statusEl) { statusEl.style.display = 'block'; statusEl.innerText = 'Translating...'; }
     if (translateBtn) translateBtn.style.pointerEvents = 'none';
-
     try {
-        const url = 'https://api.mymemory.translated.net/get?q=' +
-                    encodeURIComponent(originalBodies[postId]) + '&langpair=autodetect|' + targetLang;
+        const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(originalBodies[postId]) + '&langpair=autodetect|' + targetLang;
         const response = await fetch(url);
         const data = await response.json();
         if (data && data.responseStatus === 200 && data.responseData) {
@@ -1447,7 +1509,6 @@ async function translatePost(postId, targetLang) {
             setTimeout(function() { if (statusEl) statusEl.style.display = 'none'; }, 2000);
         }
     } catch (err) {
-        console.warn('LotGuard: Translation error:', err);
         if (statusEl) statusEl.innerText = 'Translation failed. Check your connection.';
         setTimeout(function() { if (statusEl) statusEl.style.display = 'none'; }, 2000);
     } finally {
@@ -1464,20 +1525,13 @@ function showOriginal(postId) {
 }
 
 // ── Driver Feed ──────────────────────────────────────────────────────────
-const BADGE_LABELS = {
-    wait_time: '⏱ WAIT TIME',
-    alert:     '🚨 ALERT',
-    tip:       '💡 TIP',
-    general:   '💬 GENERAL'
-};
-
+const BADGE_LABELS = { wait_time: '⏱ WAIT TIME', alert: '🚨 ALERT', tip: '💡 TIP', general: '💬 GENERAL' };
 const reportedPosts = new Set();
 const confirmedByMe = new Set();
 let currentReportPostId = null;
 
 function timeAgo(dateString) {
-    const now = new Date();
-    const then = new Date(dateString);
+    const now = new Date(), then = new Date(dateString);
     const seconds = Math.floor((now - then) / 1000);
     if (seconds < 60)    return 'just now';
     if (seconds < 3600)  return Math.floor(seconds / 60) + ' min ago';
@@ -1493,11 +1547,7 @@ function renderPost(post, isNew) {
     const alreadyReported = reportedPosts.has(post.id);
     const trustDot = post.trust_indicator ? '<span class="trust-dot">●</span>' : '';
     const confirmCount = post.confirmation_count > 0
-        ? '<span class="confirmation-count">✅ ' + post.confirmation_count + ' confirmed</span>'
-        : '';
-    const reportBtnText = alreadyReported ? 'Reported' : 'Report';
-    const reportBtnAttr = alreadyReported ? 'disabled' : '';
-
+        ? '<span class="confirmation-count">✅ ' + post.confirmation_count + ' confirmed</span>' : '';
     return `
         <div class="post-card${newClass}" id="post-${post.id}">
             <div class="post-header">
@@ -1514,25 +1564,16 @@ function renderPost(post, isNew) {
             <div class="post-body" id="body-${post.id}">${post.body}</div>
             <div class="post-confirmation-row">${confirmCount}</div>
             <div class="post-footer">
-                <button class="translate-link" id="translate-btn-${post.id}"
-                    onclick="showTranslatePicker('${post.id}')">Translate</button>
-                <button class="report-link" id="report-btn-${post.id}"
-                    onclick="openReportModal('${post.id}')"
-                    ${reportBtnAttr}>${reportBtnText}</button>
+                <button class="translate-link" id="translate-btn-${post.id}" onclick="showTranslatePicker('${post.id}')">Translate</button>
+                <button class="report-link" id="report-btn-${post.id}" onclick="openReportModal('${post.id}')"
+                    ${alreadyReported ? 'disabled' : ''}>${alreadyReported ? 'Reported' : 'Report'}</button>
             </div>
         </div>
     `;
 }
 
-function openReportModal(postId) {
-    currentReportPostId = postId;
-    document.getElementById('reportModal').classList.add('open');
-}
-
-function closeReportModal() {
-    currentReportPostId = null;
-    document.getElementById('reportModal').classList.remove('open');
-}
+function openReportModal(postId) { currentReportPostId = postId; document.getElementById('reportModal').classList.add('open'); }
+function closeReportModal() { currentReportPostId = null; document.getElementById('reportModal').classList.remove('open'); }
 
 async function submitReport(reason) {
     const postId = currentReportPostId;
@@ -1541,26 +1582,19 @@ async function submitReport(reason) {
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) return;
-        const { error } = await supabaseClient
-            .from('post_reports')
-            .insert({ post_id: postId, reporter_id: session.user.id, reason: reason });
+        const { error } = await supabaseClient.from('post_reports').insert({ post_id: postId, reporter_id: session.user.id, reason: reason });
         if (error) { console.warn('LotGuard: Report error:', error); return; }
         reportedPosts.add(postId);
         const btn = document.getElementById('report-btn-' + postId);
         if (btn) { btn.innerText = 'Reported'; btn.disabled = true; }
-    } catch (err) {
-        console.warn('LotGuard: Report submit error:', err);
-    }
+    } catch (err) { console.warn('LotGuard: Report submit error:', err); }
 }
 
 async function waitForAuthThenLoadFeed() {
     const feedList = document.getElementById('feedList');
     feedList.innerHTML = '<div class="feed-state">Loading ' + browsingAirport + ' feed...</div>';
     let waited = 0;
-    while (!authReady && waited < 10) {
-        await new Promise(function(resolve) { setTimeout(resolve, 500); });
-        waited++;
-    }
+    while (!authReady && waited < 10) { await new Promise(function(r) { setTimeout(r, 500); }); waited++; }
     await loadFeed(browsingAirport);
     subscribeToFeed(browsingAirport);
 }
@@ -1570,60 +1604,33 @@ async function loadFeed(iataCode) {
     try {
         const { data: posts, error } = await supabaseClient
             .from('feed_posts')
-            .select(`
-                id, body, post_type, created_at, airport_iata_code,
-                author_id, confirmation_count,
-                driver_profiles!author_id ( trust_score )
-            `)
-            .eq('airport_iata_code', iataCode)
-            .eq('is_moderated', false)
+            .select(`id, body, post_type, created_at, airport_iata_code, author_id, confirmation_count, driver_profiles!author_id ( trust_score )`)
+            .eq('airport_iata_code', iataCode).eq('is_moderated', false)
             .gt('expires_at', new Date().toISOString())
-            .order('created_at', { ascending: false })
-            .limit(50);
+            .order('created_at', { ascending: false }).limit(50);
 
-        if (error) {
-            console.warn('LotGuard: Feed load error:', error);
-            feedList.innerHTML = '<div class="feed-state">Unable to load feed. Please try again.</div>';
-            return;
-        }
-
-        if (!posts || posts.length === 0) {
-            feedList.innerHTML = '<div class="feed-state">No posts yet. Be the first to share an update.</div>';
-            return;
-        }
+        if (error) { console.warn('LotGuard: Feed load error:', error); feedList.innerHTML = '<div class="feed-state">Unable to load feed. Please try again.</div>'; return; }
+        if (!posts || posts.length === 0) { feedList.innerHTML = '<div class="feed-state">No posts yet. Be the first to share an update.</div>'; return; }
 
         try {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
                 const postIds = posts.map(function(p) { return p.id; });
-                const { data: myConfs } = await supabaseClient
-                    .from('post_confirmations')
-                    .select('post_id')
-                    .eq('user_id', session.user.id)
-                    .in('post_id', postIds);
+                const { data: myConfs } = await supabaseClient.from('post_confirmations').select('post_id').eq('user_id', session.user.id).in('post_id', postIds);
                 if (myConfs) myConfs.forEach(function(c) { confirmedByMe.add(c.post_id); });
             }
         } catch (e) { /* non-critical */ }
 
-        const postsWithTrust = posts.map(function(p) {
-            return Object.assign({}, p, {
-                trust_indicator: p.driver_profiles && p.driver_profiles.trust_score >= 80
-            });
-        });
-
-        feedList.innerHTML = postsWithTrust.map(function(p) { return renderPost(p, false); }).join('');
-
-    } catch (err) {
-        console.warn('LotGuard: Feed error:', err);
-        feedList.innerHTML = '<div class="feed-state">Unable to load feed. Please try again.</div>';
-    }
+        feedList.innerHTML = posts.map(function(p) {
+            return renderPost(Object.assign({}, p, { trust_indicator: p.driver_profiles && p.driver_profiles.trust_score >= 80 }), false);
+        }).join('');
+    } catch (err) { console.warn('LotGuard: Feed error:', err); feedList.innerHTML = '<div class="feed-state">Unable to load feed. Please try again.</div>'; }
 }
 
 function subscribeToFeed(iataCode) {
     if (realtimeChannel) { supabaseClient.removeChannel(realtimeChannel); realtimeChannel = null; }
     if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
-    realtimeChannel = supabaseClient
-        .channel('airport:' + iataCode)
+    realtimeChannel = supabaseClient.channel('airport:' + iataCode)
         .on('broadcast', { event: 'new_post' }, function(payload) { handleNewRealtimePost(payload.payload); })
         .subscribe();
     pollInterval = setInterval(function() { loadFeed(browsingAirport); }, 30000);
@@ -1665,222 +1672,131 @@ function setComposerMessage(msg, isSuccess) {
 async function submitPost(bypass) {
     const body = document.getElementById('postBody').value.trim();
     const submitBtn = document.getElementById('submitBtn');
-
     if (body.length < 3) { setComposerMessage('Please write a message before posting.', false); return; }
     if (body.length > 280) { setComposerMessage('Message is too long. Max 280 characters.', false); return; }
-
     const now = Date.now();
-    if (now - lastPostTime < 30000) {
-        const secondsLeft = Math.ceil((30000 - (now - lastPostTime)) / 1000);
-        setComposerMessage('Please wait ' + secondsLeft + ' seconds before posting again.', false);
-        return;
-    }
-
+    if (now - lastPostTime < 30000) { setComposerMessage('Please wait ' + Math.ceil((30000 - (now - lastPostTime)) / 1000) + ' seconds before posting again.', false); return; }
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) { setComposerMessage('Not signed in. Please refresh and try again.', false); return; }
-
-    const { data: profile } = await supabaseClient
-        .from('driver_profiles').select('is_banned').eq('id', session.user.id).single();
+    const { data: profile } = await supabaseClient.from('driver_profiles').select('is_banned').eq('id', session.user.id).single();
     if (profile && profile.is_banned) { setComposerMessage('You can no longer post in LotGuard.', false); return; }
-
     if (!bypass) {
         const check = await checkForDuplicates(body, session);
         if (check.result === 'block') { setComposerMessage(check.reason, false); return; }
         if (check.result === 'confirm') { showConfirmationPrompt(check.post); return; }
     }
-
     const { data: airports } = await supabaseClient.from('airports').select('id, iata_code');
     const airport = airports ? airports.find(function(a) { return a.iata_code === activeAirport; }) : null;
     if (!airport) { setComposerMessage('Could not find airport. Please try again.', false); return; }
-
-    submitBtn.disabled = true;
-    submitBtn.innerText = 'Posting...';
-
+    submitBtn.disabled = true; submitBtn.innerText = 'Posting...';
     try {
-        const { error } = await supabaseClient
-            .from('feed_posts')
-            .insert({ airport_id: airport.id, author_id: session.user.id, body: body, post_type: selectedPostType });
-
+        const { error } = await supabaseClient.from('feed_posts').insert({ airport_id: airport.id, author_id: session.user.id, body: body, post_type: selectedPostType });
         if (error) { console.warn('LotGuard: Post error:', error); setComposerMessage('Could not post. Please try again.', false); return; }
-
         lastPostTime = Date.now();
         document.getElementById('postBody').value = '';
         updateCharCounter();
         setComposerMessage('Posted successfully!', true);
         await loadFeed(activeAirport);
-
-    } catch (err) {
-        console.warn('LotGuard: Submit error:', err);
-        setComposerMessage('Could not post. Please try again.', false);
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'Post Update';
-    }
+    } catch (err) { console.warn('LotGuard: Submit error:', err); setComposerMessage('Could not post. Please try again.', false); }
+    finally { submitBtn.disabled = false; submitBtn.innerText = 'Post Update'; }
 }
 
 // ── Timer ────────────────────────────────────────────────────────────────
-let totalSeconds = 60 * 60;
-let remainingSeconds = totalSeconds;
-let timerInterval;
-let audioContext;
-let soundUnlocked = false;
+let totalSeconds = 60 * 60, remainingSeconds = totalSeconds, timerInterval, audioContext, soundUnlocked = false;
 
-function unlockSound() {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    soundUnlocked = true;
-}
+function unlockSound() { audioContext = new (window.AudioContext || window.webkitAudioContext)(); soundUnlocked = true; }
 
 async function playBeep() {
     if (!soundUnlocked || !audioContext) return;
     if (audioContext.state === 'suspended') await audioContext.resume();
-    var osc = audioContext.createOscillator();
-    var gain = audioContext.createGain();
+    var osc = audioContext.createOscillator(), gain = audioContext.createGain();
     osc.connect(gain); gain.connect(audioContext.destination);
-    osc.frequency.value = 800;
-    gain.gain.setValueAtTime(0.5, audioContext.currentTime);
-    osc.start(audioContext.currentTime);
-    osc.stop(audioContext.currentTime + 0.3);
+    osc.frequency.value = 800; gain.gain.setValueAtTime(0.5, audioContext.currentTime);
+    osc.start(audioContext.currentTime); osc.stop(audioContext.currentTime + 0.3);
 }
 
 function calculateRemainingTime() {
     var saved = localStorage.getItem('lotguardStartTime');
-    if (saved) {
-        var elapsed = Math.floor((Date.now() - Number(saved)) / 1000);
-        remainingSeconds = totalSeconds - elapsed;
-        if (remainingSeconds < 0) remainingSeconds = 0;
-    }
+    if (saved) { remainingSeconds = totalSeconds - Math.floor((Date.now() - Number(saved)) / 1000); if (remainingSeconds < 0) remainingSeconds = 0; }
 }
 
 function updateDisplay() {
-    var mins = Math.floor(remainingSeconds / 60);
-    var secs = remainingSeconds % 60;
-    document.getElementById('timer').innerText =
-        String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    document.getElementById('timer').innerText = String(Math.floor(remainingSeconds / 60)).padStart(2, '0') + ':' + String(remainingSeconds % 60).padStart(2, '0');
     var status = document.getElementById('status');
     if (remainingSeconds > 15 * 60) {
-        status.innerText = 'SAFE ZONE';
-        document.body.style.backgroundColor = '#d4f8d4';
-        document.getElementById('alertBox').innerText = '';
+        status.innerText = 'SAFE ZONE'; document.body.style.backgroundColor = '#d4f8d4'; document.getElementById('alertBox').innerText = '';
     } else if (remainingSeconds > 5 * 60) {
-        status.innerText = 'PREPARE TO LEAVE';
-        document.body.classList.remove('flash-red');
-        document.body.style.backgroundColor = '#fff3b0';
-        document.getElementById('alertBox').innerText = '15 MINUTES REMAINING';
-        if (remainingSeconds === 15 * 60) playBeep();
+        status.innerText = 'PREPARE TO LEAVE'; document.body.classList.remove('flash-red'); document.body.style.backgroundColor = '#fff3b0';
+        document.getElementById('alertBox').innerText = '15 MINUTES REMAINING'; if (remainingSeconds === 15 * 60) playBeep();
     } else if (remainingSeconds > 0) {
-        status.innerText = 'LEAVE THE LOT NOW';
-        document.body.classList.add('flash-red');
-        document.getElementById('alertBox').innerText = '⚠️ EXIT NOW ⚠️';
+        status.innerText = 'LEAVE THE LOT NOW'; document.body.classList.add('flash-red'); document.getElementById('alertBox').innerText = '⚠️ EXIT NOW ⚠️';
     } else {
-        clearInterval(timerInterval);
-        status.innerText = 'VIOLATION RISK';
-        document.getElementById('timer').innerText = '00:00';
-        document.body.style.backgroundColor = '#8b0000';
-        document.getElementById('alertBox').innerText = 'YOU HAVE EXCEEDED THE LOT LIMIT';
+        clearInterval(timerInterval); status.innerText = 'VIOLATION RISK'; document.getElementById('timer').innerText = '00:00';
+        document.body.style.backgroundColor = '#8b0000'; document.getElementById('alertBox').innerText = 'YOU HAVE EXCEEDED THE LOT LIMIT';
     }
 }
 
-function runCountdown() {
-    clearInterval(timerInterval);
-    timerInterval = setInterval(function() { calculateRemainingTime(); updateDisplay(); }, 1000);
-}
+function runCountdown() { clearInterval(timerInterval); timerInterval = setInterval(function() { calculateRemainingTime(); updateDisplay(); }, 1000); }
 
 function startTimer() {
     unlockSound();
-    var existing = localStorage.getItem('lotguardStartTime');
-    if (existing && remainingSeconds > 0) {
-        if (!confirm('A timer is already running. Start a new 60-minute timer?')) return;
-    }
+    if (localStorage.getItem('lotguardStartTime') && remainingSeconds > 0) { if (!confirm('A timer is already running. Start a new 60-minute timer?')) return; }
     var now = new Date();
     localStorage.setItem('lotguardStartTime', now.getTime());
-    document.getElementById('enteredAt').innerText =
-        'Entered Lot: ' + now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-    var exitTime = new Date(now.getTime() + 60 * 60 * 1000);
-    document.getElementById('exitBy').innerText =
-        'Exit By: ' + exitTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    document.getElementById('enteredAt').innerText = 'Entered Lot: ' + now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    document.getElementById('exitBy').innerText = 'Exit By: ' + new Date(now.getTime() + 3600000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     calculateRemainingTime(); updateDisplay(); runCountdown();
 }
 
 function resetTimer() {
-    clearInterval(timerInterval);
-    remainingSeconds = totalSeconds;
-    document.body.classList.remove('flash-red');
-    document.getElementById('timer').innerText = '60:00';
-    document.getElementById('status').innerText = 'Ready to start';
-    document.getElementById('enteredAt').innerText = 'Entered Lot: --';
-    document.getElementById('exitBy').innerText = 'Exit By: --';
-    document.getElementById('alertBox').innerText = '';
-    document.body.style.backgroundColor = 'white';
+    clearInterval(timerInterval); remainingSeconds = totalSeconds; document.body.classList.remove('flash-red');
+    document.getElementById('timer').innerText = '60:00'; document.getElementById('status').innerText = 'Ready to start';
+    document.getElementById('enteredAt').innerText = 'Entered Lot: --'; document.getElementById('exitBy').innerText = 'Exit By: --';
+    document.getElementById('alertBox').innerText = ''; document.body.style.backgroundColor = 'white';
     localStorage.removeItem('lotguardStartTime');
 }
 
-setInterval(function() {
-    document.getElementById('currentTime').innerText =
-        'Current Time: ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-}, 1000);
+setInterval(function() { document.getElementById('currentTime').innerText = 'Current Time: ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }, 1000);
 
 var savedStartTime = localStorage.getItem('lotguardStartTime');
 if (savedStartTime) {
-    var startTime = new Date(Number(savedStartTime));
-    var exitTime  = new Date(Number(savedStartTime) + 60 * 60 * 1000);
-    document.getElementById('enteredAt').innerText =
-        'Entered Lot: ' + startTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-    document.getElementById('exitBy').innerText =
-        'Exit By: ' + exitTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    document.getElementById('enteredAt').innerText = 'Entered Lot: ' + new Date(Number(savedStartTime)).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    document.getElementById('exitBy').innerText = 'Exit By: ' + new Date(Number(savedStartTime) + 3600000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     calculateRemainingTime(); updateDisplay(); runCountdown();
 }
 
-document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) { calculateRemainingTime(); updateDisplay(); }
-});
+document.addEventListener('visibilitychange', function() { if (!document.hidden) { calculateRemainingTime(); updateDisplay(); } });
 
 // ── Airport Selection (first time) ───────────────────────────────────────
-function showAirportModal()  { document.getElementById('airportOverlay').classList.add('visible'); }
-function hideAirportModal()  { document.getElementById('airportOverlay').classList.remove('visible'); }
+function showAirportModal() { document.getElementById('airportOverlay').classList.add('visible'); }
+function hideAirportModal() { document.getElementById('airportOverlay').classList.remove('visible'); }
 
 async function checkAirportSelection() {
     try {
         const local = localStorage.getItem('lotguard_airport');
         if (local) { activeAirport = local; browsingAirport = local; return; }
         let session = null, attempts = 0;
-        while (!session && attempts < 10) {
-            const { data } = await supabaseClient.auth.getSession();
-            session = data.session;
-            if (!session) { await new Promise(function(r) { setTimeout(r, 500); }); attempts++; }
-        }
+        while (!session && attempts < 10) { const { data } = await supabaseClient.auth.getSession(); session = data.session; if (!session) { await new Promise(function(r) { setTimeout(r, 500); }); attempts++; } }
         if (!session) { showAirportModal(); return; }
-        const { data: profile, error } = await supabaseClient
-            .from('driver_profiles').select('active_airport_id').eq('id', session.user.id).single();
+        const { data: profile, error } = await supabaseClient.from('driver_profiles').select('active_airport_id').eq('id', session.user.id).single();
         if (error || !profile || !profile.active_airport_id) showAirportModal();
-    } catch (err) {
-        console.warn('LotGuard: Could not check airport selection.', err);
-        showAirportModal();
-    }
+    } catch (err) { console.warn('LotGuard: Could not check airport selection.', err); showAirportModal(); }
 }
 
 async function selectAirport(iataCode) {
-    localStorage.setItem('lotguard_airport', iataCode);
-    activeAirport = iataCode;
-    browsingAirport = iataCode;
-    hideAirportModal();
+    localStorage.setItem('lotguard_airport', iataCode); activeAirport = iataCode; browsingAirport = iataCode; hideAirportModal();
     const subtitle = document.getElementById('timerSubtitle');
     if (subtitle) subtitle.innerText = '✈️ ' + iataCode + ' — TNC Waiting Lot';
     const tab = document.getElementById('atab-' + iataCode);
-    if (tab) {
-        document.querySelectorAll('.airport-tab-btn').forEach(function(b) { b.classList.remove('active'); });
-        tab.classList.add('active');
-    }
+    if (tab) { document.querySelectorAll('.airport-tab-btn').forEach(function(b) { b.classList.remove('active'); }); tab.classList.add('active'); }
     try {
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (!session) return;
         const { data: airports } = await supabaseClient.from('airports').select('id, iata_code');
         const airport = airports ? airports.find(function(a) { return a.iata_code === iataCode; }) : null;
         if (!airport) return;
-        await supabaseClient.from('driver_profiles')
-            .update({ active_airport_id: airport.id }).eq('id', session.user.id);
-    } catch (err) {
-        console.warn('LotGuard: Airport selection error:', err);
-    }
+        await supabaseClient.from('driver_profiles').update({ active_airport_id: airport.id }).eq('id', session.user.id);
+    } catch (err) { console.warn('LotGuard: Airport selection error:', err); }
 }
 
 setTimeout(checkAirportSelection, 3000);
