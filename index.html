@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <title>LotGuard</title>
 <meta charset="utf-8">
-<!-- LotGuard PWA v3.2 -->
+<!-- LotGuard PWA v3.3 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#34c759">
@@ -43,7 +43,6 @@ button {
 }
 
 .reset-btn { background: #ff3b30; }
-
 .flash-red { animation: flashRed 1s infinite; }
 
 @keyframes flashRed {
@@ -409,17 +408,8 @@ button {
     width: auto;
 }
 
-.confirm-btn-yes {
-    background: #34c759;
-    color: white;
-}
-
-.confirm-btn-post {
-    background: #f5f5f5;
-    color: #333;
-    border: 1px solid #ddd;
-}
-
+.confirm-btn-yes  { background: #34c759; color: white; }
+.confirm-btn-post { background: #f5f5f5; color: #333; border: 1px solid #ddd; }
 .confirm-btn-cancel {
     background: transparent;
     color: #aaa;
@@ -953,7 +943,7 @@ async function switchActiveAirport(iataCode) {
     }
 }
 
-// ── Event Taxonomy (client-side similarity classification) ───────────────
+// ── Event Taxonomy ───────────────────────────────────────────────────────
 const EVENT_TAXONOMY = {
     compliance: {
         keywords: ['compliance', 'tsa', 'enforcement', 'officer', 'inspector', 'placard', 'check'],
@@ -1037,7 +1027,7 @@ async function checkForDuplicates(body, session) {
     const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
-    // Rule 1: same-driver exact duplicate within 15 minutes — block
+    // Rule 1: same-driver exact duplicate within 15 minutes
     const { data: ownRecent } = await supabaseClient
         .from('feed_posts')
         .select('id, body, created_at')
@@ -1056,7 +1046,7 @@ async function checkForDuplicates(body, session) {
         }
     }
 
-    // Rule 2: community similar post within 10 minutes — confirmation prompt
+    // Rule 2: community similar post within 10 minutes
     const { data: communityRecent } = await supabaseClient
         .from('feed_posts')
         .select('id, body, created_at, author_id')
@@ -1069,9 +1059,7 @@ async function checkForDuplicates(body, session) {
 
     if (communityRecent) {
         for (const post of communityRecent) {
-            // Skip if opposite events
             if (areOppositeEvents(body, post.body)) continue;
-            // Check similarity
             const score = similarityScore(body, post.body);
             if (score >= 0.70) {
                 return { result: 'confirm', post: post };
@@ -1084,14 +1072,9 @@ async function checkForDuplicates(body, session) {
 
 function showConfirmationPrompt(post) {
     pendingConfirmPostId = post.id;
-    const prompt = document.getElementById('confirmationPrompt');
-    const bodyEl = document.getElementById('confirmPromptBody');
-    const metaEl = document.getElementById('confirmPromptMeta');
-
-    bodyEl.innerText = '"' + post.body + '"';
-    metaEl.innerText = 'Posted ' + timeAgo(post.created_at) + ' at ' + activeAirport;
-
-    prompt.classList.add('visible');
+    document.getElementById('confirmPromptBody').innerText = '"' + post.body + '"';
+    document.getElementById('confirmPromptMeta').innerText = 'Posted ' + timeAgo(post.created_at) + ' at ' + activeAirport;
+    document.getElementById('confirmationPrompt').classList.add('visible');
     document.getElementById('submitBtn').style.display = 'none';
 }
 
@@ -1103,7 +1086,6 @@ function hideConfirmationPrompt() {
 
 async function confirmExistingPost() {
     if (!pendingConfirmPostId) return;
-
     const postId = pendingConfirmPostId;
     hideConfirmationPrompt();
 
@@ -1116,7 +1098,7 @@ async function confirmExistingPost() {
             return;
         }
 
-        if (data.error) {
+        if (data && data.error) {
             const msgs = {
                 'already_confirmed': 'You already confirmed this alert.',
                 'own_post':          'You cannot confirm your own post.',
@@ -1128,7 +1110,6 @@ async function confirmExistingPost() {
             return;
         }
 
-        // Success
         document.getElementById('postBody').value = '';
         updateCharCounter();
         setComposerMessage('Thanks for confirming. Other drivers have been notified.', true);
@@ -1142,12 +1123,11 @@ async function confirmExistingPost() {
 
 async function postAnyway() {
     hideConfirmationPrompt();
-    await submitPost(true); // bypass = true — skip duplicate check for this submission
+    await submitPost(true);
 }
 
 function cancelConfirmation() {
     hideConfirmationPrompt();
-    // Typed text is preserved in the textarea
 }
 
 // ── Translation ──────────────────────────────────────────────────────────
@@ -1251,19 +1231,12 @@ function renderPost(post, isNew) {
     const time = timeAgo(post.created_at);
     const newClass = isNew ? ' new-post' : '';
     const alreadyReported = reportedPosts.has(post.id);
-    const alreadyConfirmed = confirmedByMe.has(post.id);
     const trustDot = post.trust_indicator ? '<span class="trust-dot">●</span>' : '';
-
     const confirmCount = post.confirmation_count > 0
         ? '<span class="confirmation-count">✅ ' + post.confirmation_count + ' confirmed</span>'
         : '';
-
     const reportBtnText = alreadyReported ? 'Reported' : 'Report';
     const reportBtnAttr = alreadyReported ? 'disabled' : '';
-
-    // Check if within 10-minute confirmation window and not own post
-    const postAge = (new Date() - new Date(post.created_at)) / 1000 / 60;
-    const canConfirm = postAge <= 10 && !alreadyConfirmed;
 
     return `
         <div class="post-card${newClass}" id="post-${post.id}">
@@ -1279,9 +1252,7 @@ function renderPost(post, isNew) {
                 <button class="lang-btn" onclick="translatePost('${post.id}', 'pa')">ਪੰਜਾਬੀ</button>
             </div>
             <div class="post-body" id="body-${post.id}">${post.body}</div>
-            <div class="post-confirmation-row">
-                ${confirmCount}
-            </div>
+            <div class="post-confirmation-row">${confirmCount}</div>
             <div class="post-footer">
                 <button class="translate-link" id="translate-btn-${post.id}"
                     onclick="showTranslatePicker('${post.id}')">Translate</button>
@@ -1354,7 +1325,7 @@ async function loadFeed(iataCode) {
             `)
             .eq('airport_iata_code', iataCode)
             .eq('is_moderated', false)
-            .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+            .gt('expires_at', new Date().toISOString())
             .order('created_at', { ascending: false })
             .limit(50);
 
@@ -1369,7 +1340,7 @@ async function loadFeed(iataCode) {
             return;
         }
 
-        // Load own confirmations for visible posts
+        // Load own confirmations
         try {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
@@ -1463,7 +1434,6 @@ async function submitPost(bypass) {
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) { setComposerMessage('Not signed in. Please refresh and try again.', false); return; }
 
-    // Banned check
     const { data: profile } = await supabaseClient
         .from('driver_profiles').select('is_banned').eq('id', session.user.id).single();
     if (profile && profile.is_banned) {
@@ -1471,22 +1441,12 @@ async function submitPost(bypass) {
         return;
     }
 
-    // Duplicate / similarity check (skip if bypass = true from postAnyway)
     if (!bypass) {
         const check = await checkForDuplicates(body, session);
-
-        if (check.result === 'block') {
-            setComposerMessage(check.reason, false);
-            return;
-        }
-
-        if (check.result === 'confirm') {
-            showConfirmationPrompt(check.post);
-            return;
-        }
+        if (check.result === 'block') { setComposerMessage(check.reason, false); return; }
+        if (check.result === 'confirm') { showConfirmationPrompt(check.post); return; }
     }
 
-    // Get airport
     const { data: airports } = await supabaseClient.from('airports').select('id, iata_code');
     const airport = airports ? airports.find(function(a) { return a.iata_code === activeAirport; }) : null;
     if (!airport) { setComposerMessage('Could not find airport. Please try again.', false); return; }
