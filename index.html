@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <title>LotGuard</title>
 <meta charset="utf-8">
-<!-- LotGuard PWA v4.1 -->
+<!-- LotGuard PWA v4.2 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#34c759">
@@ -141,6 +141,107 @@ button {
     color: #34c759;
     border-bottom: 3px solid #34c759;
     background: transparent;
+}
+
+/* ── Operations Brief ─────────────────────────────────────────────────── */
+.brief-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 16px;
+    text-align: left;
+    color: white;
+}
+
+.brief-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.brief-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+}
+
+.brief-badge {
+    font-size: 10px;
+    font-weight: bold;
+    background: #34c759;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+}
+
+.brief-status {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 12px;
+}
+
+.brief-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px;
+}
+
+.brief-row:last-of-type { border-bottom: none; }
+.brief-label { color: rgba(255,255,255,0.55); }
+.brief-value { color: white; font-weight: 600; text-align: right; max-width: 60%; }
+
+.brief-recommendation {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: rgba(52,199,89,0.15);
+    border-radius: 8px;
+    border-left: 3px solid #34c759;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.4;
+    text-align: left;
+}
+
+.brief-footer {
+    margin-top: 10px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    text-align: right;
+}
+
+.brief-teaser {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.brief-teaser-left { flex: 1; }
+.brief-teaser-title { font-size: 14px; font-weight: bold; color: white; margin-bottom: 3px; }
+.brief-teaser-sub { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+.brief-teaser-btn {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: none;
+    background: #34c759;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+    margin: 0;
+    width: auto;
 }
 
 /* ── Driver Feed ──────────────────────────────────────────────────────── */
@@ -389,7 +490,6 @@ button {
 
 /* ── Settings Tab ─────────────────────────────────────────────────────── */
 .settings-panel { text-align: left; }
-
 .settings-section { border-bottom: 1px solid #f0f0f0; padding: 16px 0; }
 .settings-section:last-child { border-bottom: none; }
 
@@ -411,7 +511,6 @@ button {
 }
 
 .settings-row:active { opacity: 0.7; }
-
 .settings-row-left { display: flex; flex-direction: column; gap: 2px; }
 .settings-row-title { font-size: 15px; font-weight: bold; color: #1a1a1a; }
 .settings-row-subtitle { font-size: 13px; color: #888; }
@@ -427,19 +526,8 @@ button {
     text-align: left;
 }
 
-.email-link-card-title {
-    font-size: 15px;
-    font-weight: bold;
-    color: #1a1a1a;
-    margin-bottom: 6px;
-}
-
-.email-link-card-desc {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 14px;
-    line-height: 1.5;
-}
+.email-link-card-title { font-size: 15px; font-weight: bold; color: #1a1a1a; margin-bottom: 6px; }
+.email-link-card-desc { font-size: 13px; color: #666; margin-bottom: 14px; line-height: 1.5; }
 
 .email-input {
     width: 100%;
@@ -484,14 +572,7 @@ button {
     text-decoration: underline;
 }
 
-.email-status {
-    font-size: 13px;
-    text-align: center;
-    margin-top: 8px;
-    color: #ff3b30;
-    min-height: 18px;
-}
-
+.email-status { font-size: 13px; text-align: center; margin-top: 8px; color: #ff3b30; min-height: 18px; }
 .email-status.success { color: #34c759; }
 
 .email-sent-card {
@@ -840,7 +921,12 @@ button {
                 <button class="airport-tab-btn" id="atab-SJC" onclick="switchBrowseTab('SJC', this)">SJC</button>
                 <button class="airport-tab-btn" id="atab-OAK" onclick="switchBrowseTab('OAK', this)">OAK</button>
             </div>
+
+            <!-- Operations Brief -->
+            <div id="operationsBrief" style="display:none;"></div>
+
             <div id="feedList"><div class="feed-state">Loading feed...</div></div>
+
             <div class="composer">
                 <div id="composerDisabledMsg" class="composer-disabled-msg" style="display:none;"></div>
                 <textarea id="postBody" placeholder="Share an update with SFO drivers..." maxlength="280" oninput="updateCharCounter()"></textarea>
@@ -869,8 +955,6 @@ button {
         <!-- Settings Tab -->
         <div id="tab-settings" class="tab-panel">
             <div class="settings-panel">
-
-                <!-- Active Airport -->
                 <div class="settings-section">
                     <div class="settings-section-label">Active Airport</div>
                     <div class="settings-row" onclick="openSwitchModal()">
@@ -881,34 +965,23 @@ button {
                         <div class="settings-row-right">›</div>
                     </div>
                 </div>
-
-                <!-- Account -->
                 <div class="settings-section">
                     <div class="settings-section-label">Account</div>
-                    <div id="accountSection">
-                        <!-- Populated by renderAccountSection() -->
-                    </div>
+                    <div id="accountSection"></div>
                 </div>
-
-                <!-- LotGuard Pro -->
                 <div class="settings-section">
                     <div class="settings-section-label">LotGuard Pro</div>
-                    <div id="proSection">
-                        <!-- Populated by renderProSection() -->
-                    </div>
+                    <div id="proSection"></div>
                 </div>
-
-                <!-- About -->
                 <div class="settings-section">
                     <div class="settings-section-label">About</div>
                     <div class="settings-row">
                         <div class="settings-row-left">
                             <div class="settings-row-title">LotGuard</div>
-                            <div class="settings-row-subtitle">Version 4.1 · For airport rideshare drivers</div>
+                            <div class="settings-row-subtitle">Version 4.2 · For airport rideshare drivers</div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -938,7 +1011,6 @@ let currentProfile = null;
         await loadProfile();
         authReady = true;
 
-        // Listen for auth state changes (magic link verification)
         supabaseClient.auth.onAuthStateChange(async function(event, session) {
             if (event === 'USER_UPDATED' || event === 'SIGNED_IN') {
                 currentSession = session;
@@ -947,7 +1019,6 @@ let currentProfile = null;
                 renderProSection();
             }
         });
-
     } catch (err) {
         console.warn('LotGuard: Supabase auth unavailable.', err);
         authReady = true;
@@ -973,9 +1044,7 @@ function getUserEmail() {
     return currentSession.user.email || null;
 }
 
-function isEmailLinked() {
-    return !!getUserEmail();
-}
+function isEmailLinked() { return !!getUserEmail(); }
 
 // ── Airport Subtitle ─────────────────────────────────────────────────────
 (function setTimerSubtitle() {
@@ -988,7 +1057,6 @@ function isEmailLinked() {
 let activeAirport = localStorage.getItem('lotguard_airport') || 'SFO';
 let browsingAirport = activeAirport;
 const AIRPORTS = ['SFO', 'SJC', 'OAK'];
-
 const AIRPORT_NAMES = {
     'SFO': 'San Francisco International',
     'SJC': 'San Jose International',
@@ -1031,14 +1099,13 @@ function updateComposerState() {
 }
 
 // ── Settings — Account Section ───────────────────────────────────────────
-var emailLinkState = 'idle'; // idle | entering | sent
+var emailLinkState = 'idle';
 
 function renderAccountSection() {
     const el = document.getElementById('accountSection');
     if (!el) return;
 
     if (isEmailLinked()) {
-        // Email is linked — show verified state
         el.innerHTML = `
             <div class="account-verified-row">
                 <div class="account-verified-icon">✅</div>
@@ -1056,7 +1123,6 @@ function renderAccountSection() {
             <div class="email-sent-card">
                 <div class="email-sent-title">✉️ Check your email</div>
                 <div class="email-sent-desc">
-                    We sent a sign-in link to <strong id="sentEmailDisplay"></strong>.<br><br>
                     Open the link on this device to verify your account.
                 </div>
                 <button class="email-resend-btn" onclick="resetEmailLinkState()">Use a different email</button>
@@ -1089,7 +1155,6 @@ function renderAccountSection() {
         return;
     }
 
-    // Default idle state
     el.innerHTML = `
         <div class="settings-row" onclick="startEmailLink()">
             <div class="settings-row-left">
@@ -1101,25 +1166,16 @@ function renderAccountSection() {
     `;
 }
 
-function startEmailLink() {
-    emailLinkState = 'entering';
-    renderAccountSection();
-}
-
-function resetEmailLinkState() {
-    emailLinkState = 'idle';
-    renderAccountSection();
-}
+function startEmailLink() { emailLinkState = 'entering'; renderAccountSection(); }
+function resetEmailLinkState() { emailLinkState = 'idle'; renderAccountSection(); }
 
 async function sendMagicLink() {
     const input = document.getElementById('emailInput');
     const statusEl = document.getElementById('emailStatus');
     const submitBtn = document.getElementById('emailSubmitBtn');
-
     if (!input) return;
 
     const email = input.value.trim().toLowerCase();
-
     if (!email || !email.includes('@') || !email.includes('.')) {
         if (statusEl) { statusEl.innerText = 'Please enter a valid email address.'; statusEl.className = 'email-status'; }
         return;
@@ -1130,36 +1186,17 @@ async function sendMagicLink() {
 
     try {
         const { error } = await supabaseClient.auth.updateUser({ email: email });
-
         if (error) {
-            console.warn('LotGuard: Magic link error:', error);
-
-            // Handle duplicate email conflict
             if (error.message && error.message.toLowerCase().includes('already')) {
-                if (statusEl) {
-                    statusEl.innerText = 'This email is already linked to another account. Try a different email.';
-                    statusEl.className = 'email-status';
-                }
-                if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = 'Send Magic Link'; }
-                return;
-            }
-
-            if (statusEl) {
-                statusEl.innerText = 'Could not send link. Please try again.';
-                statusEl.className = 'email-status';
+                if (statusEl) { statusEl.innerText = 'This email is already linked to another account. Try a different email.'; statusEl.className = 'email-status'; }
+            } else {
+                if (statusEl) { statusEl.innerText = 'Could not send link. Please try again.'; statusEl.className = 'email-status'; }
             }
             if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = 'Send Magic Link'; }
             return;
         }
-
-        // Success — show sent state
         emailLinkState = 'sent';
         renderAccountSection();
-
-        // Show the email address in the sent card
-        const sentDisplay = document.getElementById('sentEmailDisplay');
-        if (sentDisplay) sentDisplay.innerText = email;
-
     } catch (err) {
         console.warn('LotGuard: Send magic link error:', err);
         if (statusEl) { statusEl.innerText = 'Could not send link. Check your connection.'; statusEl.className = 'email-status'; }
@@ -1206,16 +1243,12 @@ function renderProSection() {
 }
 
 function handleUpgradeClick() {
-    // V4-D: connects to Stripe checkout
-    // Requires email to be linked first
     if (!isEmailLinked()) {
         emailLinkState = 'entering';
         renderAccountSection();
-        // Scroll to account section
         document.getElementById('accountSection').scrollIntoView({ behavior: 'smooth' });
         return;
     }
-    // Stripe checkout — coming in V4-D
     alert('Pro subscriptions are coming very soon. You\'ll be among the first to know.');
 }
 
@@ -1499,7 +1532,7 @@ async function translatePost(postId, targetLang) {
         const response = await fetch(url);
         const data = await response.json();
         if (data && data.responseStatus === 200 && data.responseData) {
-            const translated = data.responseData.translatedText;
+            const translated = decodeURIComponent(data.responseData.translatedText);
             if (!translationCache[postId]) translationCache[postId] = {};
             translationCache[postId][targetLang] = translated;
             bodyEl.innerText = translated;
@@ -1524,6 +1557,95 @@ function showOriginal(postId) {
     if (translateBtn) { translateBtn.innerText = 'Translate'; translateBtn.onclick = function() { showTranslatePicker(postId); }; }
 }
 
+// ── Operations Brief ─────────────────────────────────────────────────────
+async function loadOperationsBrief(iataCode) {
+    const briefEl = document.getElementById('operationsBrief');
+    if (!briefEl) return;
+
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) { briefEl.style.display = 'none'; return; }
+
+        const { data: profile } = await supabaseClient
+            .from('driver_profiles')
+            .select('is_pro, pro_expires_at')
+            .eq('id', session.user.id)
+            .single();
+
+        const isPro = profile?.is_pro &&
+            (!profile?.pro_expires_at || new Date(profile.pro_expires_at) > new Date());
+
+        if (!isPro) {
+            briefEl.style.display = 'block';
+            briefEl.innerHTML = `
+                <div class="brief-teaser">
+                    <div class="brief-teaser-left">
+                        <div class="brief-teaser-title">⭐ ${iataCode} Operations Brief</div>
+                        <div class="brief-teaser-sub">Skip reading dozens of posts. Get the situation in seconds.</div>
+                    </div>
+                    <button class="brief-teaser-btn" onclick="showTab('settings', document.getElementById('btn-settings'))">
+                        Upgrade
+                    </button>
+                </div>
+            `;
+            return;
+        }
+
+        const { data: summary } = await supabaseClient
+            .from('airport_summaries')
+            .select('*')
+            .eq('airport_iata', iataCode)
+            .gt('valid_until', new Date().toISOString())
+            .order('generated_at', { ascending: false })
+            .limit(1)
+            .single();
+
+        if (!summary || !summary.structured_data) {
+            briefEl.style.display = 'none';
+            return;
+        }
+
+        const s = summary.structured_data;
+        const generatedMins = Math.floor((Date.now() - new Date(summary.generated_at).getTime()) / 60000);
+        const updatedText = generatedMins === 0 ? 'just now' : generatedMins + ' min ago';
+
+        briefEl.style.display = 'block';
+        briefEl.innerHTML = `
+            <div class="brief-card">
+                <div class="brief-header">
+                    <span class="brief-title">✈️ ${iataCode} Operations Brief</span>
+                    <span class="brief-badge">⭐ PRO</span>
+                </div>
+                <div class="brief-status">${s.overall_emoji} ${s.overall_status.charAt(0).toUpperCase() + s.overall_status.slice(1)} activity</div>
+                <div class="brief-row">
+                    <span class="brief-label">Queue Estimate</span>
+                    <span class="brief-value">${s.queue_estimate}</span>
+                </div>
+                <div class="brief-row">
+                    <span class="brief-label">Compliance</span>
+                    <span class="brief-value">${s.compliance_active ? '⚠️ ' + s.compliance_summary : 'None reported'}</span>
+                </div>
+                <div class="brief-row">
+                    <span class="brief-label">Overflow</span>
+                    <span class="brief-value">${s.overflow_status.charAt(0).toUpperCase() + s.overflow_status.slice(1)}</span>
+                </div>
+                ${s.terminal_summary ? `<div class="brief-row"><span class="brief-label">Terminals</span><span class="brief-value">${s.terminal_summary}</span></div>` : ''}
+                <div class="brief-row">
+                    <span class="brief-label">Confidence</span>
+                    <span class="brief-value">${s.confidence_level.charAt(0).toUpperCase() + s.confidence_level.slice(1)} · ${summary.post_count} reports</span>
+                </div>
+                <div class="brief-recommendation">→ ${s.recommended_action}</div>
+                <div class="brief-footer">Updated ${updatedText}</div>
+            </div>
+        `;
+
+    } catch (err) {
+        console.warn('LotGuard: Brief load error:', err);
+        const briefEl = document.getElementById('operationsBrief');
+        if (briefEl) briefEl.style.display = 'none';
+    }
+}
+
 // ── Driver Feed ──────────────────────────────────────────────────────────
 const BADGE_LABELS = { wait_time: '⏱ WAIT TIME', alert: '🚨 ALERT', tip: '💡 TIP', general: '💬 GENERAL' };
 const reportedPosts = new Set();
@@ -1533,8 +1655,8 @@ let currentReportPostId = null;
 function timeAgo(dateString) {
     const now = new Date(), then = new Date(dateString);
     const seconds = Math.floor((now - then) / 1000);
-    if (seconds < 60)    return 'just now';
-    if (seconds < 3600)  return Math.floor(seconds / 60) + ' min ago';
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' min ago';
     if (seconds < 86400) return Math.floor(seconds / 3600) + ' hr ago';
     return Math.floor(seconds / 86400) + ' day ago';
 }
@@ -1601,13 +1723,19 @@ async function waitForAuthThenLoadFeed() {
 
 async function loadFeed(iataCode) {
     const feedList = document.getElementById('feedList');
+
+    // Load Operations Brief alongside feed
+    loadOperationsBrief(iataCode);
+
     try {
         const { data: posts, error } = await supabaseClient
             .from('feed_posts')
             .select(`id, body, post_type, created_at, airport_iata_code, author_id, confirmation_count, driver_profiles!author_id ( trust_score )`)
-            .eq('airport_iata_code', iataCode).eq('is_moderated', false)
+            .eq('airport_iata_code', iataCode)
+            .eq('is_moderated', false)
             .gt('expires_at', new Date().toISOString())
-            .order('created_at', { ascending: false }).limit(50);
+            .order('created_at', { ascending: false })
+            .limit(50);
 
         if (error) { console.warn('LotGuard: Feed load error:', error); feedList.innerHTML = '<div class="feed-state">Unable to load feed. Please try again.</div>'; return; }
         if (!posts || posts.length === 0) { feedList.innerHTML = '<div class="feed-state">No posts yet. Be the first to share an update.</div>'; return; }
@@ -1624,6 +1752,7 @@ async function loadFeed(iataCode) {
         feedList.innerHTML = posts.map(function(p) {
             return renderPost(Object.assign({}, p, { trust_indicator: p.driver_profiles && p.driver_profiles.trust_score >= 80 }), false);
         }).join('');
+
     } catch (err) { console.warn('LotGuard: Feed error:', err); feedList.innerHTML = '<div class="feed-state">Unable to load feed. Please try again.</div>'; }
 }
 
