@@ -3,7 +3,7 @@
 // index.html: network-first (always fresh)
 // Static assets: cache-first
 
-const CACHE_NAME = 'lotguard-v15';
+const CACHE_NAME = 'lotguard-v16';
 const STATIC_ASSETS = [
     '/manifest.json',
     '/icon-512.png'
