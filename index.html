@@ -1384,7 +1384,7 @@ function subscribeToFeed(iataCode) {
             if (!document.getElementById('post-' + payload.payload.id))
                 feedList.insertAdjacentHTML('afterbegin', renderPost(payload.payload, true));
         }).subscribe();
-    pollInterval = setInterval(function() { loadFeed(browsingAirport); }, 30000);
+    pollInterval = setInterval(function() { loadFeed(browsingAirport); }, 5000);
 }
 
 // ── Tab Navigation ───────────────────────────────────────────────────────
